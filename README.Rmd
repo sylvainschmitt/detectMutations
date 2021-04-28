@@ -21,65 +21,28 @@ opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8
 
 Development of a [`singularity` & `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity) workflow to detect mutations with several alignment and mutation detection tools.
 
-# Source
+# Align
 
-*Get source data.*
+*Align reads against reference.*
 
-* Rule: [`get_source`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/get_source.smk), [`uncompress`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/uncompress.smk) & [`index`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/index.smk)
-* Tools: `snakemake.remote.HTTP`, `mv`, `zcat` & [`samtools faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-* Address: http://`r yaml::read_yaml("config/config.yml")$genome$address`
-* Files: `r yaml::read_yaml("config/config.yml")$genome$sequence`, `r yaml::read_yaml("config/config.yml")$genome$genes`, `r yaml::read_yaml("config/config.yml")$genome$TE`
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+## Software 1
 
-# **Base** reference
+* Rules: [`rule`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/rule.smk)
+* Tools: [`tool`](url)
+* Singularity: url
+* Parameter: `r yaml::read_yaml("config/config.yml")$par`
 
-*Subsample genome with chromosome and positions.*
+# Detect
 
-* Rules: [`reference_bed`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/reference_bed.smk) & [`sample_reference`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/sample_reference.smk)
-* Tools: `echo` & [`bedtools getfasta`](https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-* Sample: `r yaml::read_yaml("config/config.yml")$reference$chromosome`:`r yaml::read_yaml("config/config.yml")$reference$start`-`r yaml::read_yaml("config/config.yml")$reference$stop`
+*Detect and filter mutations in alignments.*
 
-# **Mutated** reference
+## Software 1
 
-*Mutate reference.*
+* Rules: [`rule`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/rule.smk)
+* Tools: [`tool`](url)
+* Singularity: url
+* Parameter: `r yaml::read_yaml("config/config.yml")$par`
 
-* Rules: [`generate_mutations`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/generate_mutations.smk)
-* Script: [`generate_mutations.R`](https://bedtools.readthedocs.io/en/latest/content/scripts/generate_mutations.R)
-* Singularity: https://depot.galaxyproject.org/singularity/bioconductor-biostrings:2.58.0--r40hd029910_1 (fail and I don't know why, maybe I should build my own image)
-* Mutations:
-    * Number: `r yaml::read_yaml("config/config.yml")$mutations$number`
-    * Transition/Transversion ratio (see below): `r yaml::read_yaml("config/config.yml")$mutations$R`
-
-To be upgraded on several chromosomes and with annotation (beware R might start to be slow for such a task): transposable elements, heterosigozity, genes.
-
-```{r R}
-include_graphics("https://dridk.me/images/post17/transition_transversion.png")
-```
-
-# **Base** reads
-
-*Generate reads from base reference.*
-
-* Rules: [`generate_reads`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/generate_reads.smk)
-* Tools: [`insilicoseq`](https://insilicoseq.readthedocs.io/en/latest/)
-* Singularity:  docker://hadrieng/insilicoseq:latest
-* Parameters:
-    * Sequencing machine: `r yaml::read_yaml("config/config.yml")$sequencing$illumina` 
-    * Number of reads: `r yaml::read_yaml("config/config.yml")$sequencing$n_reads` (150X)
-
-# **Mutated** reads
-
-*Generate mixed reads from base and mutated reference.*
-
-* Rules: [`generate_reads`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/generate_reads.smk) & [`merge_reads`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/merge_reads.smk)
-* Tools: [`insilicoseq`](https://insilicoseq.readthedocs.io/en/latest/)
-* Singularity:  docker://hadrieng/insilicoseq:latest
-* Parameters:
-    * Allelic fraction: `r yaml::read_yaml("config/config.yml")$mutations$AF` 
-    * Sequencing machine: `r yaml::read_yaml("config/config.yml")$sequencing$illumina` 
-    * Number of reads: `r yaml::read_yaml("config/config.yml")$sequencing$n_reads` (150X)
-        
 # Miscellaneous
 
 ## Commands
@@ -97,24 +60,10 @@ snakemake --report results/report.html
 
 *Represent rules.*
 
-```{r}
+```{r, eval=F}
 knitr::include_graphics("dag/dag.svg")
 ```
 
 ## Resources
 
 * [TreeMutation pages](https://treemutation.netlify.app/mutations-detection.html#in-silico-mutations)
-* [genologin skanemake template](https://forgemia.inra.fr/bios4biol/workflows/-/tree/06c6a5cb3206a594f9a535ba8d3df3e64682a8bc/Snakemake/template_dev)
-* [Oak genome A4 snakemake](https://forgemia.inra.fr/genome_a4/genome_a4)
-* [singularity images from forgemia](https://forgemia.inra.fr/gafl/singularity)
-* [biocontainers](https://biocontainers.pro/tools/bioconductor-biostrings)
-
-* https://forgemia.inra.fr/adminforgemia/doc-public/-/wikis/Gitlab-Container-Registry
-* https://souchal.pages.in2p3.fr/hugo-perso/2019/09/20/tutorial-singularity-and-docker/
-
-* https://github.com/ShixiangWang/sigminer
-* https://github.com/ShixiangWang/sigflow
-* https://github.com/FunGeST/Palimpsest
-* https://github.com/IARCbioinfo/needlestack
-* https://github.com/luntergroup/octopus
-* https://github.com/G3viz/g3viz
