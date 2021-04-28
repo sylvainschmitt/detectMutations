@@ -1,0 +1,36 @@
+__default__:
+  jobname: "default"
+  mem: "4G"
+  cpus: 8
+  time: "48:00:00"
+
+get_genome:
+  jobname: "get_genome"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+
+chromosomes_length:
+  jobname: "chromosomes_length"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+sample_reference:
+  jobname: "sample_reference"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+uncompress_reference:
+  jobname: "uncompress_reference"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+generate_reads:
+  jobname: "generate_reads"
+  mem: "100G"
+  cpus: 10
+  time: "01:00:00"
+  
