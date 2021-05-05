@@ -7,8 +7,8 @@ rule all:
     input:
         # multiext("results/raw_data/reference/reference", ".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"),
         "results/qc/reads/multiqc_report.html",
-        expand("results/alignments/bwa/{sample}{ext}", sample=[config["base"], config["mutated"]], ext=[".md.bam", ".md.bam.bai", ".bam.metrics", ".md.bam.stats.out", "/qualimapReport.html"])
-        # expand("results/mutations/mutect2/{aligner}/mutations.vcf.gz", aligner=["bwa"])
+        expand("results/alignments/bwa/{sample}{ext}", sample=[config["base"], config["mutated"]], ext=[".md.bam", ".md.bam.bai", ".bam.metrics", ".md.bam.stats.out", "/qualimapReport.html"]),
+        expand("results/germline/{caller}/{sample}.vcf", caller=["gatk", "freebayes"], sample=[config["base"]])
         
 # Rules
 
@@ -36,4 +36,13 @@ include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_stats.smk"
 include: "rules/qualimap.smk"
 ## germline variant calling
+# gatk haplotypecaller + genotypegvcfs, sentieon DNAseq + DNAscope, strelka, manta, tiddit, freebayes 
+# focus first on gatk (maybe free abyes in second)
+include: "rules/gatk_haplotypecaller.smk"
+include: "rules/gatk_genotypegvcfs.smk"
+include: "rules/freebayes.smk"
 ## somatic variant calling
+# gatk mutect2, freebayes, strelka2, manta, ascat, control-freec, msisensor
+# focus first on mutect2
+# include: "rules/gatk_mutect2.smk"
+# qc with bcftools stats and vcftools --TsTv-by-count --TsTv-by-qual -FILTER-summary 
