@@ -1,15 +1,15 @@
 sample=[config["base"]]
 
-rule freebayes:
+rule freebayes_germline:
     input:
         "results/alignments/bwa/{sample}.md.bam",
          multiext("results/raw_data/reference/reference", ".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict")
     output:
         "results/germline/freebayes/{sample}.vcf"
     log:
-        "results/logs/freebayes_{sample}.log"
+        "results/logs/freebayes_germline_{sample}.log"
     benchmark:
-        "results/benchmarks/freebayes_{sample}.benchmark.txt"
+        "results/benchmarks/freebayes_germline_{sample}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest"
     shell:
