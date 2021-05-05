@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --time=01:00:00
-#SBATCH -J genMut
+#SBATCH -J detMut
 #SBATCH -o detMut.%N.%j.out
 #SBATCH -e detMut.%N.%j.err
 #SBATCH --mem=1G
@@ -10,7 +10,7 @@
 
 # Environment
 module purge
-module load bioinfo/snakemake-5.8.1
+module load bioinfo/snakemake-5.25.0
 module load system/singularity-3.6.4
 module load system/Python-3.6.3 # for jinja2
 

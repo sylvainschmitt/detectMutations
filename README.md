@@ -94,11 +94,11 @@ snakemake --report report.html # report
 ## HPC
 
 ``` bash
-module purge ; module load bioinfo/snakemake-5.8.1 # for test on node
+module purge ; module load bioinfo/snakemake-5.25.0 # for test on node
 snakemake -np # dry run
 sbatch job.sh ; watch 'squeue -u sschmitt' # run
-less genMut.*.err # snakemake outputs, use MAJ+F
-less genMut.*.out # snakemake outputs, use MAJ+F
+less detMut.*.err # snakemake outputs, use MAJ+F
+less detMut.*.out # snakemake outputs, use MAJ+F
 snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 module purge ; module load bioinfo/snakemake-5.8.1 ; module load system/Python-3.6.3 # for report
 snakemake --report report.html # report
