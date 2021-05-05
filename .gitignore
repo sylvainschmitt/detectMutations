@@ -12,3 +12,7 @@ report.html
 # genologin
 *.err
 *.out
+# other
+.cache
+.java
+.oracle_jre_usage

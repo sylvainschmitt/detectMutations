@@ -4,5 +4,6 @@
 # Ressources
 ressources: "genologin.yaml"
 
-# Raw data
-
+# Raw data: base first mutated second
+base: base1
+mutated: mutated
