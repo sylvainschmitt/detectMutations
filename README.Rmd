@@ -257,9 +257,11 @@ mutations %>%
   full_join(somatic) %>% 
   select(CHROM, POS, REF, ALT, TYPE, freebayes, gatk) %>% 
   mutate_at(c("freebayes", "gatk"), funs(ifelse(is.na(.), 0, .))) %>% 
+  arrange(CHROM, POS, REF, ALT) %>% 
   kable(col.names = c("Chromosome", "Position", "Reference", "Alternative", "Type",
                       "[`freebayes`](https://github.com/freebayes/freebayes)", 
-                      "[`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)"))
+                      "[`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)"),
+        caption = "Generated mutations and their detection with different callers.")
 ```
 
 
