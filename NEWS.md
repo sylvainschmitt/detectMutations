@@ -1,3 +1,7 @@
+# detectMutation 0.1.9006
+* data/, get_data.sh, & mv_data.smk
+* Results in README
+
 # detectMutation 0.1.9005
 * README: install and use
 * README: all rules

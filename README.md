@@ -110,6 +110,10 @@ snakemake --report report.html # report
 
 *Index reference for software to work with.*
 
+### [mv\_data](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/mv_data.smk)
+
+  - Tools: `mv`
+
 ### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
   - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
@@ -273,3 +277,613 @@ skipped.*
 <!-- * Singularity: link -->
 
 # Results
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+Chromosome
+
+</th>
+
+<th style="text-align:right;">
+
+Position
+
+</th>
+
+<th style="text-align:left;">
+
+Reference
+
+</th>
+
+<th style="text-align:left;">
+
+Alternative
+
+</th>
+
+<th style="text-align:left;">
+
+Type
+
+</th>
+
+<th style="text-align:right;">
+
+[`freebayes`](https://github.com/freebayes/freebayes)
+
+</th>
+
+<th style="text-align:right;">
+
+[`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+746
+
+</td>
+
+<td style="text-align:left;">
+
+C
+
+</td>
+
+<td style="text-align:left;">
+
+T
+
+</td>
+
+<td style="text-align:left;">
+
+transition
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+163
+
+</td>
+
+<td style="text-align:left;">
+
+T
+
+</td>
+
+<td style="text-align:left;">
+
+A
+
+</td>
+
+<td style="text-align:left;">
+
+transversion2
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+959
+
+</td>
+
+<td style="text-align:left;">
+
+T
+
+</td>
+
+<td style="text-align:left;">
+
+C
+
+</td>
+
+<td style="text-align:left;">
+
+transition
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+278
+
+</td>
+
+<td style="text-align:left;">
+
+A
+
+</td>
+
+<td style="text-align:left;">
+
+C
+
+</td>
+
+<td style="text-align:left;">
+
+transversion1
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+474
+
+</td>
+
+<td style="text-align:left;">
+
+T
+
+</td>
+
+<td style="text-align:left;">
+
+C
+
+</td>
+
+<td style="text-align:left;">
+
+transition
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+844
+
+</td>
+
+<td style="text-align:left;">
+
+T
+
+</td>
+
+<td style="text-align:left;">
+
+A
+
+</td>
+
+<td style="text-align:left;">
+
+transversion2
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+708
+
+</td>
+
+<td style="text-align:left;">
+
+C
+
+</td>
+
+<td style="text-align:left;">
+
+T
+
+</td>
+
+<td style="text-align:left;">
+
+transition
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+215
+
+</td>
+
+<td style="text-align:left;">
+
+A
+
+</td>
+
+<td style="text-align:left;">
+
+T
+
+</td>
+
+<td style="text-align:left;">
+
+transversion2
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+213
+
+</td>
+
+<td style="text-align:left;">
+
+G
+
+</td>
+
+<td style="text-align:left;">
+
+A
+
+</td>
+
+<td style="text-align:left;">
+
+transition
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+166
+
+</td>
+
+<td style="text-align:left;">
+
+C
+
+</td>
+
+<td style="text-align:left;">
+
+A
+
+</td>
+
+<td style="text-align:left;">
+
+transversion1
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+163
+
+</td>
+
+<td style="text-align:left;">
+
+TAAC
+
+</td>
+
+<td style="text-align:left;">
+
+AAAA
+
+</td>
+
+<td style="text-align:left;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Qrob\_Chr01:0-1000
+
+</td>
+
+<td style="text-align:right;">
+
+213
+
+</td>
+
+<td style="text-align:left;">
+
+GGA
+
+</td>
+
+<td style="text-align:left;">
+
+AGT
+
+</td>
+
+<td style="text-align:left;">
+
+NA
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>

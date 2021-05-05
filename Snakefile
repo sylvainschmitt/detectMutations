@@ -25,6 +25,7 @@ rule all:
 
 ## Index ##
 
+include: "rules/mv_data.smk"
 include: "rules/bwa_index.smk"
 include: "rules/samtools_faidx.smk"
 include: "rules/gatk_dict.smk"

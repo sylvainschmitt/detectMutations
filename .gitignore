@@ -16,3 +16,7 @@ report.html
 .cache
 .java
 .oracle_jre_usage
+# data
+*.fastq
+*.fa
+*.tsv

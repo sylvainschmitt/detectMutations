@@ -15,6 +15,7 @@ library(kableExtra)
 if(knitr:::is_html_output()) options(knitr.table.format = "html") 
 if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
 library(tidyverse)
+library(vcfR)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
                cache = F, cache.lazy = F)
@@ -104,6 +105,10 @@ snakemake --report report.html # report
 ## Index
 
 *Index reference for software to work with.*
+
+### [mv_data](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/mv_data.smk)
+
+* Tools: `mv`
 
 ### [bwa_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
@@ -239,6 +244,23 @@ snakemake --report report.html # report
 
 # Results
 
+```{r}
+mutations <- read_tsv("data/mutation.tsv")
+somatic <- lapply(c(freebayes = "freebayes", gatk = "gatk"),
+                  function(caller) as.data.frame(read.vcfR(file.path("results/somatic", caller, "mutated_vs_base1.vcf"), verbose = F)@fix)) %>% 
+  bind_rows(.id = "caller") %>% 
+  mutate(count = 1) %>% 
+  reshape2::dcast(CHROM + POS + REF + ALT ~ caller, value.var = "count") %>% 
+  mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
+  mutate(POS = as.numeric(as.character(POS)))
+mutations %>%  
+  full_join(somatic) %>% 
+  select(CHROM, POS, REF, ALT, TYPE, freebayes, gatk) %>% 
+  mutate_at(c("freebayes", "gatk"), funs(ifelse(is.na(.), 0, .))) %>% 
+  kable(col.names = c("Chromosome", "Position", "Reference", "Alternative", "Type",
+                      "[`freebayes`](https://github.com/freebayes/freebayes)", 
+                      "[`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)"))
+```
 
 
 
