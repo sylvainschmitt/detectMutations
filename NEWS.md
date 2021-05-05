@@ -1,3 +1,7 @@
+# detectMutation 0.1.9005
+* README: install and use
+* README: all rules
+
 # detectMutation 0.1.9004
 * somatic with gatk and freebayes
 * vcf qc

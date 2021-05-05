@@ -3,93 +3,95 @@ detect Mutations
 Sylvain Schmitt
 April 20, 2021
 
-  - [Align](#align)
-      - [bwa](#bwa)
-          - [bwa map](#bwa-map)
-          - [PICARD SortSam](#picard-sortsam)
-          - [samtools index](#samtools-index)
-          - [samtools view](#samtools-view)
-          - [samtools index](#samtools-index-1)
-          - [samtools sort](#samtools-sort)
-      - [GEM](#gem)
-      - [Novoalign](#novoalign)
-  - [Detect](#detect)
-      - [Mutect2](#mutect2)
-  - [Miscellaneous](#miscellaneous)
-      - [Commands](#commands)
-      - [Direct Acyclic Graph](#direct-acyclic-graph)
-      - [Resources](#resources)
+  - [Installation](#installation)
+  - [Usage](#usage)
+      - [Get data](#get-data)
+      - [Locally](#locally)
+      - [HPC](#hpc)
+  - [Workflow](#workflow)
+      - [Index](#index)
+      - [Reads QC](#reads-qc)
+      - [Trimming](#trimming)
+      - [Mapping](#mapping)
+      - [Recalibration](#recalibration)
+      - [Alignments QC](#alignments-qc)
+      - [Germline variant calling](#germline-variant-calling)
+      - [Somatic variant calling](#somatic-variant-calling)
+      - [Calls QC](#calls-qc)
+  - [Results](#results)
 
-Development of a [`singularity` &
+[`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
 workflow to detect mutations with several alignment and mutation
 detection tools.
 
-# Align
+![Direct acyclic graph.](dag/dag.svg)
 
-*Align reads against reference.*
+# Installation
 
-## bwa
+  - [x] Python ≥3.5
+  - [x] Snakemake ≥5.24.1
+  - [x] Golang ≥1.15.2
+  - [x] Singularity ≥3.7.3
+  - [x] This workflow
 
-### bwa map
-
-*Align in sam.*
-
-  - Rules:
-    [`bwa_map`](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_map.smk)
-  - Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
-
-### PICARD SortSam
-
-### samtools index
-
-### samtools view
-
-*Convert sam to bam.*
-
-  - Rules:
-    [`samtools_view`](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_view.smk)
-  - Tools: [`samtools
-    view`](http://www.htslib.org/doc/samtools-view.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### samtools index
-
-### samtools sort
-
-## GEM
-
-## Novoalign
-
-# Detect
-
-*Detect and filter mutations in alignments.*
-
-## Mutect2
-
-  - Rules:
-    [`mutect2`](https://github.com/sylvainschmitt/generateMutations/blob/main/rules/mutect2.smk)
-  - Tools:
-    [`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
-  - Singularity: docker://alexcoppe/gatk
-
-# Miscellaneous
-
-## Commands
-
-*To run locally.*
+<!-- end list -->
 
 ``` bash
-snakemake -np 
-snakemake --dag | dot -Tsvg > dag/dag.svg
-snakemake --use-singularity --cores 4
-snakemake --report report.html
+# Python
+sudo apt-get install python3.5
+# Snakemake
+sudo apt install snakemake`
+# Golang
+export VERSION=1.15.8 OS=linux ARCH=amd64  # change this as you need
+wget -O /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz https://dl.google.com/go/go${VERSION}.${OS}-${ARCH}.tar.gz && \
+sudo tar -C /usr/local -xzf /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz
+echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
+echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc && \
+source ~/.bashrc
+# Singularity
+mkdir -p ${GOPATH}/src/github.com/sylabs && \
+  cd ${GOPATH}/src/github.com/sylabs && \
+  git clone https://github.com/sylabs/singularity.git && \
+  cd singularity
+git checkout v3.7.3
+cd ${GOPATH}/src/github.com/sylabs/singularity && \
+  ./mconfig && \
+  cd ./builddir && \
+  make && \
+  sudo make install
+# detect Mutations
+git clone git@github.com:sylvainschmitt/detectMutations.git
+cd detectMutations
 ```
 
-*To run on HPC.*
+# Usage
+
+## Get data
+
+*Generate data using the [generate
+Mutations](https://github.com/sylvainschmitt/generateMutations)
+workflow.*
+
+``` bash
+git clone git@github.com:sylvainschmitt/generateMutations.git
+cd ../generateMutations
+snakemake --use-singularity --cores 4
+cd ../detectMutations
+bash scripts/get_data.sh
+```
+
+## Locally
+
+``` bash
+snakemake -np # dry run
+snakemake --dag | dot -Tsvg > dag/dag.svg # dag
+snakemake --use-singularity --cores 4 # run
+snakemake --use-singularity --cores 1 --verbose # debug
+snakemake --report report.html # report
+```
+
+## HPC
 
 ``` bash
 module purge ; module load bioinfo/snakemake-5.8.1 # for test on node
@@ -102,13 +104,172 @@ module purge ; module load bioinfo/snakemake-5.8.1 ; module load system/Python-3
 snakemake --report report.html # report
 ```
 
-## Direct Acyclic Graph
+# Workflow
 
-*Represent rules.*
+## Index
 
-![](dag/dag.svg)<!-- -->
+*Index reference for software to work with.*
 
-## Resources
+### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
-  - [TreeMutation
-    pages](https://treemutation.netlify.app/mutations-detection.html#in-silico-mutations)
+  - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+
+### [samtools\_faidx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_faidx.smk)
+
+  - Tools: [`samtools
+    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [gatk\_dict](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_dict.smk)
+
+  - Tools: [`gatk
+    CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
+  - Singularity: docker://broadinstitute/gatk
+
+## Reads QC
+
+*Report read quality.*
+
+### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
+
+  - Tools:
+    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
+  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
+
+### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
+
+  - Tools: [`MultiQC`](https://multiqc.info/)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
+
+## Trimming
+
+*Trimming of low quality reads or bases is not implemented yet
+([`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)).*
+
+## Mapping
+
+*Align reads against reference.*
+
+### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_mem.smk)
+
+  - Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+
+### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_sort.smk)
+
+  - Tools: [`Samtools
+    sort`](http://www.htslib.org/doc/samtools-sort.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_index.smk)
+
+  - Tools: [`Samtools
+    index`](http://www.htslib.org/doc/samtools-index.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_markduplicates.smk)
+
+  - Tools: [`gatk
+    MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
+  - Singularity: docker://broadinstitute/gatk
+
+## Recalibration
+
+*Recalibration necessitate confidence known sites. Without reference
+SNPs DB, the user need to build one. Consequently this step is currently
+skipped.*
+
+## Alignments QC
+
+*Report alignment quality.*
+
+### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
+
+  - Tools: [`Samtools
+    stats`](http://www.htslib.org/doc/samtools-stats.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
+
+  - Tools:
+    [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
+  - Singularity: docker://pegi3s/qualimap
+
+## Germline variant calling
+
+*Detect SNPs in the germline using `freebayes` and `gatk` (`strelka`,
+`manta`, `tiddit`, etc can be further implemented).*
+
+### [freebayes\_somatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk)
+
+  - Tools: [`freebayes`](https://github.com/freebayes/freebayes)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
+
+### GATK
+
+#### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_haplotypecaller.smk)
+
+  - Tools: [`gatk
+    HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+  - Singularity: docker://broadinstitute/gatk
+
+#### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_genotypegvcfs.smk)
+
+  - Tools: [`gatk
+    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
+  - Singularity: docker://broadinstitute/gatk
+
+## Somatic variant calling
+
+*Detect mutations between germline and mutated somatic tissue using
+`freebayes` and `Mutect2` (`strelka2`, `manta`, `ascat`,
+`control-freec`, `msisensor`, etc can be further implemented).*
+
+### [freebayes\_somatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk)
+
+  - Tools: [`freebayes`](https://github.com/freebayes/freebayes)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
+
+### [gatk\_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_mutect2.smk)
+
+  - Tools: [`gatk
+    Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
+  - Singularity: docker://broadinstitute/gatk
+
+## Calls QC
+
+*Report calls quality.*
+
+### [bcftools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bcftools_stats.smk)
+
+  - Tools:
+    [`bcftools_stats`](http://samtools.github.io/bcftools/bcftools.html#stats)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bcftools/bcftools:latest
+
+### [vcftools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/vcftools_stats.smk)
+
+  - Tools: [`vcftools --TsTv-by-count --TsTv-by-qual
+    --FILTER-summary`](http://vcftools.sourceforge.net/man_latest.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/vcftools/vcftools:latest
+
+<!-- template: -->
+
+<!-- ### [command_sub](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/command_sub.smk) -->
+
+<!-- * Tools: [`command sub`](link) -->
+
+<!-- * Singularity: link -->
+
+# Results
