@@ -244,6 +244,8 @@ snakemake --report report.html # report
 
 # Results
 
+> Note that `freebayes` has mistaken two SNPs at low coverage (~75X).
+
 ```{r}
 mutations <- read_tsv("data/mutation.tsv")
 somatic <- lapply(c(freebayes = "freebayes", gatk = "gatk"),
@@ -263,7 +265,3 @@ mutations %>%
                       "[`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)"),
         caption = "Generated mutations and their detection with different callers.")
 ```
-
-
-
-

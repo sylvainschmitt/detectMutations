@@ -5,7 +5,9 @@ rule gatk_mutect2:
     input:
         "results/alignments/bwa/{base}.md.bam",
         "results/alignments/bwa/{mutated}.md.bam",
-         multiext("results/raw_data/reference/reference", ".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict")
+         multiext("results/raw_data/reference/reference", ".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"),
+         "results/alignments/bwa/{base}.md.bam.bai",
+        "results/alignments/bwa/{mutated}.md.bam.bai"
     output:
         "results/somatic/gatk/{mutated}_vs_{base}.vcf"
     log:
