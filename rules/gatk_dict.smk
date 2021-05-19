@@ -1,8 +1,8 @@
 rule gatk_dict:
     input:
-        "results/raw_data/reference/reference.fa"
+        expand("results/reference/{reference}.fa", reference=config["reference"])
     output:
-        "results/raw_data/reference/reference.dict"
+        expand("results/reference/{reference}.dict", reference=config["reference"])
     log:
         "results/logs/gatk_dict.log"
     benchmark:

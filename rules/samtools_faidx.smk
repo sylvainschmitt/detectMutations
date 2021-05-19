@@ -1,8 +1,8 @@
 rule samtools_faidx:
     input:
-        "results/raw_data/reference/reference.fa"
+        expand("results/reference/{reference}.fa", reference=config["reference"])
     output:
-        "results/raw_data/reference/reference.fa.fai"
+        expand("results/reference/{reference}.fa.fai", reference=config["reference"])
     log:
         "results/logs/samtools_faidx.log"
     benchmark:

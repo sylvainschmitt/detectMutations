@@ -9,15 +9,10 @@ April 20, 2021
       - [Locally](#locally)
       - [HPC](#hpc)
   - [Workflow](#workflow)
-      - [Index](#index)
-      - [Reads QC](#reads-qc)
-      - [Trimming](#trimming)
-      - [Mapping](#mapping)
-      - [Recalibration](#recalibration)
-      - [Alignments QC](#alignments-qc)
-      - [Germline variant calling](#germline-variant-calling)
-      - [Somatic variant calling](#somatic-variant-calling)
-      - [Calls QC](#calls-qc)
+      - [Reference](#reference)
+      - [Reads](#reads)
+      - [Alignments](#alignments)
+      - [Mutation](#mutation)
   - [Results](#results)
 
 [`singularity` &
@@ -106,13 +101,13 @@ snakemake --report report.html # report
 
 # Workflow
 
-## Index
+## Reference
 
-*Index reference for software to work with.*
+*Copy and index reference for software to work with.*
 
-### [mv\_data](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/mv_data.smk)
+### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
 
-  - Tools: `mv`
+  - Tools: `cp`
 
 ### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
@@ -133,9 +128,13 @@ snakemake --report report.html # report
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
-## Reads QC
+## Reads
 
-*Report read quality.*
+*Copy reads, report quality and trim.*
+
+### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
+
+  - Tools: `cp`
 
 ### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
 
@@ -149,14 +148,16 @@ snakemake --report report.html # report
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
-## Trimming
+### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
-*Trimming of low quality reads or bases is not implemented yet
-([`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)).*
+  - Tools:
+    [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/trimmomatic/trimmomatic:latest
 
-## Mapping
+## Alignments
 
-*Align reads against reference.*
+*Align reads against reference and report alignment quality.*
 
 ### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_mem.smk)
 
@@ -184,16 +185,6 @@ snakemake --report report.html # report
     MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
-## Recalibration
-
-*Recalibration necessitate confidence known sites. Without reference
-SNPs DB, the user need to build one. Consequently this step is currently
-skipped.*
-
-## Alignments QC
-
-*Report alignment quality.*
-
 ### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
 
   - Tools: [`Samtools
@@ -207,86 +198,44 @@ skipped.*
     [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
   - Singularity: docker://pegi3s/qualimap
 
-## Germline variant calling
+## Mutation
 
-*Detect SNPs in the germline using `freebayes` and `gatk` (`strelka`,
+*Detect mutation using `freebayes`, `gatk`, and `Mutect2` (`strelka`,
 `manta`, `tiddit`, etc can be further implemented).*
 
-### [freebayes\_somatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk)
+### Mutect2
 
-  - Tools: [`freebayes`](https://github.com/freebayes/freebayes)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
-
-### GATK
-
-#### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_haplotypecaller.smk)
-
-  - Tools: [`gatk
-    HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-  - Singularity: docker://broadinstitute/gatk
-
-#### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_genotypegvcfs.smk)
-
-  - Tools: [`gatk
-    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-  - Singularity: docker://broadinstitute/gatk
-
-## Somatic variant calling
-
-*Detect mutations between germline and mutated somatic tissue using
-`freebayes` and `Mutect2` (`strelka2`, `manta`, `ascat`,
-`control-freec`, `msisensor`, etc can be further implemented).*
-
-### [freebayes\_somatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk)
-
-  - Tools: [`freebayes`](https://github.com/freebayes/freebayes)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
-
-### [gatk\_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_mutect2.smk)
+#### [gatk\_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_mutect2.smk)
 
   - Tools: [`gatk
     Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
   - Singularity: docker://broadinstitute/gatk
 
-## Calls QC
+<!-- ### freebayes -->
 
-*Report calls quality.*
+<!-- #### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk) -->
 
-### [bcftools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bcftools_stats.smk)
+<!-- * Tools: [`freebayes`](https://github.com/freebayes/freebayes) -->
 
-  - Tools:
-    [`bcftools_stats`](http://samtools.github.io/bcftools/bcftools.html#stats)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bcftools/bcftools:latest
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest -->
 
-### [vcftools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/vcftools_stats.smk)
+<!-- ### GATK -->
 
-  - Tools: [`vcftools --TsTv-by-count --TsTv-by-qual
-    --FILTER-summary`](http://vcftools.sourceforge.net/man_latest.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/vcftools/vcftools:latest
+<!-- #### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_haplotypecaller.smk) -->
 
-<!-- template: -->
+<!-- * Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller) -->
 
-<!-- ### [command_sub](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/command_sub.smk) -->
+<!-- * Singularity: docker://broadinstitute/gatk -->
 
-<!-- * Tools: [`command sub`](link) -->
+<!-- #### [gatk_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_genotypegvcfs.smk) -->
 
-<!-- * Singularity: link -->
+<!-- * Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs) -->
+
+<!-- * Singularity: docker://broadinstitute/gatk -->
 
 # Results
 
-> Note that `freebayes` has mistaken two SNPs at low coverage (\~75X).
-
 <table>
-
-<caption>
-
-Generated mutations and their detection with different callers.
-
-</caption>
 
 <thead>
 
@@ -294,43 +243,25 @@ Generated mutations and their detection with different callers.
 
 <th style="text-align:left;">
 
-Chromosome
-
-</th>
-
-<th style="text-align:right;">
-
-Position
+Caller
 
 </th>
 
 <th style="text-align:left;">
 
-Reference
-
-</th>
-
-<th style="text-align:left;">
-
-Alternative
-
-</th>
-
-<th style="text-align:left;">
-
-Type
+Confusion
 
 </th>
 
 <th style="text-align:right;">
 
-[`freebayes`](https://github.com/freebayes/freebayes)
+N
 
 </th>
 
 <th style="text-align:right;">
 
-[`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
+P
 
 </th>
 
@@ -344,43 +275,25 @@ Type
 
 <td style="text-align:left;">
 
-Qrob\_Chr01:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-334
+mutect2
 
 </td>
 
 <td style="text-align:left;">
 
-A
-
-</td>
-
-<td style="text-align:left;">
-
-C
-
-</td>
-
-<td style="text-align:left;">
-
-transversion1
+False Negative
 
 </td>
 
 <td style="text-align:right;">
 
-1
+96
 
 </td>
 
 <td style="text-align:right;">
 
-1
+6.16
 
 </td>
 
@@ -390,43 +303,25 @@ transversion1
 
 <td style="text-align:left;">
 
-Qrob\_Chr01:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-342
+mutect2
 
 </td>
 
 <td style="text-align:left;">
 
-C
-
-</td>
-
-<td style="text-align:left;">
-
-G
-
-</td>
-
-<td style="text-align:left;">
-
-transversion2
+False Positive
 
 </td>
 
 <td style="text-align:right;">
 
-1
+1459
 
 </td>
 
 <td style="text-align:right;">
 
-1
+93.59
 
 </td>
 
@@ -436,457 +331,25 @@ transversion2
 
 <td style="text-align:left;">
 
-Qrob\_Chr01:0-1000
+mutect2
+
+</td>
+
+<td style="text-align:left;">
+
+True Positive
 
 </td>
 
 <td style="text-align:right;">
 
-538
-
-</td>
-
-<td style="text-align:left;">
-
-T
-
-</td>
-
-<td style="text-align:left;">
-
-A
-
-</td>
-
-<td style="text-align:left;">
-
-transversion2
+4
 
 </td>
 
 <td style="text-align:right;">
 
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr01:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-609
-
-</td>
-
-<td style="text-align:left;">
-
-A
-
-</td>
-
-<td style="text-align:left;">
-
-C
-
-</td>
-
-<td style="text-align:left;">
-
-NA
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-0
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr01:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-710
-
-</td>
-
-<td style="text-align:left;">
-
-C
-
-</td>
-
-<td style="text-align:left;">
-
-T
-
-</td>
-
-<td style="text-align:left;">
-
-transition
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr01:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-817
-
-</td>
-
-<td style="text-align:left;">
-
-T
-
-</td>
-
-<td style="text-align:left;">
-
-A
-
-</td>
-
-<td style="text-align:left;">
-
-transversion2
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr02:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-352
-
-</td>
-
-<td style="text-align:left;">
-
-G
-
-</td>
-
-<td style="text-align:left;">
-
-C
-
-</td>
-
-<td style="text-align:left;">
-
-transversion2
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr02:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-663
-
-</td>
-
-<td style="text-align:left;">
-
-A
-
-</td>
-
-<td style="text-align:left;">
-
-C
-
-</td>
-
-<td style="text-align:left;">
-
-NA
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-0
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr02:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-665
-
-</td>
-
-<td style="text-align:left;">
-
-G
-
-</td>
-
-<td style="text-align:left;">
-
-C
-
-</td>
-
-<td style="text-align:left;">
-
-transversion2
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr02:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-702
-
-</td>
-
-<td style="text-align:left;">
-
-T
-
-</td>
-
-<td style="text-align:left;">
-
-C
-
-</td>
-
-<td style="text-align:left;">
-
-transition
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr02:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-837
-
-</td>
-
-<td style="text-align:left;">
-
-G
-
-</td>
-
-<td style="text-align:left;">
-
-T
-
-</td>
-
-<td style="text-align:left;">
-
-transversion1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Qrob\_Chr02:0-1000
-
-</td>
-
-<td style="text-align:right;">
-
-984
-
-</td>
-
-<td style="text-align:left;">
-
-G
-
-</td>
-
-<td style="text-align:left;">
-
-A
-
-</td>
-
-<td style="text-align:left;">
-
-transition
-
-</td>
-
-<td style="text-align:right;">
-
-1
-
-</td>
-
-<td style="text-align:right;">
-
-1
+0.26
 
 </td>
 

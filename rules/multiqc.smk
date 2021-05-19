@@ -1,15 +1,15 @@
 rule multiqc:
     input:
-        expand("results/qc/reads/{sample}_{strand}_fastqc.{ext}", sample=[config["base"], config["mutated"]], strand=["R1","R2"], ext=["html", "zip"])
+        expand("results/{library}/{library}_{strand}.raw_fastqc.{ext}", strand=["R1", "R2"], ext=["html", "zip"], allow_missing=True)
     output:
-        "results/qc/reads/multiqc_report.html"
+        "results/{library}/qc/multiqc_report.html"
     log:
-        "results/logs/multiqc.log"
+        "results/logs/multiqc_{library}.log"
     benchmark:
-        "results/benchmarks/multiqc.benchmark.txt"
+        "results/benchmarks/multiqc_{library}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest"
     shell:
-        "multiqc results/qc/reads/ -o results/qc/reads/"
+        "multiqc results/{wildcards.library}/ -o results/{wildcards.library}/qc"
 
 # could include bam reports from samtools stats

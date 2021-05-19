@@ -1,3 +1,7 @@
+# detectMutation 0.1.9007
+* Hard changes
+* New version with multiple libraries but only mutated reads and one reference (to be checked)
+
 # detectMutation 0.1.9006
 * data/, get_data.sh, & mv_data.smk
 * Results in README

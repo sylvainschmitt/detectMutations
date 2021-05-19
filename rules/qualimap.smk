@@ -1,15 +1,14 @@
-sample=[config["base"], config["mutated"]]
-
 rule qualimap:
     input:
-        "results/alignments/bwa/{sample}.md.bam"
+        "results/{library}/{library}.md.bam"
     output:
-        "results/alignments/bwa/{sample}/qualimapReport.html"
+        "results/{library}/qc/qualimap/qualimapReport.html"
     log:
-        "results/logs/qualimap_{sample}.log"
+        "results/logs/qualimap_{library}.log"
     benchmark:
-        "results/benchmarks/qualimap_{sample}.benchmark.txt"
+        "results/benchmarks/qualimap_{library}.benchmark.txt"
     singularity: 
         "docker://pegi3s/qualimap"
     shell:
-        "qualimap bamqc -bam {input} --paint-chromosome-limits -nt {threads} -skip-duplicated --skip-dup-mode 0 -outdir results/alignments/bwa/{wildcards.sample}  -outformat HTML"
+        "qualimap bamqc -bam {input} --paint-chromosome-limits -nt {threads} -skip-duplicated --skip-dup-mode " 
+        "0 -outdir results/{wildcards.library}/qc/qualimap -outformat HTML"

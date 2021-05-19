@@ -1,15 +1,13 @@
-sample=[config["base"], config["mutated"]]
-
 rule gatk_markduplicates:
     input:
-        multiext("results/alignments/bwa/{sample}", ".bam", ".bam.bai")
+        multiext("results/{library}/{library}", ".bam", ".bam.bai")
     output:
-        "results/alignments/bwa/{sample}.md.bam",
-        "results/alignments/bwa/{sample}.bam.metrics"
+        "results/{library}/{library}.md.bam",
+        temp("results/{library}/{library}.bam.metrics")
     log:
-        "results/logs/gatk_markduplicates_{sample}.log"
+        "results/logs/gatk_markduplicates_{library}.log"
     benchmark:
-        "results/benchmarks/gatk_markduplicates_{sample}.benchmark.txt"
+        "results/benchmarks/gatk_markduplicates_{library}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     shell:

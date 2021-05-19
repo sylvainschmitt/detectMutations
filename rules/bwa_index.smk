@@ -1,8 +1,8 @@
 rule bwa_index:
     input:
-        "results/raw_data/reference/reference.fa"
+        expand("results/reference/{reference}.fa", reference=config["reference"])
     output:
-        multiext("results/raw_data/reference/reference.fa", ".amb", ".ann", ".bwt", ".pac", ".sa")
+        expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
     log:
         "results/logs/bwa_index.log"
     benchmark:

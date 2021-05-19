@@ -102,13 +102,13 @@ snakemake --report report.html # report
 
 # Workflow
 
-## Index
+## Reference
 
-*Index reference for software to work with.*
+*Copy and index reference for software to work with.*
 
-### [mv_data](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/mv_data.smk)
+### [cp_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
 
-* Tools: `mv`
+* Tools: `cp`
 
 ### [bwa_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
@@ -125,9 +125,13 @@ snakemake --report report.html # report
 * Tools: [`gatk CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
 * Singularity: docker://broadinstitute/gatk
 
-## Reads QC
+## Reads
 
-*Report read quality.*
+*Copy reads, report quality and trim.*
+
+### [cp_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
+
+* Tools: `cp`
 
 ### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
 
@@ -139,13 +143,14 @@ snakemake --report report.html # report
 * Tools: [`MultiQC`](https://multiqc.info/)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
-## Trimming
+### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
-*Trimming of low quality reads or bases is not implemented yet ([`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)).*
+* Tools: [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/trimmomatic/trimmomatic:latest
 
-## Mapping
+## Alignments
 
-*Align reads against reference.*
+*Align reads against reference and report alignment quality.*
 
 ### [bwa_mem](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_mem.smk)
 
@@ -167,14 +172,6 @@ snakemake --report report.html # report
 * Tools: [`gatk MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
 * Singularity: docker://broadinstitute/gatk
 
-## Recalibration
-
-*Recalibration necessitate confidence known sites. Without reference SNPs DB, the user need to build one. Consequently this step is currently skipped.*
-
-## Alignments QC
-
-*Report alignment quality.*
-
 ### [samtools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
 
 * Tools: [`Samtools stats`](http://www.htslib.org/doc/samtools-stats.html)
@@ -185,83 +182,61 @@ snakemake --report report.html # report
 * Tools: [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
 * Singularity: docker://pegi3s/qualimap
 
-## Germline variant calling
+## Mutation
 
-*Detect SNPs in the germline using `freebayes` and `gatk` (`strelka`, `manta`, `tiddit`, etc can be further implemented).*
+*Detect mutation using `freebayes`, `gatk`, and `Mutect2` (`strelka`, `manta`, `tiddit`, etc can be further implemented).*
 
-### [freebayes_somatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk)
+### Mutect2
 
-* Tools: [`freebayes`](https://github.com/freebayes/freebayes)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
-
-### GATK
-
-#### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_haplotypecaller.smk)
-
-* Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-* Singularity: docker://broadinstitute/gatk
-
-#### [gatk_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_genotypegvcfs.smk)
-
-* Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-* Singularity: docker://broadinstitute/gatk
-
-## Somatic variant calling
-
-*Detect mutations between germline and mutated somatic tissue using `freebayes` and `Mutect2` (`strelka2`, `manta`, `ascat`, `control-freec`, `msisensor`, etc can be further implemented).*
-
-### [freebayes_somatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk)
-
-* Tools: [`freebayes`](https://github.com/freebayes/freebayes)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
-
-### [gatk_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_mutect2.smk)
+#### [gatk_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_mutect2.smk)
 
 * Tools: [`gatk Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
 * Singularity: docker://broadinstitute/gatk
 
-## Calls QC
+<!-- ### freebayes -->
 
-*Report calls quality.*
+<!-- #### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk) -->
 
-### [bcftools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bcftools_stats.smk)
+<!-- * Tools: [`freebayes`](https://github.com/freebayes/freebayes) -->
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest -->
 
-* Tools: [`bcftools_stats`](http://samtools.github.io/bcftools/bcftools.html#stats)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bcftools/bcftools:latest
+<!-- ### GATK -->
 
-### [vcftools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/vcftools_stats.smk)
+<!-- #### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_haplotypecaller.smk) -->
 
-* Tools: [`vcftools --TsTv-by-count --TsTv-by-qual --FILTER-summary`](http://vcftools.sourceforge.net/man_latest.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/vcftools/vcftools:latest
+<!-- * Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller) -->
+<!-- * Singularity: docker://broadinstitute/gatk -->
 
+<!-- #### [gatk_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_genotypegvcfs.smk) -->
 
-<!-- template: -->
-
-<!-- ### [command_sub](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/command_sub.smk) -->
-
-<!-- * Tools: [`command sub`](link) -->
-<!-- * Singularity: link -->
+<!-- * Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs) -->
+<!-- * Singularity: docker://broadinstitute/gatk -->
 
 # Results
 
-> Note that `freebayes` has mistaken two SNPs at low coverage (~75X).
-
-```{r}
-mutations <- read_tsv("data/mutation.tsv")
-somatic <- lapply(c(freebayes = "freebayes", gatk = "gatk"),
-                  function(caller) as.data.frame(read.vcfR(file.path("results/somatic", caller, "mutated_vs_base1.vcf"), verbose = F)@fix)) %>% 
+```{r }
+mutations <- read_tsv("../generateMutations/results/mutations/Qrob_PM1N_Qrob_Chr01_mutated_N100_R2.tsv") %>% 
+  mutate(True = 1)
+library <- "N100_R2_AF0.8_NR50000"
+somatic <- lapply(c(mutect2 = "mutect2"),
+                  function(caller) as.data.frame(read.vcfR(file.path("results", library, caller, 
+                                                                     paste0(library, ".vcf")), verbose = F)@fix)) %>% 
   bind_rows(.id = "caller") %>% 
   mutate(count = 1) %>% 
   reshape2::dcast(CHROM + POS + REF + ALT ~ caller, value.var = "count") %>% 
   mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
-  mutate(POS = as.numeric(as.character(POS)))
+  mutate(POS = as.numeric(as.character(POS))) %>% 
+  mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1))
 mutations %>%  
   full_join(somatic) %>% 
-  select(CHROM, POS, REF, ALT, TYPE, freebayes, gatk) %>% 
-  mutate_at(c("freebayes", "gatk"), funs(ifelse(is.na(.), 0, .))) %>% 
-  arrange(CHROM, POS, REF, ALT) %>% 
-  kable(col.names = c("Chromosome", "Position", "Reference", "Alternative", "Type",
-                      "[`freebayes`](https://github.com/freebayes/freebayes)", 
-                      "[`Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)"),
-        caption = "Generated mutations and their detection with different callers.")
+  mutate(Caller = "mutect2") %>% # to be changed with dcast with multiple callers 
+  rename(Called = mutect2) %>% 
+  mutate_at(c("True", "Called"), funs(ifelse(is.na(.), 0, .))) %>% 
+  mutate(Confusion = recode(paste0(True, Called), "01" = "False Positive",
+                            "10" = "False Negative", "11" = "True Positive")) %>% 
+  group_by(Caller, Confusion) %>% 
+  summarise(N = n()) %>% 
+  group_by(Caller) %>% 
+  mutate(P = round(N/sum(N)*100, 2)) %>% 
+  kable()
 ```

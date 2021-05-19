@@ -1,18 +1,13 @@
-sample=[config["base"], config["mutated"]]
-
 rule samtools_sort:
     input:
-        "results/alignments/bwa/{sample}.sam"
+        "results/{library}/{library}.sam"
     output:
-        "results/alignments/bwa/{sample}.bam"
+        temp("results/{library}/{library}.bam")
     log:
-        "results/logs/samtools_sort_{sample}.log"
+        "results/logs/samtools_sort_{library}.log"
     benchmark:
-        "results/benchmarks/samtools_sort_{sample}.benchmark.txt"
+        "results/benchmarks/samtools_sort_{library}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:
         "samtools sort --threads {threads} {input} > {output}"
-
-# samtools sort {input} > {output}
-# samtools sort --threads {threads} {input.bam} -m 2G - > ${idSample}_${idRun}.bam
