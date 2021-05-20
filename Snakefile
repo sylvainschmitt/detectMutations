@@ -6,8 +6,6 @@ libraries, = glob_wildcards(config["libdir"] + "/{library}_R1.fastq")
 
 rule all:
     input:
-        ## alignments ##
-        expand("results/{library}/{library}.md.{ext}", library=libraries, ext=["bam", "bam.bai"]),
         ## mutations ##
         expand("results/{library}/{caller}/{library}.vcf", library=libraries, caller=["mutect2"]),
         ## qc ##

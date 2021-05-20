@@ -283,7 +283,7 @@ stats <- data.frame(libraries = list.files(config$libdir, pattern = "_R1.fastq")
 ```{r statsTable}
 kable(stats, col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
                            "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
-      caption = "Caller assesment.")  
+      caption = "Caller assesments.")  
 ```
 
 ```{r statsFig, fig.cap="Caller assesment."}
