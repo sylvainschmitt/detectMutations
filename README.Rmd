@@ -208,12 +208,18 @@ snakemake --report report.html # report
 * Tools: [`gatk Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
 * Singularity: docker://broadinstitute/gatk
 
-<!-- ### freebayes -->
+### freebayes
 
-<!-- #### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk) -->
+#### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes.smk)
 
-<!-- * Tools: [`freebayes`](https://github.com/freebayes/freebayes) -->
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest -->
+* Tools: [`freebayes`](https://github.com/freebayes/freebayes)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
+
+
+#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
+
+* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
 
 <!-- ### GATK -->
 
@@ -241,7 +247,7 @@ snakemake --report report.html # report
 ```{r get_stats}
 get_stats <- function(callfile, mutationsfile){
   mutations <- read_tsv(mutationsfile) %>% 
-    mutate(True = 1) %>% 
+    mutate(True = 1) %>%
     filter(REF != "N")
   call <- read.vcfR(callfile, verbose = F)@fix %>% 
     as.data.frame() %>% 
@@ -264,11 +270,14 @@ get_stats <- function(callfile, mutationsfile){
 config.file <- "config.dev.yml"
 config <- yaml::read_yaml(file.path("config", config.file))
 refL <- width(readDNAStringSet(file.path(config$refdir, paste0(config$reference, ".fa"))))
-stats <- data.frame(libraries = list.files(config$libdir, pattern = "_R1.fastq")) %>% 
-  mutate(libraries = gsub("_R1.fastq", "", libraries)) %>% 
+stats <- data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1.fastq")) %>% 
+  mutate(libraries = gsub("_mutated_R1.fastq", "", libraries)) %>% 
   mutate(libraries = gsub("[[:alpha:]]", "", libraries)) %>% 
   separate(libraries, c("N", "R", "AF", "NR"), sep = "_", convert = T) %>% 
-  mutate(caller = "mutect2") %>% 
+  group_by(N, R, AF, NR) %>% 
+  do(caller = c("mutect2", "freebayes")) %>% 
+  unnest(caller) %>% 
+  ungroup() %>% 
   mutate(call = file.path("results", paste0("N", N, "_R", R, "_AF", AF, "_NR", NR),
                                caller, paste0("N", N, "_R", R, "_AF", AF, "_NR", NR, ".vcf"))) %>% 
   mutate(mutations = file.path(config$refdir, "..", "mutations", paste0(config$reference, "_mutated_N", N, "_R", R, ".tsv"))) %>% 
@@ -296,10 +305,8 @@ stats %>%
   filter(parameter != "N") %>% 
   mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
                             "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
-  ggplot(aes(as.character(parameter.value), metric.value, col = caller, fill = caller)) +
+  ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
   geom_boxplot(alpha = 0.3) +
-  geom_point() +
-  # geom_line() +
   facet_grid(metric ~ parameter, scales = "free") +
   theme(legend.position = "bottom", axis.title = element_blank())
 ```

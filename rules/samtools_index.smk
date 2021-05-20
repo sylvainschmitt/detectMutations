@@ -1,8 +1,8 @@
 rule samtools_index:
     input:
-        "results/{library}/{library}.bam"
+        expand("results/{library}/{library}_{type}.bam", type=["mutated", "base"], allow_missing=True)
     output:
-        temp("results/{library}/{library}.bam.bai")
+        temp(expand("results/{library}/{library}_{type}.bam.bai", type=["mutated", "base"], allow_missing=True))
     log:
         "results/logs/samtools_index_{library}.log"
     benchmark:
@@ -10,4 +10,4 @@ rule samtools_index:
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:
-        "samtools index {input}"
+        "samtools index {input[0]} ; samtools index {input[1]}"

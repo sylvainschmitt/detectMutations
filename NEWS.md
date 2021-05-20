@@ -1,3 +1,7 @@
+# detectMutation 0.1.9009
+* included base and mutated reads in every rule
+* freebayes + bedtools_substract
+
 # detectMutation 0.1.9008
 * config.dag config.dev
 * dag minimal

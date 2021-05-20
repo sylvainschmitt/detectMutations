@@ -1,8 +1,9 @@
 rule fastqc:
     input:
-         expand("results/{library}/{library}_{strand}.raw.fastq", strand=["R1", "R2"], allow_missing=True)
+         expand("results/{library}/{library}_{type}_{strand}.raw.fastq", type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True)
     output:
-        temp(expand("results/{library}/{library}_{strand}.raw_fastqc.{ext}", strand=["R1", "R2"], ext=["html", "zip"], allow_missing=True))
+        temp(expand("results/{library}/{library}_{type}_{strand}.raw_fastqc.{ext}", 
+                    type=["mutated", "base"], strand=["R1", "R2"], ext=["html", "zip"], allow_missing=True))
     log:
         "results/logs/fastqc_{library}.log"
     benchmark:

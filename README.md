@@ -223,13 +223,20 @@ quality.*
     Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
   - Singularity: docker://broadinstitute/gatk
 
-<!-- ### freebayes -->
+### freebayes
 
-<!-- #### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes_somatic.smk) -->
+#### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes.smk)
 
-<!-- * Tools: [`freebayes`](https://github.com/freebayes/freebayes) -->
+  - Tools: [`freebayes`](https://github.com/freebayes/freebayes)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
 
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest -->
+#### [bedtools\_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
+
+  - Tools: [`bedtools
+    substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
 
 <!-- ### GATK -->
 
@@ -340,7 +347,7 @@ Recall (TP/TP+FN)
 
 <td style="text-align:left;">
 
-mutect2
+freebayes
 
 </td>
 
@@ -364,7 +371,7 @@ mutect2
 
 <td style="text-align:right;">
 
-99
+148
 
 </td>
 
@@ -376,7 +383,7 @@ mutect2
 
 <td style="text-align:right;">
 
-40
+2
 
 </td>
 
@@ -388,7 +395,7 @@ mutect2
 
 <td style="text-align:right;">
 
-0.70
+0.98
 
 </td>
 
@@ -435,326 +442,6 @@ mutect2
 <td style="text-align:right;">
 
 5
-
-</td>
-
-<td style="text-align:right;">
-
-40
-
-</td>
-
-<td style="text-align:right;">
-
-95
-
-</td>
-
-<td style="text-align:right;">
-
-0.70
-
-</td>
-
-<td style="text-align:right;">
-
-0.95
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-mutect2
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-2
-
-</td>
-
-<td style="text-align:right;">
-
-0.8
-
-</td>
-
-<td style="text-align:right;">
-
-99
-
-</td>
-
-<td style="text-align:right;">
-
-5
-
-</td>
-
-<td style="text-align:right;">
-
-37
-
-</td>
-
-<td style="text-align:right;">
-
-95
-
-</td>
-
-<td style="text-align:right;">
-
-0.72
-
-</td>
-
-<td style="text-align:right;">
-
-0.95
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-mutect2
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-2
-
-</td>
-
-<td style="text-align:right;">
-
-0.8
-
-</td>
-
-<td style="text-align:right;">
-
-148
-
-</td>
-
-<td style="text-align:right;">
-
-5
-
-</td>
-
-<td style="text-align:right;">
-
-40
-
-</td>
-
-<td style="text-align:right;">
-
-95
-
-</td>
-
-<td style="text-align:right;">
-
-0.70
-
-</td>
-
-<td style="text-align:right;">
-
-0.95
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-mutect2
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-<td style="text-align:right;">
-
-0.6
-
-</td>
-
-<td style="text-align:right;">
-
-99
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-<td style="text-align:right;">
-
-46
-
-</td>
-
-<td style="text-align:right;">
-
-97
-
-</td>
-
-<td style="text-align:right;">
-
-0.68
-
-</td>
-
-<td style="text-align:right;">
-
-0.97
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-mutect2
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-<td style="text-align:right;">
-
-0.6
-
-</td>
-
-<td style="text-align:right;">
-
-148
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-<td style="text-align:right;">
-
-11
-
-</td>
-
-<td style="text-align:right;">
-
-97
-
-</td>
-
-<td style="text-align:right;">
-
-0.90
-
-</td>
-
-<td style="text-align:right;">
-
-0.97
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-mutect2
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-<td style="text-align:right;">
-
-0.8
-
-</td>
-
-<td style="text-align:right;">
-
-99
-
-</td>
-
-<td style="text-align:right;">
-
-3
 
 </td>
 
@@ -766,7 +453,7 @@ mutect2
 
 <td style="text-align:right;">
 
-97
+95
 
 </td>
 
@@ -778,71 +465,7 @@ mutect2
 
 <td style="text-align:right;">
 
-0.97
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-mutect2
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-<td style="text-align:right;">
-
-0.8
-
-</td>
-
-<td style="text-align:right;">
-
-148
-
-</td>
-
-<td style="text-align:right;">
-
-3
-
-</td>
-
-<td style="text-align:right;">
-
-47
-
-</td>
-
-<td style="text-align:right;">
-
-97
-
-</td>
-
-<td style="text-align:right;">
-
-0.67
-
-</td>
-
-<td style="text-align:right;">
-
-0.97
+0.95
 
 </td>
 

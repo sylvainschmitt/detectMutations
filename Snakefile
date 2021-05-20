@@ -1,13 +1,13 @@
 ## Sylvain SCHMITT
 ## 28/04/2021
 
-configfile: "config/config.dev.yml"
-libraries, = glob_wildcards(config["libdir"] + "/{library}_R1.fastq")
+configfile: "config/config.dag.yml"
+libraries, = glob_wildcards(config["libdir"] + "/{library}_mutated_R1.fastq")
 
 rule all:
     input:
         ## mutations ##
-        expand("results/{library}/{caller}/{library}.vcf", library=libraries, caller=["mutect2"]),
+        expand("results/{library}/{caller}/{library}.vcf", library=libraries, caller=["mutect2", "freebayes"]),
         ## qc ##
         expand("results/{library}/multiqc_report.html", library=libraries)
          
@@ -48,12 +48,14 @@ include: "rules/qualimap.smk"
 ### GATK Mutect2 ###
 include: "rules/gatk_mutect2.smk"
 
+### freebayes ###
+include: "rules/freebayes.smk"
+include: "rules/bedtools_substract.smk"
+
 ### GATK  ###
 # include: "rules/gatk_haplotypecaller.smk"
 # include: "rules/gatk_genotypegvcfs.smk"
 
-### freebayes ###
-# include: "rules/freebayes_somatic.smk"
 
 ## qc ##
 include: "rules/multiqc.smk"

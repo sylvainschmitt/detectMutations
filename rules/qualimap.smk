@@ -1,8 +1,8 @@
 rule qualimap:
     input:
-        "results/{library}/{library}.md.bam"
+        expand("results/{library}/{library}_{type}.md.bam", type=["mutated", "base"], allow_missing=True)
     output:
-        "results/{library}/qualimap/qualimapReport.html"
+        expand("results/{library}/qualimap_{type}/qualimapReport.html", type=["mutated", "base"], allow_missing=True)
     log:
         "results/logs/qualimap_{library}.log"
     benchmark:
@@ -10,5 +10,7 @@ rule qualimap:
     singularity: 
         "docker://pegi3s/qualimap"
     shell:
-        "qualimap bamqc -bam {input} --paint-chromosome-limits -nt {threads} -skip-duplicated --skip-dup-mode " 
-        "0 -outdir results/{wildcards.library}/qualimap -outformat HTML"
+        "qualimap bamqc -bam {input[0]} --paint-chromosome-limits -nt {threads} -skip-duplicated --skip-dup-mode " 
+        "0 -outdir results/{wildcards.library}/qualimap_mutated -outformat HTML ; "
+        "qualimap bamqc -bam {input[1]} --paint-chromosome-limits -nt {threads} -skip-duplicated --skip-dup-mode " 
+        "0 -outdir results/{wildcards.library}/qualimap_base -outformat HTML"
