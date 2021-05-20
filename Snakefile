@@ -1,18 +1,18 @@
 ## Sylvain SCHMITT
 ## 28/04/2021
 
-configfile: "config/config.yml"
+configfile: "config/config.dev.yml"
 libraries, = glob_wildcards(config["libdir"] + "/{library}_R1.fastq")
 
 rule all:
     input:
-        ## reads ##
-        expand("results/{library}/qc/multiqc_report.html", library=libraries),
         ## alignments ##
-        expand("results/{library}/qc/qualimap/qualimapReport.html", library=libraries),
         expand("results/{library}/{library}.md.{ext}", library=libraries, ext=["bam", "bam.bai"]),
         ## mutations ##
-        expand("results/{library}/{caller}/{library}.vcf", library=libraries, caller=["mutect2"])
+        expand("results/{library}/{caller}/{library}.vcf", library=libraries, caller=["mutect2"]),
+        ## qc ##
+        expand("results/{library}/multiqc_report.html", library=libraries)
+         
         
         # expand("results/alignments/bwa/{sample}{ext}", sample=[config["base"], config["mutated"]], ext=[".md.bam", ".md.bam.bai", ".bam.metrics", ".md.bam.stats.out", "/qualimapReport.html"]),
         ## germline variant calling ##
@@ -34,7 +34,6 @@ include: "rules/gatk_idx.smk"
 ## Reads ##
 include: "rules/cp_reads.smk"
 include: "rules/fastqc.smk"
-include: "rules/multiqc.smk"
 include: "rules/trimmomatic.smk"
 
 ## Alignments ##
@@ -43,6 +42,7 @@ include: "rules/samtools_sort.smk"
 include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_index_md.smk"
+include: "rules/samtools_stats.smk"
 include: "rules/qualimap.smk"
 
 ## Mutations ##
@@ -56,3 +56,6 @@ include: "rules/gatk_mutect2.smk"
 
 ### freebayes ###
 # include: "rules/freebayes_somatic.smk"
+
+## qc ##
+include: "rules/multiqc.smk"

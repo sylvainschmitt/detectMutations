@@ -13,6 +13,7 @@ April 20, 2021
       - [Reads](#reads)
       - [Alignments](#alignments)
       - [Mutation](#mutation)
+      - [Quality check](#quality-check)
   - [Results](#results)
 
 [`singularity` &
@@ -20,7 +21,7 @@ April 20, 2021
 workflow to detect mutations with several alignment and mutation
 detection tools.
 
-![Direct acyclic graph.](dag/dag.svg)
+![](dag/dag.minimal.svg)<!-- -->
 
 # Installation
 
@@ -103,7 +104,7 @@ snakemake --report report.html # report
 
 ## Reference
 
-*Copy and index reference for software to work with.*
+*Copy and index reference and SNPs for software to work with.*
 
 ### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
 
@@ -128,11 +129,21 @@ snakemake --report report.html # report
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
+### [cp\_snps](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_snps.smk)
+
+  - Tools: `cp`
+
+### [gatk\_idx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_idx.smk)
+
+  - Tools: [`gatk
+    IndexFeatureFile`](https://gatk.broadinstitute.org/hc/en-us/articles/360037428111-IndexFeatureFile)
+  - Singularity: docker://broadinstitute/gatk
+
 ## Reads
 
 *Copy reads, report quality and trim.*
 
-### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
+### [cp\_reads](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reads.smk)
 
   - Tools: `cp`
 
@@ -141,12 +152,6 @@ snakemake --report report.html # report
   - Tools:
     [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
   - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
-
-### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
-
-  - Tools: [`MultiQC`](https://multiqc.info/)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
@@ -157,7 +162,8 @@ snakemake --report report.html # report
 
 ## Alignments
 
-*Align reads against reference and report alignment quality.*
+*Align reads against reference, mark duplicated, and report alignment
+quality.*
 
 ### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_mem.smk)
 
@@ -185,6 +191,13 @@ snakemake --report report.html # report
     MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
+### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_index_md.smk)
+
+  - Tools: [`Samtools
+    index`](http://www.htslib.org/doc/samtools-index.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
 ### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
 
   - Tools: [`Samtools
@@ -200,8 +213,7 @@ snakemake --report report.html # report
 
 ## Mutation
 
-*Detect mutation using `freebayes`, `gatk`, and `Mutect2` (`strelka`,
-`manta`, `tiddit`, etc can be further implemented).*
+*Detect mutations.*
 
 ### Mutect2
 
@@ -233,9 +245,26 @@ snakemake --report report.html # report
 
 <!-- * Singularity: docker://broadinstitute/gatk -->
 
+## Quality check
+
+*Combined quality information from `QualiMap`, `Picard`, `Samtools`,
+`Trimmomatic`, and `FastQC` (see previous steps).*
+
+### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
+
+  - Tools: [`MultiQC`](https://multiqc.info/)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
+
 # Results
 
 <table>
+
+<caption>
+
+Caller assesment.
+
+</caption>
 
 <thead>
 
@@ -247,21 +276,57 @@ Caller
 
 </th>
 
-<th style="text-align:left;">
+<th style="text-align:right;">
 
-Confusion
+Number of mutations
 
 </th>
 
 <th style="text-align:right;">
 
-N
+Transition Transversion Ratio
 
 </th>
 
 <th style="text-align:right;">
 
-P
+Allele frequency
+
+</th>
+
+<th style="text-align:right;">
+
+Coverage
+
+</th>
+
+<th style="text-align:right;">
+
+False Negative
+
+</th>
+
+<th style="text-align:right;">
+
+False Positive
+
+</th>
+
+<th style="text-align:right;">
+
+True Positive
+
+</th>
+
+<th style="text-align:right;">
+
+Precision (TP/TP+FP)
+
+</th>
+
+<th style="text-align:right;">
+
+Recall (TP/TP+FN)
 
 </th>
 
@@ -279,21 +344,57 @@ mutect2
 
 </td>
 
-<td style="text-align:left;">
+<td style="text-align:right;">
 
-False Negative
+100
 
 </td>
 
 <td style="text-align:right;">
 
-96
+2
 
 </td>
 
 <td style="text-align:right;">
 
-6.16
+0.6
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+5
+
+</td>
+
+<td style="text-align:right;">
+
+40
+
+</td>
+
+<td style="text-align:right;">
+
+95
+
+</td>
+
+<td style="text-align:right;">
+
+0.70
+
+</td>
+
+<td style="text-align:right;">
+
+0.95
 
 </td>
 
@@ -307,21 +408,57 @@ mutect2
 
 </td>
 
-<td style="text-align:left;">
+<td style="text-align:right;">
 
-False Positive
+100
 
 </td>
 
 <td style="text-align:right;">
 
-1459
+2
 
 </td>
 
 <td style="text-align:right;">
 
-93.59
+0.6
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+5
+
+</td>
+
+<td style="text-align:right;">
+
+40
+
+</td>
+
+<td style="text-align:right;">
+
+95
+
+</td>
+
+<td style="text-align:right;">
+
+0.70
+
+</td>
+
+<td style="text-align:right;">
+
+0.95
 
 </td>
 
@@ -335,21 +472,377 @@ mutect2
 
 </td>
 
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.8
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+5
+
+</td>
+
+<td style="text-align:right;">
+
+37
+
+</td>
+
+<td style="text-align:right;">
+
+95
+
+</td>
+
+<td style="text-align:right;">
+
+0.72
+
+</td>
+
+<td style="text-align:right;">
+
+0.95
+
+</td>
+
+</tr>
+
+<tr>
+
 <td style="text-align:left;">
 
-True Positive
+mutect2
 
 </td>
 
 <td style="text-align:right;">
 
-4
+100
 
 </td>
 
 <td style="text-align:right;">
 
-0.26
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.8
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+5
+
+</td>
+
+<td style="text-align:right;">
+
+40
+
+</td>
+
+<td style="text-align:right;">
+
+95
+
+</td>
+
+<td style="text-align:right;">
+
+0.70
+
+</td>
+
+<td style="text-align:right;">
+
+0.95
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+mutect2
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.6
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+46
+
+</td>
+
+<td style="text-align:right;">
+
+97
+
+</td>
+
+<td style="text-align:right;">
+
+0.68
+
+</td>
+
+<td style="text-align:right;">
+
+0.97
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+mutect2
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.6
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+11
+
+</td>
+
+<td style="text-align:right;">
+
+97
+
+</td>
+
+<td style="text-align:right;">
+
+0.90
+
+</td>
+
+<td style="text-align:right;">
+
+0.97
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+mutect2
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.8
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+97
+
+</td>
+
+<td style="text-align:right;">
+
+0.99
+
+</td>
+
+<td style="text-align:right;">
+
+0.97
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+mutect2
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.8
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+47
+
+</td>
+
+<td style="text-align:right;">
+
+97
+
+</td>
+
+<td style="text-align:right;">
+
+0.67
+
+</td>
+
+<td style="text-align:right;">
+
+0.97
 
 </td>
 
@@ -358,3 +851,5 @@ True Positive
 </tbody>
 
 </table>
+
+![Caller assesment.](README_files/figure-gfm/statsFig-1.png)

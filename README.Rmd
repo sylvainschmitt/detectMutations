@@ -16,6 +16,7 @@ if(knitr:::is_html_output()) options(knitr.table.format = "html")
 if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
 library(tidyverse)
 library(vcfR)
+library(Biostrings)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
                cache = F, cache.lazy = F)
@@ -23,7 +24,11 @@ opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8
 
 [`singularity` & `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity) workflow to detect mutations with several alignment and mutation detection tools.
 
-```{r dag, fig.cap="Direct acyclic graph."}
+```{r dagminimal}
+knitr::include_graphics("dag/dag.minimal.svg")
+```
+
+```{r dag, eval=F}
 knitr::include_graphics("dag/dag.svg")
 ```
 
@@ -104,7 +109,7 @@ snakemake --report report.html # report
 
 ## Reference
 
-*Copy and index reference for software to work with.*
+*Copy and index reference and SNPs for software to work with.*
 
 ### [cp_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
 
@@ -125,11 +130,20 @@ snakemake --report report.html # report
 * Tools: [`gatk CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
 * Singularity: docker://broadinstitute/gatk
 
+### [cp_snps](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_snps.smk)
+
+* Tools: `cp`
+
+### [gatk_idx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_idx.smk)
+
+* Tools: [`gatk IndexFeatureFile`](https://gatk.broadinstitute.org/hc/en-us/articles/360037428111-IndexFeatureFile)
+* Singularity: docker://broadinstitute/gatk
+
 ## Reads
 
 *Copy reads, report quality and trim.*
 
-### [cp_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
+### [cp_reads](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reads.smk)
 
 * Tools: `cp`
 
@@ -138,10 +152,6 @@ snakemake --report report.html # report
 * Tools: [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
 * Singularity: docker://biocontainers/fastqc:v0.11.9_cv8
 
-### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
-
-* Tools: [`MultiQC`](https://multiqc.info/)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
@@ -150,7 +160,7 @@ snakemake --report report.html # report
 
 ## Alignments
 
-*Align reads against reference and report alignment quality.*
+*Align reads against reference, mark duplicated, and report alignment quality.*
 
 ### [bwa_mem](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_mem.smk)
 
@@ -172,6 +182,11 @@ snakemake --report report.html # report
 * Tools: [`gatk MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
 * Singularity: docker://broadinstitute/gatk
 
+### [samtools_index_md](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_index_md.smk)
+
+* Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
 ### [samtools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
 
 * Tools: [`Samtools stats`](http://www.htslib.org/doc/samtools-stats.html)
@@ -184,7 +199,7 @@ snakemake --report report.html # report
 
 ## Mutation
 
-*Detect mutation using `freebayes`, `gatk`, and `Mutect2` (`strelka`, `manta`, `tiddit`, etc can be further implemented).*
+*Detect mutations.*
 
 ### Mutect2
 
@@ -212,31 +227,79 @@ snakemake --report report.html # report
 <!-- * Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs) -->
 <!-- * Singularity: docker://broadinstitute/gatk -->
 
+## Quality check
+
+*Combined quality information from `QualiMap`, `Picard`, `Samtools`, `Trimmomatic`, and `FastQC` (see previous steps).*
+
+### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
+
+* Tools: [`MultiQC`](https://multiqc.info/)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
+
 # Results
 
-```{r }
-mutations <- read_tsv("../generateMutations/results/mutations/Qrob_PM1N_Qrob_Chr01_mutated_N100_R2.tsv") %>% 
-  mutate(True = 1)
-library <- "N100_R2_AF0.8_NR50000"
-somatic <- lapply(c(mutect2 = "mutect2"),
-                  function(caller) as.data.frame(read.vcfR(file.path("results", library, caller, 
-                                                                     paste0(library, ".vcf")), verbose = F)@fix)) %>% 
-  bind_rows(.id = "caller") %>% 
-  mutate(count = 1) %>% 
-  reshape2::dcast(CHROM + POS + REF + ALT ~ caller, value.var = "count") %>% 
-  mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
-  mutate(POS = as.numeric(as.character(POS))) %>% 
-  mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1))
-mutations %>%  
-  full_join(somatic) %>% 
-  mutate(Caller = "mutect2") %>% # to be changed with dcast with multiple callers 
-  rename(Called = mutect2) %>% 
-  mutate_at(c("True", "Called"), funs(ifelse(is.na(.), 0, .))) %>% 
-  mutate(Confusion = recode(paste0(True, Called), "01" = "False Positive",
-                            "10" = "False Negative", "11" = "True Positive")) %>% 
-  group_by(Caller, Confusion) %>% 
-  summarise(N = n()) %>% 
-  group_by(Caller) %>% 
-  mutate(P = round(N/sum(N)*100, 2)) %>% 
-  kable()
+```{r get_stats}
+get_stats <- function(callfile, mutationsfile){
+  mutations <- read_tsv(mutationsfile) %>% 
+    mutate(True = 1) %>% 
+    filter(REF != "N")
+  call <- read.vcfR(callfile, verbose = F)@fix %>% 
+    as.data.frame() %>% 
+    mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
+    mutate(POS = as.numeric(as.character(POS))) %>% 
+    mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1)) %>% 
+    mutate(Called = 1)
+  stats <- full_join(mutations, call, by = c("CHROM", "POS", "REF", "ALT")) %>% 
+    mutate_at(c("True", "Called"), funs(ifelse(is.na(.), 0, .))) %>% 
+    mutate(Confusion = recode(paste0(True, Called), "01" = "FP", "10" = "FN", "11" = "TP")) %>% 
+    group_by(Confusion) %>% 
+    summarise(N = n()) %>% 
+    reshape2::dcast(. ~ Confusion) %>% 
+    mutate(Precision = round(TP/(TP+FP), 2), Recall = round(TP/(TP+FN), 2))
+  return(stats)
+}
+```
+
+```{r stats}
+config.file <- "config.dev.yml"
+config <- yaml::read_yaml(file.path("config", config.file))
+refL <- width(readDNAStringSet(file.path(config$refdir, paste0(config$reference, ".fa"))))
+stats <- data.frame(libraries = list.files(config$libdir, pattern = "_R1.fastq")) %>% 
+  mutate(libraries = gsub("_R1.fastq", "", libraries)) %>% 
+  mutate(libraries = gsub("[[:alpha:]]", "", libraries)) %>% 
+  separate(libraries, c("N", "R", "AF", "NR"), sep = "_", convert = T) %>% 
+  mutate(caller = "mutect2") %>% 
+  mutate(call = file.path("results", paste0("N", N, "_R", R, "_AF", AF, "_NR", NR),
+                               caller, paste0("N", N, "_R", R, "_AF", AF, "_NR", NR, ".vcf"))) %>% 
+  mutate(mutations = file.path(config$refdir, "..", "mutations", paste0(config$reference, "_mutated_N", N, "_R", R, ".tsv"))) %>% 
+  group_by(N, R, AF, NR, caller) %>% 
+  do(stats = get_stats(.$call, .$mutations)) %>% 
+  unnest(stats) %>% 
+  select(-`.`) %>% 
+  mutate(C = round((NR*150)/refL)) %>% 
+  select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall)
+```
+
+```{r statsTable}
+kable(stats, col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
+                           "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
+      caption = "Caller assesment.")  
+```
+
+```{r statsFig, fig.cap="Caller assesment."}
+stats %>% 
+  reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
+                 variable.name = "parameter", value.name = "parameter.value") %>% 
+  reshape2::melt(c("caller", "parameter", "parameter.value"),
+                 variable.name = "metric", value.name = "metric.value") %>% 
+  filter(metric %in% c("Precision", "Recall")) %>% 
+  filter(parameter != "N") %>% 
+  mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
+                            "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
+  ggplot(aes(as.character(parameter.value), metric.value, col = caller, fill = caller)) +
+  geom_boxplot(alpha = 0.3) +
+  geom_point() +
+  # geom_line() +
+  facet_grid(metric ~ parameter, scales = "free") +
+  theme(legend.position = "bottom", axis.title = element_blank())
 ```

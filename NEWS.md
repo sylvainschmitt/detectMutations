@@ -1,3 +1,9 @@
+# detectMutation 0.1.9008
+* config.dag config.dev
+* dag minimal
+* improved qc
+* Rmd results
+
 # detectMutation 0.1.9007
 * Hard changes
 * New version with multiple libraries but only mutated reads and one reference (to be checked)

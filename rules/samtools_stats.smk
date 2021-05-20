@@ -1,14 +1,12 @@
-sample=[config["base"], config["mutated"]]
-
 rule samtools_stats:
     input:
-        "results/alignments/bwa/{sample}.md.bam"
+        "results/{library}/{library}.md.bam"
     output:
-        "results/alignments/bwa/{sample}.md.bam.stats.out"
+        temp("results/{library}/{library}.md.bam.stats.out")
     log:
-        "results/logs/samtools_stats_{sample}.log"
+        "results/logs/samtools_stats_{library}.log"
     benchmark:
-        "results/benchmarks/samtools_stats_{sample}.benchmark.txt"
+        "results/benchmarks/samtools_stats_{library}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:
