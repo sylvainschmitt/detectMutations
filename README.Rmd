@@ -362,7 +362,7 @@ stats <- data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1
   mutate(libraries = gsub("[[:alpha:]]", "", libraries)) %>% 
   separate(libraries, c("N", "R", "AF", "NR"), sep = "_", convert = T) %>% 
   group_by(N, R, AF, NR) %>% 
-  do(caller = c("mutect2", "freebayes", "gatk", "strelka2", "manta", "somaticsniper", "muse")) %>% 
+  do(caller = c("mutect2", "freebayes", "gatk", "strelka2", "manta", "somaticsniper", "muse", "varscan")) %>% 
   unnest(caller) %>% 
   ungroup() %>% 
   mutate(call = file.path("results", paste0("N", N, "_R", R, "_AF", AF, "_NR", NR),

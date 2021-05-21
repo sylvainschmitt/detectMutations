@@ -280,13 +280,20 @@ quality.*
 
 ### VarScan
 
-*Need to be transformed in true vcf.*
+**Need to be transformed in true VCF.**
 
 #### [varscan](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/varscan.smk)
 
   - Tools:
     [`VarScan`](https://wiki.bits.vib.be/index.php/Varscan2#calling_SNVs)
   - Singularity: docker://alexcoppe/varscan
+
+#### [varscan2vcf](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/varscan2vcf.smk)
+
+  - Script:
+    [`varscan2vcf.R`](https://github.com/sylvainschmitt/detectMutations/blob/main/scripts/varscan2vcf.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-template/releases/download/0.0.1/sylvainschmitt-singularity-tidyverse-Biostrings.latest.sif>
 
 ### Somatic Sniper
 
@@ -298,16 +305,29 @@ quality.*
 
 ### CaVEMan
 
-<https://github.com/cancerit/CaVEMan> ,
-<https://hub.docker.com/r/leukgen/docker-caveman>
+**BUG\!**
+
+#### [caveman](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/caveman.smk)
+
+  - Tools: [`CaVEMan`](https://github.com/cancerit/CaVEMan)
+  - Singularity: docker://leukgen/docker-caveman:v1.0.0
 
 ### MuSe
 
-docker://opengenomics/muse
+#### [muse](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/muse.smk)
+
+  - Tools:
+    [`MuSe`](https://bioinformatics.mdanderson.org/public-software/muse/)
+  - Singularity: docker://opengenomics/muse
 
 ### RADIA
 
-docker://opengenomics/radia
+**BUG (worked one time)\!**
+
+#### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
+
+  - Tools: [`RADIA`](https://github.com/aradenbaugh/radia/)
+  - Singularity: docker://opengenomics/radia
 
 ## Quality check
 
@@ -596,6 +616,70 @@ NaN
 
 <td style="text-align:left;">
 
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+51
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.49
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 mutect2
 
 </td>
@@ -779,6 +863,70 @@ strelka2
 <td style="text-align:right;">
 
 0.82
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+96
+
+</td>
+
+<td style="text-align:right;">
+
+67
+
+</td>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:right;">
+
+0.06
+
+</td>
+
+<td style="text-align:right;">
+
+0.04
 
 </td>
 
@@ -980,6 +1128,70 @@ NaN
 
 <td style="text-align:left;">
 
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+17
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+83
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.83
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 mutect2
 
 </td>
@@ -1163,6 +1375,70 @@ strelka2
 <td style="text-align:right;">
 
 0.94
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+68
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+0.01
+
+</td>
+
+<td style="text-align:right;">
+
+0.01
 
 </td>
 
@@ -1364,6 +1640,70 @@ NaN
 
 <td style="text-align:left;">
 
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+18
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+82
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.82
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 mutect2
 
 </td>
@@ -1556,6 +1896,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+23
+
+</td>
+
+<td style="text-align:right;">
+
+33
+
+</td>
+
+<td style="text-align:right;">
+
+77
+
+</td>
+
+<td style="text-align:right;">
+
+0.70
+
+</td>
+
+<td style="text-align:right;">
+
+0.77
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -1739,6 +2143,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+13
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+87
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.87
 
 </td>
 
@@ -1940,6 +2408,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+20
+
+</td>
+
+<td style="text-align:right;">
+
+68
+
+</td>
+
+<td style="text-align:right;">
+
+80
+
+</td>
+
+<td style="text-align:right;">
+
+0.54
+
+</td>
+
+<td style="text-align:right;">
+
+0.80
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -2123,6 +2655,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+9
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+91
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.91
 
 </td>
 
@@ -2324,6 +2920,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+68
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+0.60
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -2507,6 +3167,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+5
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+95
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.95
 
 </td>
 
@@ -2708,6 +3432,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+68
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+0.60
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -2891,6 +3679,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+43
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+57
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.57
 
 </td>
 
@@ -3092,6 +3944,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+96
+
+</td>
+
+<td style="text-align:right;">
+
+68
+
+</td>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:right;">
+
+0.06
+
+</td>
+
+<td style="text-align:right;">
+
+0.04
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -3275,6 +4191,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+17
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+83
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.83
 
 </td>
 
@@ -3476,6 +4456,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.10
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+68
+
+</td>
+
+<td style="text-align:right;">
+
+1
+
+</td>
+
+<td style="text-align:right;">
+
+0.01
+
+</td>
+
+<td style="text-align:right;">
+
+0.01
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -3659,6 +4703,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+19
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+81
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.81
 
 </td>
 
@@ -3860,6 +4968,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+31
+
+</td>
+
+<td style="text-align:right;">
+
+59
+
+</td>
+
+<td style="text-align:right;">
+
+69
+
+</td>
+
+<td style="text-align:right;">
+
+0.54
+
+</td>
+
+<td style="text-align:right;">
+
+0.69
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -4043,6 +5215,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+10
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+90
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.90
 
 </td>
 
@@ -4244,6 +5480,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+11
+
+</td>
+
+<td style="text-align:right;">
+
+68
+
+</td>
+
+<td style="text-align:right;">
+
+89
+
+</td>
+
+<td style="text-align:right;">
+
+0.57
+
+</td>
+
+<td style="text-align:right;">
+
+0.89
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -4427,6 +5727,70 @@ NaN
 <td style="text-align:right;">
 
 0.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+8
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+92
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.92
 
 </td>
 
@@ -4628,6 +5992,70 @@ strelka2
 
 <td style="text-align:left;">
 
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+49
+
+</td>
+
+<td style="text-align:right;">
+
+2
+
+</td>
+
+<td style="text-align:right;">
+
+64
+
+</td>
+
+<td style="text-align:right;">
+
+98
+
+</td>
+
+<td style="text-align:right;">
+
+0.60
+
+</td>
+
+<td style="text-align:right;">
+
+0.98
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 freebayes
 
 </td>
@@ -4820,6 +6248,70 @@ NaN
 
 <td style="text-align:left;">
 
+muse
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+5
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+95
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.95
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
 mutect2
 
 </td>
@@ -4997,6 +6489,70 @@ strelka2
 <td style="text-align:right;">
 
 0.96
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+varscan
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+66
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+0.60
 
 </td>
 
