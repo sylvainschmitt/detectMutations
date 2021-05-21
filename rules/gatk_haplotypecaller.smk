@@ -1,16 +1,16 @@
-sample=[config["base"]]
-
 rule gatk_haplotypecaller:
     input:
-        "results/alignments/bwa/{sample}.md.bam",
-         multiext("results/raw_data/reference/reference", ".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict")
+        expand("results/reference/{reference}.fa", reference=config["reference"]),
+        "results/{library}/{library}_mutated.md.bam",
+        "results/{library}/{library}_mutated.md.bam.bai",
+        expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
     output:
-        "results/germline/gatk/{sample}.g.vcf"
+        "results/{library}/gatk/{library}.g.vcf"
     log:
-        "results/logs/gatk_haplotypecaller_{sample}.log"
+        "results/logs/gatk_haplotypecaller_{library}.log"
     benchmark:
-        "results/benchmarks/gatk_haplotypecaller_{sample}.benchmark.txt"
+        "results/benchmarks/gatk_haplotypecaller_{library}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     shell:
-        "gatk HaplotypeCaller -R {input[1]} -I {input[0]} -O {output} -ERC GVCF"
+        "gatk HaplotypeCaller -R {input[0]} -I {input[1]} -O {output} -ERC GVCF"

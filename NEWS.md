@@ -1,3 +1,6 @@
+# detectMutation 0.1.9010
+* bcftools_call, caveman, gatk haplotypecaller, mutect2, manta, muse, radia, samtools_mpileup, somaticsniper, strelka2, varscan, varscan2, varscan2vcf
+
 # detectMutation 0.1.9009
 * included base and mutated reads in every rule
 * freebayes + bedtools_substract

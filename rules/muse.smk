@@ -1,4 +1,4 @@
-rule gatk_mutect2:
+rule muse:
     input:
         expand("results/reference/{reference}.fa", reference=config["reference"]),
         expand("results/{library}/{library}_{type}.md.bam", type=["mutated", "base"], allow_missing=True),
@@ -7,14 +7,13 @@ rule gatk_mutect2:
         expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"]),
         expand("results/reference/{snps}.idx", snps=config["snps"])
     output:
-        "results/{library}/mutect2/{library}.vcf"
+        "results/{library}/muse/{library}.vcf"
     log:
-        "results/logs/gatk_mutect2_{library}.log"
+        "results/logs/muse_{library}.log"
     benchmark:
-        "results/benchmarks/gatk_mutect2_{library}.benchmark.txt"
+        "results/benchmarks/muse_{library}.benchmark.txt"
     singularity: 
-        "docker://broadinstitute/gatk"
+        "docker://opengenomics/muse"
     shell:
-        "gatk Mutect2 -R {input[0]} -I {input[1]} -tumor {wildcards.library}_mutated  -I {input[2]} -normal {wildcards.library}_base "
-        " --panel-of-normals {input[3]} -dont-use-soft-clipped-bases true -O {output}"
+        "muse.py -f {input[0]} --tumor-bam {input[1]} --normal-bam {input[2]} -O {output} -n {threads} -w results/{wildcards.library}/muse/"
         

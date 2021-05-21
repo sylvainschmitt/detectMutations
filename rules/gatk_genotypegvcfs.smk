@@ -1,17 +1,16 @@
-sample=[config["base"]]
-
 rule gatk_genotypegvcfs:
     input:
-        "results/germline/gatk/{sample}.g.vcf",
-         multiext("results/raw_data/reference/reference", ".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict")
+        expand("results/reference/{reference}.fa", reference=config["reference"]),
+        "results/{library}/gatk/{library}.g.vcf",
+        expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
     output:
-        "results/germline/gatk/{sample}.vcf"
+        "results/{library}/gatk/{library}.unfiltered.vcf"
     log:
-        "results/logs/gatk_genotypegvcfs_{sample}.log"
+        "results/logs/gatk_genotypegvcfs_{library}.log"
     benchmark:
-        "results/benchmarks/gatk_genotypegvcfs_{sample}.benchmark.txt"
+        "results/benchmarks/gatk_genotypegvcfs_{library}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     shell:
-        "gatk GenotypeGVCFs -R {input[1]} -V {input[0]} -O {output}"
+        "gatk GenotypeGVCFs -R {input[0]} -V {input[1]} -O {output}"
         

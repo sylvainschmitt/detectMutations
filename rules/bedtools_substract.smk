@@ -1,13 +1,15 @@
+caller2filter=["freebayes", "gatk"]
+
 rule bedtools_substract:
     input:
-        "results/{library}/freebayes/{library}.unfiltered.vcf",
+        "results/{library}/{caller2filter}/{library}.unfiltered.vcf",
         expand("results/reference/{snps}", snps=config["snps"])
     output:
-        "results/{library}/freebayes/{library}.vcf"
+        "results/{library}/{caller2filter}/{library}.vcf"
     log:
-        "results/logs/bedtools_substract_{library}.log"
+        "results/logs/bedtools_substract_{library}_{caller2filter}.log"
     benchmark:
-        "results/benchmarks/bedtools_substract_{library}.benchmark.txt"
+        "results/benchmarks/bedtools_substract_{library}_{caller2filter}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest"
     shell:

@@ -1,23 +1,16 @@
 ## Sylvain SCHMITT
 ## 28/04/2021
 
-configfile: "config/config.dag.yml"
+configfile: "config/config.dev.yml"
 libraries, = glob_wildcards(config["libdir"] + "/{library}_mutated_R1.fastq")
 
 rule all:
     input:
         ## mutations ##
-        expand("results/{library}/{caller}/{library}.vcf", library=libraries, caller=["mutect2", "freebayes"]),
+        expand("results/{library}/{caller}/{library}.vcf", library=libraries, 
+                caller=["mutect2", "freebayes", "gatk", "strelka2", "manta", "varscan", "somaticsniper", "muse"]),
         ## qc ##
         expand("results/{library}/multiqc_report.html", library=libraries)
-         
-        
-        # expand("results/alignments/bwa/{sample}{ext}", sample=[config["base"], config["mutated"]], ext=[".md.bam", ".md.bam.bai", ".bam.metrics", ".md.bam.stats.out", "/qualimapReport.html"]),
-        ## germline variant calling ##
-        # expand("results/germline/{caller}/{sample}.vcf", caller=["gatk", "freebayes"], sample=[config["base"]]),
-        ## somatic variant calling ##
-        # expand("results/somatic/{caller}/{mutated}_vs_{base}.vcf", caller=["freebayes", "gatk"], base=[config["base"]], mutated=[config["mutated"]])
-
 
 # Rules #
 
@@ -41,6 +34,7 @@ include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_index_md.smk"
 include: "rules/samtools_stats.smk"
+include: "rules/samtools_mpileup.smk"
 include: "rules/qualimap.smk"
 
 ## Mutations ##
@@ -52,10 +46,37 @@ include: "rules/gatk_mutect2.smk"
 include: "rules/freebayes.smk"
 include: "rules/bedtools_substract.smk"
 
-### GATK  ###
-# include: "rules/gatk_haplotypecaller.smk"
-# include: "rules/gatk_genotypegvcfs.smk"
+### GATK HaplotypeCaller ###
+include: "rules/gatk_haplotypecaller.smk"
+include: "rules/gatk_genotypegvcfs.smk"
+include: "rules/bedtools_substract.smk"
 
+## Strelka2
+include: "rules/strelka2.smk"
+
+## Manta
+include: "rules/manta.smk"
+
+## VarScan2
+# not working
+# include: "rules/varscan2.smk"
+
+## VarScan
+# need to be transformed in true vcf
+include: "rules/varscan.smk"
+include: "rules/varscan2vcf.smk"
+
+## Somatic Sniper
+include: "rules/somaticsniper.smk"
+
+## CaVEMan
+include: "rules/caveman.smk"
+
+## MuSe
+include: "rules/muse.smk"
+
+## RADIA
+include: "rules/radia.smk"
 
 ## qc ##
 include: "rules/multiqc.smk"
