@@ -260,8 +260,6 @@ snakemake --report report.html # report
 
 ### VarScan
 
-**Need to be transformed in true VCF.**
-
 #### [varscan](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/varscan.smk)
 
 * Tools: [`VarScan`](https://wiki.bits.vib.be/index.php/Varscan2#calling_SNVs)
@@ -278,6 +276,11 @@ snakemake --report report.html # report
 
 * Tools: [`Somatic Sniper`](http://gmt.genome.wustl.edu/packages/somatic-sniper/)
 * Singularity: docker://lethalfang/somaticsniper:1.0.5.0
+
+#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
+
+* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
 
 ### CaVEMan 
 
@@ -319,7 +322,7 @@ snakemake --report report.html # report
 options(dplyr.summarise.inform = FALSE)
 get_stats <- function(callfile, mutationsfile){
   # print(callfile) ; print(mutationsfile) # debug
-  # callfile <- "results/N100_R2_AF0.1_NR2333/mutect2/N100_R2_AF0.1_NR2333.vcf"
+  # callfile <- "results/N100_R2_AF0.1_NR7000/varscan/N100_R2_AF0.1_NR7000.vcf"
   # mutationsfile <- "../generateMutations/results/reference//../mutations/Qrob_PM1N_7k_Qrob_Chr01_mutated_N100_R2.tsv"
   mutations <- read_tsv(mutationsfile, col_types = cols(
     CHROM = col_character(),
@@ -330,12 +333,16 @@ get_stats <- function(callfile, mutationsfile){
   )) %>% 
     mutate(True = 1) %>%
     filter(REF != "N")
-  call <- read.vcfR(callfile, verbose = F)@fix %>% 
-    as.data.frame() %>% 
-    mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
-    mutate(POS = as.numeric(as.character(POS))) %>% 
-    mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1)) %>% 
-    mutate(Called = 1)
+  call <- try(vcfR::read.vcfR(callfile, verbose = F)@fix, silent = T)
+  if(!inherits(call, "try-error")){
+    call <- as.data.frame(call) %>% 
+      mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
+      mutate(POS = as.numeric(as.character(POS))) %>% 
+      mutate(Called = 1) %>% 
+      mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1))
+  } else {
+    call <- data.frame(CHROM = character(), POS = double(), REF = character(), ALT = character(), Called = integer())
+  }
   stats <- full_join(mutations, call, by = c("CHROM", "POS", "REF", "ALT")) %>% 
     mutate_at(c("True", "Called"), funs(ifelse(is.na(.), 0, .))) %>% 
     mutate(Confusion = recode(paste0(True, Called), "01" = "FP", "10" = "FN", "11" = "TP")) %>% 
@@ -362,7 +369,16 @@ stats <- data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1
   mutate(libraries = gsub("[[:alpha:]]", "", libraries)) %>% 
   separate(libraries, c("N", "R", "AF", "NR"), sep = "_", convert = T) %>% 
   group_by(N, R, AF, NR) %>% 
-  do(caller = c("mutect2", "freebayes", "gatk", "strelka2", "manta", "somaticsniper", "muse", "varscan")) %>% 
+  do(caller = c(
+    "mutect2", 
+    "freebayes", 
+    "gatk", 
+    "strelka2", 
+    "manta",
+    "somaticsniper", 
+    "muse",
+    "varscan"
+  )) %>% 
   unnest(caller) %>% 
   ungroup() %>% 
   mutate(call = file.path("results", paste0("N", N, "_R", R, "_AF", AF, "_NR", NR),
@@ -374,12 +390,6 @@ stats <- data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1
   select(-`.`) %>% 
   mutate(C = round((NR*150)/refL)) %>% 
   select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall)
-```
-
-```{r statsTable}
-kable(stats, col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
-                           "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
-      caption = "Caller assesments.")  
 ```
 
 ```{r statsFig, fig.cap="Caller assesment."}
@@ -408,5 +418,13 @@ stats %>%
   geom_tile() +
   facet_grid(caller ~ metric) +
   viridis::scale_fill_viridis() +
-  xlab("Allele Fraction") + ylab("Coverage")
+  xlab("Allele Fraction") + ylab("Coverage") +
+  theme(strip.text.y = element_text(angle = 0))
+```
+
+```{r statsTable}
+kable(sample_n(stats, 10),
+      col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
+                           "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
+      caption = "Caller assesments.")
 ```

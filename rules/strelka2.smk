@@ -6,7 +6,7 @@ rule strelka2:
         expand("results/{library}/{library}_{type}.md.bam.bai", type=["mutated", "base"], allow_missing=True),
         expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
     output:
-        "results/{library}/strelka2/{library}.vcf"
+        temp("results/{library}/strelka2/{library}.unfiltered.vcf")
     log:
         "results/logs/strelka2_{library}.log"
     benchmark:

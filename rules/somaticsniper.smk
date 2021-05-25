@@ -5,7 +5,7 @@ rule somaticsniper:
         expand("results/{library}/{library}_{type}.md.bam.bai", type=["mutated", "base"], allow_missing=True),
         expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
     output:
-        "results/{library}/somaticsniper/{library}.vcf"
+        temp("results/{library}/somaticsniper/{library}.unfiltered.vcf")
     log:
         "results/logs/somaticsniper_{library}.log"
     benchmark:

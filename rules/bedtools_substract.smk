@@ -1,4 +1,4 @@
-caller2filter=["freebayes", "gatk"]
+caller2filter=["freebayes", "gatk", "somaticsniper", "strelka2"]
 
 rule bedtools_substract:
     input:

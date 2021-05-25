@@ -68,6 +68,7 @@ include: "rules/varscan2vcf.smk"
 
 ## Somatic Sniper
 include: "rules/somaticsniper.smk"
+include: "rules/bedtools_substract.smk"
 
 ## CaVEMan
 include: "rules/caveman.smk"

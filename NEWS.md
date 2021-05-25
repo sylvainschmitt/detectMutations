@@ -1,4 +1,8 @@
 # detectMutation 0.1.9011
+* SNPs filtered from varscan, strelka2, & somatic sniper
+* manta still not working
+
+# detectMutation 0.1.9011
 * varscan working
 
 # detectMutation 0.1.9009

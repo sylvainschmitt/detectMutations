@@ -1,6 +1,7 @@
 rule varscan2vcf:
     input:
-        "results/{library}/varscan/{library}.snp"
+        "results/{library}/varscan/{library}.snp",
+        expand("results/reference/{snps}", snps=config["snps"])
     output:
         "results/{library}/varscan/{library}.vcf"
     log:
