@@ -300,7 +300,7 @@ snakemake --report report.html # report
 
 ### RADIA
 
-**BUG (worked one time)!**
+**BUG!**
 
 #### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
 
@@ -408,6 +408,7 @@ read_tsv("stats.tsv") %>%
   ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
   geom_boxplot(alpha = 0.3) +
   facet_grid(metric ~ parameter, scales = "free") +
+  ggdark::dark_theme_gray() +
   theme(legend.position = "bottom", axis.title = element_blank()) +
   scale_color_discrete("") +
   scale_fill_discrete("")
@@ -437,6 +438,7 @@ read_tsv("stats.tsv") %>%
   facet_grid(caller ~ metric) +
   viridis::scale_fill_viridis("", option = "inferno") +
   xlab("Allele Fraction") + ylab("Coverage") +
+  ggdark::dark_theme_gray() +
   theme(strip.text.y = element_text(angle = 0),
         legend.position = "bottom", legend.key.width = unit(75, "points")) 
 ```

@@ -327,7 +327,7 @@ quality.*
 
 ### RADIA
 
-**BUG (worked one time)\!**
+**BUG\!**
 
 #### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
 
