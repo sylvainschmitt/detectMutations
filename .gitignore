@@ -20,3 +20,5 @@ report.html
 *.fastq
 *.fa
 *.tsv
+# results
+stats.tsv

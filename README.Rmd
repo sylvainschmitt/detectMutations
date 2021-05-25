@@ -318,7 +318,7 @@ snakemake --report report.html # report
 
 # Results
 
-```{r get_stats}
+```{r get_stats, eval=F}
 options(dplyr.summarise.inform = FALSE)
 get_stats <- function(callfile, mutationsfile){
   # print(callfile) ; print(mutationsfile) # debug
@@ -360,11 +360,11 @@ get_stats <- function(callfile, mutationsfile){
 }
 ```
 
-```{r stats}
+```{r stats, eval=F}
 config.file <- "config.dev.yml"
 config <- yaml::read_yaml(file.path("config", config.file))
 refL <- width(readDNAStringSet(file.path(config$refdir, paste0(config$reference, ".fa"))))
-stats <- data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1.fastq")) %>% 
+data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1.fastq")) %>% 
   mutate(libraries = gsub("_mutated_R1.fastq", "", libraries)) %>% 
   mutate(libraries = gsub("[[:alpha:]]", "", libraries)) %>% 
   separate(libraries, c("N", "R", "AF", "NR"), sep = "_", convert = T) %>% 
@@ -374,7 +374,7 @@ stats <- data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1
     "freebayes", 
     "gatk", 
     "strelka2", 
-    "manta",
+    # "manta",
     "somaticsniper", 
     "muse",
     "varscan"
@@ -389,11 +389,14 @@ stats <- data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1
   unnest(stats) %>% 
   select(-`.`) %>% 
   mutate(C = round((NR*150)/refL)) %>% 
-  select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall)
+  select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall) %>% 
+  write_tsv("stats.tsv")
 ```
 
 ```{r statsFig, fig.cap="Caller assesment."}
-stats %>% 
+read_tsv("stats.tsv") %>% 
+  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
+                               "148" = "150", "198" = "200"))) %>% 
   reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
                  variable.name = "parameter", value.name = "parameter.value") %>% 
   reshape2::melt(c("caller", "parameter", "parameter.value"),
@@ -405,26 +408,43 @@ stats %>%
   ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
   geom_boxplot(alpha = 0.3) +
   facet_grid(metric ~ parameter, scales = "free") +
-  theme(legend.position = "bottom", axis.title = element_blank())
+  theme(legend.position = "bottom", axis.title = element_blank()) +
+  scale_color_discrete("") +
+  scale_fill_discrete("")
 ```
 
 ```{r statsFig2, fig.cap="Caller assesment."}
-stats %>% 
+read_tsv("stats.tsv") %>% 
+  mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
+  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
+                               "148" = "150", "198" = "200"))) %>% 
   reshape2::melt(c("caller", "N", "R", "AF", "C"),
                  variable.name = "metric", value.name = "metric.value") %>% 
   filter(metric %in% c("Precision", "Recall")) %>% 
   filter(R == 2) %>% 
+  mutate(caller = recode(caller,    
+                         "mutect2" = "Mutect2", 
+                         "freebayes" = "freebayes", 
+                         "gatk" = "GATK", 
+                         "strelka2" = "Strelka2", 
+                         # "manta" = "Manta",
+                         "somaticsniper" = "Somatic Sniper", 
+                         "muse" = "MuSe",
+                         "varscan" = "VarScan"
+  )) %>% 
   ggplot(aes(as.factor(AF), as.factor(C), fill = metric.value)) +
   geom_tile() +
   facet_grid(caller ~ metric) +
-  viridis::scale_fill_viridis() +
+  viridis::scale_fill_viridis("", option = "inferno") +
   xlab("Allele Fraction") + ylab("Coverage") +
-  theme(strip.text.y = element_text(angle = 0))
+  theme(strip.text.y = element_text(angle = 0),
+        legend.position = "bottom", legend.key.width = unit(75, "points")) 
 ```
 
 ```{r statsTable}
-kable(sample_n(stats, 10),
-      col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
+read_tsv("stats.tsv") %>% 
+  sample_n(10) %>% 
+kable(col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
                            "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
       caption = "Caller assesments.")
 ```
