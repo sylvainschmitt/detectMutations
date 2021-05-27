@@ -1,14 +1,13 @@
 ## Sylvain SCHMITT
 ## 28/04/2021
 
-configfile: "config/config.dev.yml"
-libraries, = glob_wildcards(config["libdir"] + "/{library}_mutated_R1.fastq")
+configfile: "config/config.dag.yml"
+libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
 rule all:
     input:
-        ## mutations ##
-        expand("results/{library}/{caller}/{library}.vcf", library=libraries, 
-                caller=["mutect2", "freebayes", "gatk", "strelka2", "manta", "varscan", "somaticsniper", "muse"]),
+        ## alignments ##
+        expand("results/{library}/{library}.md.bam", library=libraries),
         ## qc ##
         expand("results/{library}/multiqc_report.html", library=libraries)
 
@@ -19,8 +18,6 @@ include: "rules/cp_reference.smk"
 include: "rules/bwa_index.smk"
 include: "rules/samtools_faidx.smk"
 include: "rules/gatk_dict.smk"
-include: "rules/cp_snps.smk"
-include: "rules/gatk_idx.smk"
 
 ## Reads ##
 include: "rules/cp_reads.smk"
@@ -34,50 +31,11 @@ include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_index_md.smk"
 include: "rules/samtools_stats.smk"
-include: "rules/samtools_mpileup.smk"
 include: "rules/qualimap.smk"
 
 ## Mutations ##
-
-### GATK Mutect2 ###
-include: "rules/gatk_mutect2.smk"
-
-### freebayes ###
-include: "rules/freebayes.smk"
-include: "rules/bedtools_substract.smk"
-
-### GATK HaplotypeCaller ###
-include: "rules/gatk_haplotypecaller.smk"
-include: "rules/gatk_genotypegvcfs.smk"
-include: "rules/bedtools_substract.smk"
-
-## Strelka2
-include: "rules/strelka2.smk"
-
-## Manta
-include: "rules/manta.smk"
-
-## VarScan2
-# not working
-# include: "rules/varscan2.smk"
-
-## VarScan
-# need to be transformed in true vcf
-include: "rules/varscan.smk"
-include: "rules/varscan2vcf.smk"
-
-## Somatic Sniper
-include: "rules/somaticsniper.smk"
-include: "rules/bedtools_substract.smk"
-
-## CaVEMan
-include: "rules/caveman.smk"
-
-## MuSe
-include: "rules/muse.smk"
-
-## RADIA
-include: "rules/radia.smk"
+# include: "rules/manta.smk"
+# include: "rules/strelka2.smk"
 
 ## qc ##
 include: "rules/multiqc.smk"

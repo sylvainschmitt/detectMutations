@@ -1,5 +1,5 @@
 ---
-title: "detect Mutations"
+title: "detect Mutations - Swiss data"
 author: Sylvain Schmitt
 date: April 20, 2021
 output:
@@ -24,11 +24,7 @@ opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8
 
 [`singularity` & `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity) workflow to detect mutations with several alignment and mutation detection tools.
 
-```{r dagminimal}
-knitr::include_graphics("dag/dag.minimal.svg")
-```
-
-```{r dag, eval=F}
+```{r dag}
 knitr::include_graphics("dag/dag.svg")
 ```
 
@@ -72,14 +68,11 @@ cd detectMutations
 
 ## Get data
 
-*Generate data using the [generate Mutations](https://github.com/sylvainschmitt/generateMutations) workflow.*
+Reference genome 3P from http://urgi.versailles.inra.fr/download/oak.
+Raw reads from ENA project PRJEB8388.
 
 ```{bash, eval=F, echo=T}
-git clone git@github.com:sylvainschmitt/generateMutations.git
-cd ../generateMutations
-snakemake --use-singularity --cores 4
-cd ../detectMutations
-bash scripts/get_data.sh
+# code to be given
 ```
 
 ## Locally
@@ -201,111 +194,15 @@ snakemake --report report.html # report
 
 *Detect mutations.*
 
-### Mutect2
-
-#### [gatk_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_mutect2.smk)
-
-* Tools: [`gatk Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
-* Singularity: docker://broadinstitute/gatk
-
-### freebayes
-
-#### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes.smk)
-
-* Tools: [`freebayes`](https://github.com/freebayes/freebayes)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
-
-
-#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
-
-* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### GATK
-
-#### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_haplotypecaller.smk)
-
-* Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-* Singularity: docker://broadinstitute/gatk
-
-#### [gatk_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_genotypegvcfs.smk)
-
-* Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-* Singularity: docker://broadinstitute/gatk
-
-#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
-
-* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### Strelka2
-
-#### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
+### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
 
 * Tools: [`Manta`](https://github.com/Illumina/manta)
 * Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-#### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
+### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
 
 * Tools: [`Strelka2`](https://github.com/Illumina/strelka)
 * Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-### Manta
-
-#### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
-
-* Tools: [`Manta`](https://github.com/Illumina/manta)
-* Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-
-### VarScan
-
-#### [varscan](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/varscan.smk)
-
-* Tools: [`VarScan`](https://wiki.bits.vib.be/index.php/Varscan2#calling_SNVs)
-* Singularity: docker://alexcoppe/varscan
-
-#### [varscan2vcf](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/varscan2vcf.smk)
-
-* Script: [`varscan2vcf.R`](https://github.com/sylvainschmitt/detectMutations/blob/main/scripts/varscan2vcf.R)
-* Singularity: https://github.com/sylvainschmitt/singularity-template/releases/download/0.0.1/sylvainschmitt-singularity-tidyverse-Biostrings.latest.sif
-
-### Somatic Sniper
-
-#### [somaticsniper](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/somaticsniper.smk)
-
-* Tools: [`Somatic Sniper`](http://gmt.genome.wustl.edu/packages/somatic-sniper/)
-* Singularity: docker://lethalfang/somaticsniper:1.0.5.0
-
-#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
-
-* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### CaVEMan 
-
-**BUG!**
-
-#### [caveman](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/caveman.smk)
-
-* Tools: [`CaVEMan`](https://github.com/cancerit/CaVEMan)
-* Singularity: docker://leukgen/docker-caveman:v1.0.0
-
-### MuSe 
-
-#### [muse](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/muse.smk)
-
-* Tools: [`MuSe`](https://bioinformatics.mdanderson.org/public-software/muse/ )
-* Singularity: docker://opengenomics/muse
-
-### RADIA
-
-**BUG!**
-
-#### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
-
-* Tools: [`RADIA`](https://github.com/aradenbaugh/radia/)
-* Singularity: docker://opengenomics/radia
 
 ## Quality check
 
@@ -317,136 +214,3 @@ snakemake --report report.html # report
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
 # Results
-
-```{r get_stats, eval=F}
-options(dplyr.summarise.inform = FALSE)
-get_stats <- function(callfile, mutationsfile){
-  # print(callfile) ; print(mutationsfile) # debug
-  # callfile <- "results/N100_R2_AF0.1_NR7000/varscan/N100_R2_AF0.1_NR7000.vcf"
-  # mutationsfile <- "../generateMutations/results/reference//../mutations/Qrob_PM1N_7k_Qrob_Chr01_mutated_N100_R2.tsv"
-  mutations <- read_tsv(mutationsfile, col_types = cols(
-    CHROM = col_character(),
-    POS = col_double(),
-    REF = col_character(),
-    TYPE = col_character(),
-    ALT = col_character()
-  )) %>% 
-    mutate(True = 1) %>%
-    filter(REF != "N")
-  call <- try(vcfR::read.vcfR(callfile, verbose = F)@fix, silent = T)
-  if(!inherits(call, "try-error")){
-    call <- as.data.frame(call) %>% 
-      mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
-      mutate(POS = as.numeric(as.character(POS))) %>% 
-      mutate(Called = 1) %>% 
-      mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1))
-  } else {
-    call <- data.frame(CHROM = character(), POS = double(), REF = character(), ALT = character(), Called = integer())
-  }
-  stats <- full_join(mutations, call, by = c("CHROM", "POS", "REF", "ALT")) %>% 
-    mutate_at(c("True", "Called"), funs(ifelse(is.na(.), 0, .))) %>% 
-    mutate(Confusion = recode(paste0(True, Called), "01" = "FP", "10" = "FN", "11" = "TP")) %>% 
-    group_by(Confusion) %>% 
-    summarise(N = n()) %>% 
-    reshape2::dcast(. ~ Confusion, value.var = "N")
-  if(!("FP" %in% names(stats)))
-     stats$FP <- 0
-  if(!("FN" %in% names(stats)))
-     stats$FN <- 0
-  if(!("TP" %in% names(stats)))
-     stats$TP <- 0
-  stats <- mutate(stats, Precision = round(TP/(TP+FP), 2), Recall = round(TP/(TP+FN), 2))
-  return(stats)
-}
-```
-
-```{r stats, eval=F}
-config.file <- "config.dev.yml"
-config <- yaml::read_yaml(file.path("config", config.file))
-refL <- width(readDNAStringSet(file.path(config$refdir, paste0(config$reference, ".fa"))))
-data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1.fastq")) %>% 
-  mutate(libraries = gsub("_mutated_R1.fastq", "", libraries)) %>% 
-  mutate(libraries = gsub("[[:alpha:]]", "", libraries)) %>% 
-  separate(libraries, c("N", "R", "AF", "NR"), sep = "_", convert = T) %>% 
-  group_by(N, R, AF, NR) %>% 
-  do(caller = c(
-    "mutect2", 
-    "freebayes", 
-    "gatk", 
-    "strelka2", 
-    # "manta",
-    "somaticsniper", 
-    "muse",
-    "varscan"
-  )) %>% 
-  unnest(caller) %>% 
-  ungroup() %>% 
-  mutate(call = file.path("results", paste0("N", N, "_R", R, "_AF", AF, "_NR", NR),
-                               caller, paste0("N", N, "_R", R, "_AF", AF, "_NR", NR, ".vcf"))) %>% 
-  mutate(mutations = file.path(config$refdir, "..", "mutations", paste0(config$reference, "_mutated_N", N, "_R", R, ".tsv"))) %>% 
-  group_by(N, R, AF, NR, caller) %>% 
-  do(stats = get_stats(.$call, .$mutations)) %>% 
-  unnest(stats) %>% 
-  select(-`.`) %>% 
-  mutate(C = round((NR*150)/refL)) %>% 
-  select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall) %>% 
-  write_tsv("stats.tsv")
-```
-
-```{r statsFig, fig.cap="Caller assesment."}
-read_tsv("stats.tsv") %>% 
-  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
-                               "148" = "150", "198" = "200"))) %>% 
-  reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
-                 variable.name = "parameter", value.name = "parameter.value") %>% 
-  reshape2::melt(c("caller", "parameter", "parameter.value"),
-                 variable.name = "metric", value.name = "metric.value") %>% 
-  filter(metric %in% c("Precision", "Recall")) %>% 
-  filter(parameter != "N") %>% 
-  mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
-                            "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
-  ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
-  geom_boxplot(alpha = 0.3) +
-  facet_grid(metric ~ parameter, scales = "free") +
-  ggdark::dark_theme_gray() +
-  theme(legend.position = "bottom", axis.title = element_blank()) +
-  scale_color_discrete("") +
-  scale_fill_discrete("")
-```
-
-```{r statsFig2, fig.cap="Caller assesment."}
-read_tsv("stats.tsv") %>% 
-  mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
-  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
-                               "148" = "150", "198" = "200"))) %>% 
-  reshape2::melt(c("caller", "N", "R", "AF", "C"),
-                 variable.name = "metric", value.name = "metric.value") %>% 
-  filter(metric %in% c("Precision", "Recall")) %>% 
-  filter(R == 2) %>% 
-  mutate(caller = recode(caller,    
-                         "mutect2" = "Mutect2", 
-                         "freebayes" = "freebayes", 
-                         "gatk" = "GATK", 
-                         "strelka2" = "Strelka2", 
-                         # "manta" = "Manta",
-                         "somaticsniper" = "Somatic Sniper", 
-                         "muse" = "MuSe",
-                         "varscan" = "VarScan"
-  )) %>% 
-  ggplot(aes(as.factor(AF), as.factor(C), fill = metric.value)) +
-  geom_tile() +
-  facet_grid(caller ~ metric) +
-  viridis::scale_fill_viridis("", option = "inferno") +
-  xlab("Allele Fraction") + ylab("Coverage") +
-  ggdark::dark_theme_gray() +
-  theme(strip.text.y = element_text(angle = 0),
-        legend.position = "bottom", legend.key.width = unit(75, "points")) 
-```
-
-```{r statsTable}
-read_tsv("stats.tsv") %>% 
-  sample_n(10) %>% 
-kable(col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
-                           "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
-      caption = "Caller assesments.")
-```

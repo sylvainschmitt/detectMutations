@@ -1,13 +1,12 @@
 rule bwa_mem:
     input:
         expand("results/reference/{reference}.fa", reference=config["reference"]),
-        expand("results/{library}/{library}_{type}_{strand}.trimmed.paired.fastq", type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True),
+        expand("results/{library}/{library}_{strand}.trimmed.paired.fastq", strand=["1", "2"], allow_missing=True),
         expand("results/reference/{reference}{ext}", reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"])
     output:
-        temp(expand("results/{library}/{library}_{type}.sam", type=["mutated", "base"], allow_missing=True))
+        temp("results/{library}/{library}.sam")
     params:
-        rg_mutated=r"@RG\tID:{library}_mutated\tSM:{library}_mutated",
-        rg_base=r"@RG\tID:{library}_base\tSM:{library}_base"
+        rg=r"@RG\tID:{library}\tSM:{library}"
     log:
         "results/logs/bwa_mem_{library}.log"
     benchmark:
@@ -15,6 +14,5 @@ rule bwa_mem:
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest"
     shell:
-        "bwa mem -M -R '{params.rg_mutated}' -t {threads} {input[0]} {input[1]} {input[2]} > {output[0]} ; "
-        "bwa mem -M -R '{params.rg_base}' -t {threads} {input[0]} {input[3]} {input[4]} > {output[1]} ; "
+        "bwa mem -M -R '{params.rg}' -t {threads} {input[0]} {input[1]} {input[2]} > {output}"
         

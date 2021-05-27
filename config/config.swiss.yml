@@ -6,6 +6,5 @@ ressources: "ressources.genologin.yaml"
 
 # data
 refdir: "../generateMutations/results/reference/"
-reference: "Qrob_PM1N_7k_Qrob_Chr01"
-snps: "Qrob_PM1N_7k_Qrob_Chr01_snps.vcf"
-libdir: "../generateMutations/results/reads/"
+reference: "Qrob_PM1N"
+libdir: "../swiss/raw/"

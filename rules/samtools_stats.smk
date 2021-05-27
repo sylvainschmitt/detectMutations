@@ -1,8 +1,8 @@
 rule samtools_stats:
     input:
-        expand("results/{library}/{library}_{type}.md.bam", type=["mutated", "base"], allow_missing=True)
+        "results/{library}/{library}.md.bam"
     output:
-        temp(expand("results/{library}/{library}_{type}.md.bam.stats.out", type=["mutated", "base"], allow_missing=True))
+        temp("results/{library}/{library}.md.bam.stats.out")
     log:
         "results/logs/samtools_stats_{library}.log"
     benchmark:
@@ -10,5 +10,4 @@ rule samtools_stats:
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:
-        "samtools stats --threads {threads} {input[0]} > {output[0]} ; "
-        "samtools stats --threads {threads} {input[1]} > {output[1]}"
+        "samtools stats --threads {threads} {input} > {output}"
