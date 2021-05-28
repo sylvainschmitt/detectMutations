@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --time=01:00:00
-#SBATCH -J detMut
-#SBATCH -o detMut.%N.%j.out
-#SBATCH -e detMut.%N.%j.err
+#SBATCH --time=96:00:00
+#SBATCH -J swiss
+#SBATCH -o swiss.%N.%j.out
+#SBATCH -e swiss.%N.%j.err
 #SBATCH --mem=1G
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
@@ -14,7 +14,7 @@ module load bioinfo/snakemake-5.25.0
 module load system/singularity-3.5.3
 
 # Variables
-CONFIG=config/genologin.yaml
+CONFIG=onfig/ressources.genologin.yaml
 COMMAND="sbatch --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
 # COMMAND="sbatch -p unlimitq --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
 CORES=32

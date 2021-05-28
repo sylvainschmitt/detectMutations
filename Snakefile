@@ -1,7 +1,7 @@
 ## Sylvain SCHMITT
 ## 28/04/2021
 
-configfile: "config/config.dag.yml"
+configfile: "config/config.swiss.yml"
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
 rule all:
