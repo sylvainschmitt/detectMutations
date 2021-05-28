@@ -78,7 +78,7 @@ samtools_index:
   
 gatk_markduplicates:
   jobname: "gatk_markduplicates"
-  mem: "4G"
+  mem: "16G"
   cpus: 1
   time: "10:00:00"
   
