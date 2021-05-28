@@ -1,0 +1,128 @@
+% template adapted from https://github.com/jgm/pandoc-templates/blob/master/default.latex
+
+%%% STYLE %%%
+\documentclass[12pt,]{article}
+
+%%% PACKAGES %%%
+
+% fonts
+\usepackage{lmodern}
+
+% pdf
+\usepackage{pdfpages}
+
+% formulae
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% Tables
+% pacakges for kableextra
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
+
+% graphics
+
+% indent
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+
+% prevent overfull lines
+\setlength{\emergencystretch}{3em}  
+\providecommand{\tightlist}{%
+\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter 
+\def\fps@figure{htbp}
+\makeatother
+
+% set default table placement to htbp
+\makeatletter 
+\def\fps@table{htbp}
+\makeatother
+
+% code highlights
+
+% hyperlinks
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\definecolor{maroon}{cmyk}{0, 0.87, 0.68, 0.32}
+\hypersetup{
+      pdfborder={0 0 0},
+      breaklinks=true}
+\urlstyle{same} % don't use monospace font for urls
+
+% geometry
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\renewcommand{\baselinestretch}{1.1}
+
+% Bibliography
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+% SuppMat
+\renewcommand{\figurename}{Figure S}
+\renewcommand{\tablename}{Table S}
+\renewcommand{\contentsname}{Supplemental content}
+\renewcommand{\listtablename}{Supplemental tables}
+\renewcommand{\listfigurename}{Supplemental figures}
+
+% header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[H]{} 
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength\headheight{80.0pt}
+\addtolength{\textheight}{-80.0pt}
+\chead{\includegraphics[width=\textwidth]{template/molecol.png}}
+
+%%% BODY %%%
+\begin{document}
+
+\begin{center}
+  \normalsize{\textbf{Supplemental Information for:}} \\
+  \vspace{5mm}
+  \large{\textbf{A roadmap for plant mutation detection tools with variable sequencing depth and allele frequency using two reproducible pipelines}} \\
+  \vspace{5mm}
+  \normalsize{(\textbf{Alphabetic}) Myriam Heuertz, Thibault leroy, Sylvain Schmitt, Niklas Tysklind} \\
+  \tableofcontents
+  \listoftables
+  \listoffigures
+\end{center}
+
+\newpage
+
+
+
+\bibliography{/home/sylvain/Documents/Bibliography/library.bib}
+
+\end{document}

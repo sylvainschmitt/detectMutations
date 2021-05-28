@@ -1,36 +1,179 @@
 __default__:
   jobname: "default"
-  mem: "4G"
-  cpus: 8
+  mem: "16G"
+  cpus: 4
   time: "48:00:00"
 
-get_genome:
-  jobname: "get_genome"
+cp_reference:
+  jobname: "cp_reference"
   mem: "4G"
   cpus: 1
-  time: "01:00:00"
+  time: "10:00:00"
 
-chromosomes_length:
-  jobname: "chromosomes_length"
+bwa_index:
+  jobname: "bwa_index"
+  mem: "4G"
+  cpus: 1
+  time: "10:00:00"
+  
+samtools_faidx:
+  jobname: "samtools_faidx"
+  mem: "4G"
+  cpus: 1
+  time: "10:00:00"
+  
+gatk_dict:
+  jobname: "gatk_dict"
+  mem: "4G"
+  cpus: 1
+  time: "10:00:00"
+
+cp_snps:
+  jobname: "cp_snps"
+  mem: "4G"
+  cpus: 1
+  time: "10:00:00"
+  
+gatk_idx:
+  jobname: "gatk_idx"
+  mem: "4G"
+  cpus: 1
+  time: "10:00:00"
+  
+cp_reads:
+  jobname: "cp_reads"
+  mem: "4G"
+  cpus: 1
+  time: "10:00:00"
+  
+fastqc:
+  jobname: "fastqc"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+
+trimmomatic:
+  jobname: "trimmomatic"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+bwa_mem:
+  jobname: "bwa_mem"
+  mem: "32G"
+  cpus: 8
+  time: "48:00:00"
+  
+samtools_sort:
+  jobname: "samtools_sort"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+
+samtools_index:
+  jobname: "samtools_index"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+gatk_markduplicates:
+  jobname: "gatk_markduplicates"
+  mem: "4G"
+  cpus: 1
+  time: "10:00:00"
+  
+samtools_index_md:
+  jobname: "samtools_index_md"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+samtools_stats:
+  jobname: "samtools_stats"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+samtools_mpileup:
+  jobname: "samtools_mpileup"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+qualimap:
+  jobname: "qualimap"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+gatk_mutect2:
+  jobname: "gatk_mutect2"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+freebayes:
+  jobname: "freebayes"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+bedtools_substract:
+  jobname: "bedtools_substract"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+gatk_haplotypecaller:
+  jobname: "gatk_haplotypecaller"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+gatk_genotypegvcfs:
+  jobname: "gatk_genotypegvcfs"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+
+manta:
+  jobname: "manta"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+strelka2:
+  jobname: "strelka2"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+varscan:
+  jobname: "varscan"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+varscan2vcf:
+  jobname: "varscan2vcf"
   mem: "4G"
   cpus: 1
   time: "01:00:00"
   
-sample_reference:
-  jobname: "sample_reference"
+somaticsniper:
+  jobname: "somaticsniper"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+muse:
+  jobname: "muse"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+multiqc:
+  jobname: "multiqc"
   mem: "4G"
   cpus: 1
   time: "01:00:00"
-  
-uncompress_reference:
-  jobname: "uncompress_reference"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"
-  
-generate_reads:
-  jobname: "generate_reads"
-  mem: "100G"
-  cpus: 10
-  time: "01:00:00"
-  

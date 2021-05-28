@@ -1,0 +1,22 @@
+---
+title: A roadmap for plant mutation detection tools with variable sequencing depth and allele frequency using two reproducible pipelines
+author: (**Alphabetic**) Myriam Heuertz, Thibault leroy, Sylvain Schmitt, Niklas Tysklind
+date: '`r Sys.Date()`'
+output:
+  bookdown::pdf_document2:
+    template: ./template/templateSuppMatMolEcol.tex
+    number_sections: false
+    toc: false
+    keep_tex: true
+  bookdown::html_document2:
+    number_sections: false
+    toc: true
+    toc_float: yes
+  bookdown::word_document2:
+    reference_docx: ./template/template.docx
+linestretch: 1.5
+csl: /home/sylvain/Documents/Bibliography/csl/molecol.csl
+bibliography: /home/sylvain/Documents/Bibliography/library.bib
+link-citations: yes
+always_allow_html: yes
+---

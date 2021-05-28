@@ -1,0 +1,152 @@
+---
+title: A roadmap for plant mutation detection tools with variable sequencing depth and allele frequency using two reproducible pipelines
+date: '`r Sys.Date()`'
+output:
+  bookdown::html_document2:
+    number_sections: false  
+    toc: true
+    toc_float: yes
+  bookdown::pdf_document2:
+    includes:
+      before_body: ./template/doc_prefix.tex
+      in_header: ./template/preamble.tex
+    number_sections: false
+    toc: false
+  bookdown::word_document2:
+    reference_docx: ./template/template.docx
+linestretch: 1.5
+csl: /home/sylvain/Documents/Bibliography/csl/molecol.csl
+bibliography: /home/sylvain/Documents/Bibliography/library.bib
+link-citations: yes
+---
+
+**Running title: plant mutation detection tools**
+
+Authors (**alphabetic**):
+
+* Myriam Heuertz
+    - heuertzm@gmail.com
+    - orcid.org/0000-0002-6322-3645
+    - Univ. Bordeaux, INRAE, BIOGECO, 69 route d’Arcachon, 33610 Cestas France
+* Thibault Leroy
+    - orcid.org/0000-0003-2259-9723
+    - Department of Botany and Biodiversity Research, University of Vienna, Rennweg 14, A-1030 Vienna, Austria
+* Sylvain Schmitt
+    - Corresponding author
+    - sylvain.m.schmitt@gmail.com
+    - orcid.org/0000-0001-7759-7106
+    - CNRS, UMR EcoFoG (Agroparistech, Cirad, INRAE, Université des Antilles, Université de la Guyane), Campus Agronomique, 97310 Kourou, French Guiana
+* Niklas Tysklind
+    - Niklas.Tysklind@ecofog.gf
+    - INRAE, UMR EcoFoG (Agroparistech, CNRS, Cirad, Université des Antilles, Université de la Guyane), Campus Agronomique, 97310 Kourou, French Guiana
+
+\newpage 
+
+# Abstract
+
+*Please provide an abstract of no more than 250 words containing the major keywords.*
+
+\newpage 
+
+# Introduction 
+
+# Material and Methods
+
+## Generation of mutations
+
+## Detection of mutations
+
+## Virtual experiment
+
+## Oak data reanalyses
+
+# Results
+
+# Discussion
+
+# Acknowledgements
+
+# References
+
+<div id="refs"></div>
+
+# Authors’ contributions
+
+All authors conceived the ideas;
+SS developed the pipelines;
+SS and TL realized the virtual experiment;
+SS and TL  analyzed outputs; 
+SS and TL led the writing of the manuscript. 
+All authors contributed critically to the drafts and gave final approval for publication.
+
+# Data Accessibility
+
+`generateMutations` and `detectMutations` pipelines are available on GitHub (https://github.com/sylvainschmitt/generateMutations and https://github.com/sylvainschmitt/detectMutations).
+Reanalyzed reads and corresponding genomes were extracted from GenBank under accession BioProject PRJNA327502 
+and from European Nucleotide Archive under project accession code PRJEB8388.
+
+# Tables and Figures
+
+
+```{r config, message=FALSE, warning=FALSE, include=FALSE}
+rm(list = ls()); invisible(gc())
+library(knitr)
+library(tidyverse)
+library(bayesplot)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(echo = F, message = F, warning = F, 
+               fig.height = 8, fig.width = 8,
+               cache = T, cache.lazy = F)
+stats <- read_tsv("../stats.tsv")
+```
+
+```{r}
+stats %>% 
+  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
+                               "148" = "150", "198" = "200"))) %>% 
+  reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
+                 variable.name = "parameter", value.name = "parameter.value") %>% 
+  reshape2::melt(c("caller", "parameter", "parameter.value"),
+                 variable.name = "metric", value.name = "metric.value") %>% 
+  filter(metric %in% c("Precision", "Recall")) %>% 
+  filter(parameter != "N") %>% 
+  mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
+                            "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
+  ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
+  geom_boxplot(alpha = 0.3) +
+  facet_grid(metric ~ parameter, scales = "free") +
+  theme(legend.position = "bottom", axis.title = element_blank()) +
+  scale_color_discrete("") +
+  scale_fill_discrete("")
+```
+
+```{r}
+stats %>% 
+  filter(R == 2) %>% 
+  mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
+  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
+                               "148" = "150", "198" = "200"))) %>% 
+  reshape2::melt(c("caller", "N", "R", "AF", "C"),
+                 variable.name = "metric", value.name = "metric.value") %>% 
+  filter(metric %in% c("Precision", "Recall")) %>% 
+  filter(R == 2) %>% 
+  mutate(caller = recode(caller,    
+                         "mutect2" = "Mutect2", 
+                         "freebayes" = "freebayes", 
+                         "gatk" = "GATK", 
+                         "strelka2" = "Strelka2", 
+                         "somaticsniper" = "Somatic Sniper", 
+                         "muse" = "MuSe",
+                         "varscan" = "VarScan"
+  )) %>% 
+  ggplot(aes(as.factor(AF), as.factor(C), fill = metric.value)) +
+  geom_tile() +
+  facet_grid(caller ~ metric) +
+  viridis::scale_fill_viridis("", option = "inferno") +
+  xlab("Allele Fraction") + ylab("Coverage") +
+  theme(strip.text.y = element_text(angle = 0),
+        legend.position = "bottom", legend.key.width = unit(75, "points"))
+```
+
+
+

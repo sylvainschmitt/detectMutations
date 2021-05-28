@@ -374,7 +374,6 @@ data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1.fastq"))
     "freebayes", 
     "gatk", 
     "strelka2", 
-    # "manta",
     "somaticsniper", 
     "muse",
     "varscan"
@@ -416,6 +415,7 @@ read_tsv("stats.tsv") %>%
 
 ```{r statsFig2, fig.cap="Caller assesment."}
 read_tsv("stats.tsv") %>% 
+  filter(R == 2) %>% 
   mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
   mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
                                "148" = "150", "198" = "200"))) %>% 
@@ -428,7 +428,6 @@ read_tsv("stats.tsv") %>%
                          "freebayes" = "freebayes", 
                          "gatk" = "GATK", 
                          "strelka2" = "Strelka2", 
-                         # "manta" = "Manta",
                          "somaticsniper" = "Somatic Sniper", 
                          "muse" = "MuSe",
                          "varscan" = "VarScan"
@@ -440,7 +439,7 @@ read_tsv("stats.tsv") %>%
   xlab("Allele Fraction") + ylab("Coverage") +
   ggdark::dark_theme_gray() +
   theme(strip.text.y = element_text(angle = 0),
-        legend.position = "bottom", legend.key.width = unit(75, "points")) 
+        legend.position = "bottom", legend.key.width = unit(75, "points"))
 ```
 
 ```{r statsTable}

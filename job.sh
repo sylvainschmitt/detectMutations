@@ -1,12 +1,11 @@
 #!/bin/bash
-#SBATCH --time=01:00:00
+#SBATCH --time=96:00:00
 #SBATCH -J detMut
 #SBATCH -o detMut.%N.%j.out
 #SBATCH -e detMut.%N.%j.err
 #SBATCH --mem=1G
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
-####SBATCH -p unlimitq
 
 # Environment
 module purge
@@ -17,7 +16,7 @@ module load system/singularity-3.5.3
 CONFIG=config/genologin.yaml
 COMMAND="sbatch --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
 # COMMAND="sbatch -p unlimitq --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
-CORES=32
+CORES=100
 mkdir -p snake_subjob_log
 
 # Workflow
@@ -34,7 +33,4 @@ echo 'Job ID:' $SLURM_JOB_ID
 echo 'Number of nodes assigned to job:' $SLURM_JOB_NUM_NODES
 echo 'Nodes assigned to job:' $SLURM_JOB_NODELIST
 echo 'Directory:' $(pwd)
-## Detail Information:
-#echo 'scontrol show job:'
-#scontrol show job $SLURM_JOB_ID
 echo '########################################'

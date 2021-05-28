@@ -62,7 +62,6 @@ include: "rules/manta.smk"
 # include: "rules/varscan2.smk"
 
 ## VarScan
-# need to be transformed in true vcf
 include: "rules/varscan.smk"
 include: "rules/varscan2vcf.smk"
 

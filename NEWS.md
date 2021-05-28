@@ -1,3 +1,9 @@
+# detectMutation 0.1.9013
+* msc start
+* data from Bordeaux and Swiss
+* resources
+* config experiment, job, & Snakefile
+
 # detectMutation 0.1.9012
 * preliminary results on 7kb
 
