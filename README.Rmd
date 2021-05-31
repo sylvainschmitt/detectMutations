@@ -24,11 +24,7 @@ opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8
 
 [`singularity` & `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity) workflow to detect mutations with several alignment and mutation detection tools.
 
-```{r dagminimal}
-knitr::include_graphics("dag/dag.minimal.svg")
-```
-
-```{r dag, eval=F}
+```{r dag}
 knitr::include_graphics("dag/dag.svg")
 ```
 
@@ -103,6 +99,7 @@ less detMut.*.out # snakemake outputs, use MAJ+F
 snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 module purge ; module load bioinfo/snakemake-5.8.1 ; module load system/Python-3.6.3 # for report
 snakemake --report report.html # report
+module purge ; module load system/R-3.6.2 ; R # to build results
 ```
 
 # Workflow
@@ -200,6 +197,10 @@ snakemake --report report.html # report
 ## Mutation
 
 *Detect mutations.*
+
+#### [cp_vcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_vcfs.smk)
+
+* Tools: `cp`
 
 ### Mutect2
 
@@ -361,30 +362,20 @@ get_stats <- function(callfile, mutationsfile){
 ```
 
 ```{r stats, eval=F}
-config.file <- "config.dev.yml"
+config.file <- "config.experiment.yml"
 config <- yaml::read_yaml(file.path("config", config.file))
+config$reference <- "Qrob_PM1N_7k_Qrob_Chr01"
 refL <- width(readDNAStringSet(file.path(config$refdir, paste0(config$reference, ".fa"))))
-data.frame(libraries = list.files(config$libdir, pattern = "_mutated_R1.fastq")) %>% 
-  mutate(libraries = gsub("_mutated_R1.fastq", "", libraries)) %>% 
-  mutate(libraries = gsub("[[:alpha:]]", "", libraries)) %>% 
-  separate(libraries, c("N", "R", "AF", "NR"), sep = "_", convert = T) %>% 
-  group_by(N, R, AF, NR) %>% 
-  do(caller = c(
-    "mutect2", 
-    "freebayes", 
-    "gatk", 
-    "strelka2", 
-    "somaticsniper", 
-    "muse",
-    "varscan"
-  )) %>% 
-  unnest(caller) %>% 
-  ungroup() %>% 
-  mutate(call = file.path("results", paste0("N", N, "_R", R, "_AF", AF, "_NR", NR),
-                               caller, paste0("N", N, "_R", R, "_AF", AF, "_NR", NR, ".vcf"))) %>% 
-  mutate(mutations = file.path(config$refdir, "..", "mutations", paste0(config$reference, "_mutated_N", N, "_R", R, ".tsv"))) %>% 
+data.frame(vcf = list.files("results/mutations", full.names = T)) %>% 
+  mutate(vcf = as.character(vcf)) %>% 
+  mutate(libraries = gsub("results/mutations/", "", vcf)) %>% 
+  mutate(libraries = gsub(".vcf", "", libraries)) %>% 
+  separate(libraries, c("N", "R", "AF", "NR", "caller"), sep = "_") %>% 
+  mutate_at(c("N", "R", "AF", "NR"), funs(as.numeric(gsub("[[:alpha:]]", "", .)))) %>% 
+  mutate(mutations = file.path("..", "generateMutations", "results", "mutations", 
+                               paste0(config$reference, "_mutated_N", N, "_R", R, ".tsv"))) %>% 
   group_by(N, R, AF, NR, caller) %>% 
-  do(stats = get_stats(.$call, .$mutations)) %>% 
+  do(stats = get_stats(.$vcf, .$mutations)) %>% 
   unnest(stats) %>% 
   select(-`.`) %>% 
   mutate(C = round((NR*150)/refL)) %>% 

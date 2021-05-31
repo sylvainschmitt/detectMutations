@@ -7,7 +7,7 @@ libraries, = glob_wildcards(config["libdir"] + "/{library}_mutated_R1.fastq")
 rule all:
     input:
         ## mutations ##
-        expand("results/{library}/{caller}/{library}.vcf", library=libraries, 
+        expand("results/mutations/{library}_{caller}.vcf", library=libraries, 
                 caller=["mutect2", "freebayes", "gatk", "strelka2", "manta", "varscan", "somaticsniper", "muse"]),
         ## qc ##
         expand("results/{library}/multiqc_report.html", library=libraries)
@@ -78,5 +78,6 @@ include: "rules/muse.smk"
 ## RADIA
 include: "rules/radia.smk"
 
-## qc ##
+## results ##
+include: "rules/cp_vcfs.smk"
 include: "rules/multiqc.smk"
