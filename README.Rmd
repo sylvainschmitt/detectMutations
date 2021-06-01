@@ -108,6 +108,11 @@ snakemake --report report.html # report
 
 * Tools: `cp`
 
+### [samtools_faidx_split](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_faidx_split.smk)
+
+* Tools: [`samtools faidx`](http://www.htslib.org/doc/samtools-faidx.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
 ### [bwa_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
 * Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
@@ -190,19 +195,19 @@ snakemake --report report.html # report
 * Tools: [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
 * Singularity: docker://pegi3s/qualimap
 
-## Mutation
+<!-- ## Mutation -->
 
-*Detect mutations.*
+<!-- *Detect mutations.* -->
 
-### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
+<!-- ### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk) -->
 
-* Tools: [`Manta`](https://github.com/Illumina/manta)
-* Singularity: docker://quay.io/wtsicgp/strelka2-manta
+<!-- * Tools: [`Manta`](https://github.com/Illumina/manta) -->
+<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
 
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
+<!-- ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk) -->
 
-* Tools: [`Strelka2`](https://github.com/Illumina/strelka)
-* Singularity: docker://quay.io/wtsicgp/strelka2-manta
+<!-- * Tools: [`Strelka2`](https://github.com/Illumina/strelka) -->
+<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
 
 ## Quality check
 

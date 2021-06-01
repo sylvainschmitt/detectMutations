@@ -1,18 +1,17 @@
 rule multiqc:
     input:
-        expand("results/{library}/{library}_{strand}.raw_fastqc.{ext}", strand=["1", "2"], ext=["html", "zip"], allow_missing=True),
-        "results/{library}/trim_out.log",
-        "results/{library}/{library}.md.bam.stats.out",
-        "results/{library}/qualimap/qualimapReport.html",
-        "results/{library}/{library}.bam.metrics"
+        expand("results/{library}/{library}_{strand}.raw_fastqc.{ext}", library=libraries, strand=["1", "2"], ext=["html", "zip"]),
+        expand("results/{library}/trim_out.log", library=libraries),
+        expand("results/{library}/{library}_{chromosome}_md.bam.stats.out", chromosome=chromosomes, library=libraries),
+        expand("results/{library}/qualimap_{library}_{chromosome}/qualimapReport.html", chromosome=chromosomes, library=libraries),
+        expand("results/{library}/{library}_{chromosome}.bam.metrics", chromosome=chromosomes, library=libraries)
     output:
-        "results/{library}/multiqc_report.html"
+        "results/multiqc_report.html"
     log:
-        "results/logs/multiqc_{library}.log"
+        "results/logs/multiqc.log"
     benchmark:
-        "results/benchmarks/multiqc_{library}.benchmark.txt"
+        "results/benchmarks/multiqc.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest"
     shell:
-        "multiqc results/{wildcards.library}/ -o results/{wildcards.library} ; "
-        "rm -r results/{wildcards.library}/qualimap"
+        "multiqc results/ -o results/ ; rm -r results/*/qualimap_* ; rm -r results/*/aln"

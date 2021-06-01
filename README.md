@@ -12,7 +12,6 @@ April 20, 2021
       - [Reference](#reference)
       - [Reads](#reads)
       - [Alignments](#alignments)
-      - [Mutation](#mutation)
       - [Quality check](#quality-check)
   - [Results](#results)
 
@@ -21,7 +20,7 @@ April 20, 2021
 workflow to detect mutations with several alignment and mutation
 detection tools.
 
-![](dag/dag.minimal.svg)<!-- -->
+![](dag/dag.svg)<!-- -->
 
 # Installation
 
@@ -104,6 +103,13 @@ snakemake --report report.html # report
 ### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
 
   - Tools: `cp`
+
+### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_faidx_split.smk)
+
+  - Tools: [`samtools
+    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
 ### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
@@ -206,19 +212,21 @@ quality.*
     [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
   - Singularity: docker://pegi3s/qualimap
 
-## Mutation
+<!-- ## Mutation -->
 
-*Detect mutations.*
+<!-- *Detect mutations.* -->
 
-### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
+<!-- ### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk) -->
 
-  - Tools: [`Manta`](https://github.com/Illumina/manta)
-  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
+<!-- * Tools: [`Manta`](https://github.com/Illumina/manta) -->
 
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
+<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
 
-  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
-  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
+<!-- ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk) -->
+
+<!-- * Tools: [`Strelka2`](https://github.com/Illumina/strelka) -->
+
+<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
 
 ## Quality check
 

@@ -1,16 +1,18 @@
 rule bwa_mem:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"]),
+        expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True),
         expand("results/{library}/{library}_{strand}.trimmed.paired.fastq", strand=["1", "2"], allow_missing=True),
-        expand("results/reference/{reference}{ext}", reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"])
+        expand("results/reference/{reference}_{chromosome}{ext}", 
+                reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"], 
+                allow_missing=True)
     output:
-        temp("results/{library}/{library}.sam")
+        temp("results/{library}/{library}_{chromosome}.sam")
     params:
-        rg=r"@RG\tID:{library}\tSM:{library}"
+        rg=r"@RG\tID:{library}_{chromosome}\tSM:{library}_{chromosome}"
     log:
-        "results/logs/bwa_mem_{library}.log"
+        "results/logs/bwa_mem_{library}_{chromosome}.log"
     benchmark:
-        "results/benchmarks/bwa_mem_{library}.benchmark.txt"
+        "results/benchmarks/bwa_mem_{library}_{chromosome}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest"
     shell:

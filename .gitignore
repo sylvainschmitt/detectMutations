@@ -17,6 +17,6 @@ report.html
 .java
 .oracle_jre_usage
 # data
-*.fastq
+*.fastq.gz
 *.fa
-*.tsv
+*.fa.fai

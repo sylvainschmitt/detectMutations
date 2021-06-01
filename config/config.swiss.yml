@@ -5,6 +5,6 @@
 ressources: "ressources.genologin.yaml"
 
 # data
-refdir: "../generateMutations/data/"
+refdir: "../generateMutations/data"
 reference: "Qrob_PM1N"
-libdir: "/home/sschmitt/save/swiss/test/"
+libdir: "/home/sschmitt/save/swiss/test"

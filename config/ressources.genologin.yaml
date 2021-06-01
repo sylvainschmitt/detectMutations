@@ -9,6 +9,12 @@ cp_reference:
   mem: "4G"
   cpus: 1
   time: "01:00:00"
+  
+samtools_faidx_split:  
+  jobname: "samtools_faidx_split"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
 
 bwa_index:
   jobname: "bwa_index"
@@ -54,19 +60,19 @@ bwa_mem:
   
 samtools_sort:
   jobname: "samtools_sort"
-  mem: "16G"
-  cpus: 4
-  time: "01:00:00"
+  mem: "32G"
+  cpus: 8
+  time: "48:00:00"
 
 samtools_index:
   jobname: "samtools_index"
-  mem: "16G"
-  cpus: 4
-  time: "01:00:00"
+  mem: "32G"
+  cpus: 8
+  time: "48:00:00"
   
 gatk_markduplicates:
   jobname: "gatk_markduplicates"
-  mem: "4G"
+  mem: "100G"
   cpus: 1
   time: "01:00:00"
   
@@ -78,9 +84,9 @@ samtools_index_md:
   
 samtools_stats:
   jobname: "samtools_stats"
-  mem: "16G"
-  cpus: 4
-  time: "01:00:00"
+  mem: "32G"
+  cpus: 8
+  time: "48:00:00"
   
 qualimap:
   jobname: "qualimap"

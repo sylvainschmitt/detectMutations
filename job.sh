@@ -11,7 +11,7 @@
 # Environment
 module purge
 module load bioinfo/snakemake-5.25.0
-module load system/singularity-3.5.3
+module load system/singularity-3.7.3
 
 # Variables
 CONFIG=onfig/ressources.genologin.yaml
@@ -21,7 +21,7 @@ CORES=32
 mkdir -p snake_subjob_log
 
 # Workflow
-snakemake -s Snakefile --use-singularity --singularity-args "\-\-containall" -j $CORES --cluster-config $CONFIG --cluster "$COMMAND"
+snakemake -s Snakefile --use-singularity --singularity-args "\-\-containall" -j $CORES --cluster-config $CONFIG --cluster "$COMMAND" --keep-going
 # --singularity-args "\-\-containall" for qualimap container
 
 ## Session informations
