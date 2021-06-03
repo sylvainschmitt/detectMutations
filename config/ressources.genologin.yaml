@@ -4,12 +4,8 @@ __default__:
   cpus: 4
   time: "48:00:00"
 
-cp_reference:
-  jobname: "cp_reference"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"
-  
+## Reference ## 
+
 samtools_faidx_split:  
   jobname: "samtools_faidx_split"
   mem: "4G"
@@ -33,7 +29,9 @@ gatk_dict:
   mem: "4G"
   cpus: 1
   time: "01:00:00"
-  
+
+## Reads ##
+
 cp_reads:
   jobname: "cp_reads"
   mem: "4G"
@@ -51,9 +49,17 @@ trimmomatic:
   mem: "16G"
   cpus: 4
   time: "01:00:00"
-  
+
+## Alignments ##
+
 bwa_mem:
   jobname: "bwa_mem"
+  mem: "32G"
+  cpus: 8
+  time: "48:00:00"
+  
+samtools_view:
+  jobname: "samtools_view"
   mem: "32G"
   cpus: 8
   time: "48:00:00"
@@ -76,6 +82,12 @@ gatk_markduplicates:
   cpus: 1
   time: "01:00:00"
   
+samtools_view_md:
+  jobname: "samtools_view_md"
+  mem: "32G"
+  cpus: 8
+  time: "48:00:00"
+  
 samtools_index_md:
   jobname: "samtools_index_md"
   mem: "16G"
@@ -93,6 +105,16 @@ qualimap:
   mem: "16G"
   cpus: 4
   time: "01:00:00"
+  
+## Mutations ##
+
+strelka2:
+  jobname: "strelka2"
+  mem: "32G"
+  cpus: 8
+  time: "48:00:00"
+  
+## QC ##
   
 multiqc:
   jobname: "multiqc"

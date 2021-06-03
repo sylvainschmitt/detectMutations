@@ -12,8 +12,8 @@ April 20, 2021
       - [Reference](#reference)
       - [Reads](#reads)
       - [Alignments](#alignments)
+      - [Mutation](#mutation)
       - [Quality check](#quality-check)
-  - [Results](#results)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -86,23 +86,15 @@ snakemake --report report.html # report
 ``` bash
 module purge ; module load bioinfo/snakemake-5.25.0 # for test on node
 snakemake -np # dry run
-sbatch job.sh ; watch 'squeue -u sschmitt' # run
-less detMut.*.err # snakemake outputs, use MAJ+F
-less detMut.*.out # snakemake outputs, use MAJ+F
+sbatch job.sh # run
 snakemake --dag | dot -Tsvg > dag/dag.svg # dag
-module purge ; module load bioinfo/snakemake-5.8.1 ; module load system/Python-3.6.3 # for report
-snakemake --report report.html # report
 ```
 
 # Workflow
 
 ## Reference
 
-*Copy and index reference and SNPs for software to work with.*
-
-### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
-
-  - Tools: `cp`
+*Copy and index reference for software to work with.*
 
 ### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_faidx_split.smk)
 
@@ -128,16 +120,6 @@ snakemake --report report.html # report
 
   - Tools: [`gatk
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
-  - Singularity: docker://broadinstitute/gatk
-
-### [cp\_snps](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_snps.smk)
-
-  - Tools: `cp`
-
-### [gatk\_idx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_idx.smk)
-
-  - Tools: [`gatk
-    IndexFeatureFile`](https://gatk.broadinstitute.org/hc/en-us/articles/360037428111-IndexFeatureFile)
   - Singularity: docker://broadinstitute/gatk
 
 ## Reads
@@ -172,6 +154,13 @@ quality.*
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
+### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_view.smk)
+
+  - Tools: [`Samtools
+    view`](http://www.htslib.org/doc/samtools-view.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
 ### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_sort.smk)
 
   - Tools: [`Samtools
@@ -191,6 +180,13 @@ quality.*
   - Tools: [`gatk
     MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
   - Singularity: docker://broadinstitute/gatk
+
+### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_view_md.smk)
+
+  - Tools: [`Samtools
+    view`](http://www.htslib.org/doc/samtools-view.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
 ### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_index_md.smk)
 
@@ -212,21 +208,12 @@ quality.*
     [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
   - Singularity: docker://pegi3s/qualimap
 
-<!-- ## Mutation -->
+## Mutation
 
-<!-- *Detect mutations.* -->
+### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
 
-<!-- ### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk) -->
-
-<!-- * Tools: [`Manta`](https://github.com/Illumina/manta) -->
-
-<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
-
-<!-- ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk) -->
-
-<!-- * Tools: [`Strelka2`](https://github.com/Illumina/strelka) -->
-
-<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
+  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
+  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
 ## Quality check
 
@@ -238,5 +225,3 @@ quality.*
   - Tools: [`MultiQC`](https://multiqc.info/)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
-
-# Results

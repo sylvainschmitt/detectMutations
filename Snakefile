@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-configfile: "config/config.dag.yml"
+configfile: "config/config.swiss.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
@@ -15,12 +15,9 @@ lambda wildcards: chromosomes
 
 rule all:
     input:
-        ## alignments ##
-        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes),
-        ## qc ##
-        "results/multiqc_report.html",
-        ## mutations ##
-        expand("results/mutations/{vcfs}_on_{chromosome}.vcf", vcfs=config["vcfs"], chromosome=chromosomes)
+        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes) # aln
+        # "results/multiqc_report.html", # qc
+        # expand("results/mutations/{vcfs}_on_{chromosome}.vcf", vcfs=config["vcfs"], chromosome=chromosomes) # mut
 
 # Rules #
 
@@ -49,5 +46,5 @@ include: "rules/qualimap.smk"
 ## Mutations ##
 include: "rules/strelka2.smk"
 
-## qc ##
+## QC ##
 include: "rules/multiqc.smk"
