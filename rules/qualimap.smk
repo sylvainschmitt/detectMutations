@@ -1,6 +1,6 @@
 rule qualimap:
     input:
-        "results/{library}/{library}_{chromosome}_md.bam"
+        "results/{library}/{library}_{chromosome}.md.bam"
     output:
         "results/{library}/qualimap_{library}_{chromosome}/qualimapReport.html"
     log:

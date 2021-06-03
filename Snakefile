@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-configfile: "config/config.swiss.yml"
+configfile: "config/config.dag.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
@@ -15,17 +15,16 @@ lambda wildcards: chromosomes
 
 rule all:
     input:
-        # expand("results/reference/{reference}_{chromosome}.{ext}", 
-        #         reference=config["reference"], ext=["fa", "fa.fai", "dict", "fa.amb"], chromosome=chromosomes),
         ## alignments ##
-        expand("results/{library}/{library}_{chromosome}_md.bam", library=libraries, chromosome=chromosomes),
+        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes),
         ## qc ##
-        "results/multiqc_report.html"
+        "results/multiqc_report.html",
+        ## mutations ##
+        expand("results/mutations/{vcfs}_on_{chromosome}.vcf", vcfs=config["vcfs"], chromosome=chromosomes)
 
 # Rules #
 
 ## Reference ##
-include: "rules/cp_reference.smk"
 include: "rules/samtools_faidx_split.smk"
 include: "rules/bwa_index.smk"
 include: "rules/samtools_faidx.smk"
@@ -38,16 +37,17 @@ include: "rules/trimmomatic.smk"
 
 ## Alignments ##
 include: "rules/bwa_mem.smk"
+include: "rules/samtools_view.smk"
 include: "rules/samtools_sort.smk"
 include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
+include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
 include: "rules/samtools_stats.smk"
 include: "rules/qualimap.smk"
 
 ## Mutations ##
-# include: "rules/manta.smk"
-# include: "rules/strelka2.smk"
+include: "rules/strelka2.smk"
 
 ## qc ##
 include: "rules/multiqc.smk"

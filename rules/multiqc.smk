@@ -4,7 +4,7 @@ rule multiqc:
         expand("results/{library}/trim_out.log", library=libraries),
         expand("results/{library}/{library}_{chromosome}_md.bam.stats.out", chromosome=chromosomes, library=libraries),
         expand("results/{library}/qualimap_{library}_{chromosome}/qualimapReport.html", chromosome=chromosomes, library=libraries),
-        expand("results/{library}/{library}_{chromosome}.bam.metrics", chromosome=chromosomes, library=libraries)
+        expand("results/{library}/{library}_{chromosome}.md.bam.metrics", chromosome=chromosomes, library=libraries)
     output:
         "results/multiqc_report.html"
     log:
@@ -14,4 +14,4 @@ rule multiqc:
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest"
     shell:
-        "multiqc results/ -o results/ ; rm -r results/*/qualimap_* ; rm -r results/*/aln"
+        "multiqc results/ -o results/ ; rm -r results/*/qualimap_*"

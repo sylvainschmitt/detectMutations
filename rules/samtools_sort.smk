@@ -1,8 +1,8 @@
 rule samtools_sort:
     input:
-        "results/{library}/{library}_{chromosome}.sam"
+        "results/{library}/{library}_{chromosome}.raw.cram"
     output:
-        temp("results/{library}/aln/{library}_{chromosome}.bam")
+        temp("results/{library}/{library}_{chromosome}.sorted.cram")
     log:
         "results/logs/samtools_sort_{library}_{chromosome}.log"
     benchmark:
@@ -10,4 +10,4 @@ rule samtools_sort:
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:
-        "samtools sort --threads {threads} {input} > {output}"
+        "samtools sort --threads {threads} -O cram {input} > {output}"

@@ -1,8 +1,8 @@
 rule samtools_index:
     input:
-        "results/{library}/aln/{library}_{chromosome}.bam"
+        "results/{library}/{library}_{chromosome}.sorted.cram"
     output:
-        temp("results/{library}/aln/{library}_{chromosome}.bam.bai")
+        temp("results/{library}/{library}_{chromosome}.sorted.cram.crai")
     log:
         "results/logs/samtools_index_{library}_{chromosome}.log"
     benchmark:

@@ -1,6 +1,6 @@
 rule samtools_faidx_split:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        expand("{refdir}/{reference}.fa", refdir=config["refdir"], reference=config["reference"])
     output:
         expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True)
     log:

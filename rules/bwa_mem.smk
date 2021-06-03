@@ -1,9 +1,9 @@
 rule bwa_mem:
     input:
         expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True),
-        expand("results/{library}/{library}_{strand}.trimmed.paired.fastq", strand=["1", "2"], allow_missing=True),
+        expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", strand=["1", "2"], allow_missing=True),
         expand("results/reference/{reference}_{chromosome}{ext}", 
-                reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"], 
+                reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"],
                 allow_missing=True)
     output:
         temp("results/{library}/{library}_{chromosome}.sam")
