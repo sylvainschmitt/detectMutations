@@ -362,9 +362,8 @@ get_stats <- function(callfile, mutationsfile){
 ```
 
 ```{r stats, eval=F}
-config.file <- "config.experiment.yml"
+config.file <- "config.dev.yml"
 config <- yaml::read_yaml(file.path("config", config.file))
-config$reference <- "Qrob_PM1N_7k_Qrob_Chr01"
 refL <- width(readDNAStringSet(file.path(config$refdir, paste0(config$reference, ".fa"))))
 data.frame(vcf = list.files("results/mutations", full.names = T)) %>% 
   mutate(vcf = as.character(vcf)) %>% 
@@ -380,11 +379,12 @@ data.frame(vcf = list.files("results/mutations", full.names = T)) %>%
   select(-`.`) %>% 
   mutate(C = round((NR*150)/refL)) %>% 
   select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall) %>% 
-  write_tsv("stats.tsv")
+  write_tsv("stats.dev.tsv")
 ```
 
 ```{r statsFig, fig.cap="Caller assesment."}
-read_tsv("stats.tsv") %>% 
+read_tsv("stats.dev.tsv") %>% 
+  filter(caller != "manta") %>% 
   mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
                                "148" = "150", "198" = "200"))) %>% 
   reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
@@ -395,17 +395,26 @@ read_tsv("stats.tsv") %>%
   filter(parameter != "N") %>% 
   mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
                             "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
+    mutate(caller = recode(caller,    
+                         "mutect2" = "Mutect2", 
+                         "freebayes" = "freebayes", 
+                         "gatk" = "GATK", 
+                         "strelka2" = "Strelka2", 
+                         "somaticsniper" = "Somatic Sniper", 
+                         "muse" = "MuSE",
+                         "varscan" = "VarScan"
+  )) %>% 
   ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
   geom_boxplot(alpha = 0.3) +
   facet_grid(metric ~ parameter, scales = "free") +
-  ggdark::dark_theme_gray() +
   theme(legend.position = "bottom", axis.title = element_blank()) +
   scale_color_discrete("") +
   scale_fill_discrete("")
 ```
 
 ```{r statsFig2, fig.cap="Caller assesment."}
-read_tsv("stats.tsv") %>% 
+read_tsv("stats.dev.tsv") %>% 
+  filter(caller != "manta") %>% 
   filter(R == 2) %>% 
   mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
   mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
@@ -420,7 +429,7 @@ read_tsv("stats.tsv") %>%
                          "gatk" = "GATK", 
                          "strelka2" = "Strelka2", 
                          "somaticsniper" = "Somatic Sniper", 
-                         "muse" = "MuSe",
+                         "muse" = "MuSE",
                          "varscan" = "VarScan"
   )) %>% 
   ggplot(aes(as.factor(AF), as.factor(C), fill = metric.value)) +
@@ -428,15 +437,49 @@ read_tsv("stats.tsv") %>%
   facet_grid(caller ~ metric) +
   viridis::scale_fill_viridis("", option = "inferno") +
   xlab("Allele Fraction") + ylab("Coverage") +
-  ggdark::dark_theme_gray() +
   theme(strip.text.y = element_text(angle = 0),
         legend.position = "bottom", legend.key.width = unit(75, "points"))
 ```
 
+```{r}
+dat <- read_tsv("stats.dev.tsv") %>%
+  filter(caller != "manta") %>%
+  mutate(caller = recode(caller,    
+                         "mutect2" = "Mutect2", 
+                         "freebayes" = "freebayes", 
+                         "gatk" = "GATK", 
+                         "strelka2" = "Strelka2", 
+                         "somaticsniper" = "Somatic Sniper", 
+                         "muse" = "MuSE",
+                         "varscan" = "VarScan"
+  )) %>% 
+  filter(R == 2) %>% 
+  filter(Precision > 0.9) %>% 
+  group_by(AF, C) %>% 
+  filter(Recall == max(Recall)) %>% 
+  filter(Precision == max(Precision)) %>% 
+  group_by(AF, C, Precision, Recall) %>% 
+  summarise(caller = paste(caller, sep = ", ", collapse = ", "))
+dat2 <- select(dat, -caller) %>% 
+  unique() %>% 
+  mutate(label = paste0("R=", Recall, "\n", "P=", Precision))
+ggplot(dat, aes(as.factor(AF), as.factor(C))) +
+  geom_tile(aes(fill = caller)) +
+  geom_text(aes(label = label), col = "white", data = dat2) +
+  scale_fill_brewer("", palette = "Paired") +
+  xlab("Allele Fraction") + ylab("Coverage") +
+  theme(strip.text.y = element_text(angle = 0),
+        legend.position = "bottom") +
+  guides(fill=guide_legend(nrow = 3))
+```
+
 ```{r statsTable}
-read_tsv("stats.tsv") %>% 
+read_tsv("stats.dev.tsv") %>% 
   sample_n(10) %>% 
 kable(col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
                            "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
       caption = "Caller assesments.")
 ```
+
+
+

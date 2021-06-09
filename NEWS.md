@@ -1,3 +1,6 @@
+# detectMutation 0.1.9015
+* new caller: octopus
+
 # detectMutation 0.1.9014
 * cp_vcfs
 

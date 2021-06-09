@@ -1,4 +1,4 @@
-caller2mv=["mutect2", "freebayes", "gatk", "strelka2", "manta", "varscan", "somaticsniper", "muse"]
+caller2mv=["mutect2", "freebayes", "gatk", "strelka2", "manta", "varscan", "somaticsniper", "muse", "octopus"]
 
 rule cp_vcfs:
     input:

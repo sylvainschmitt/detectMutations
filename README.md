@@ -356,6 +356,8 @@ quality.*
 
 ![Caller assesment.](README_files/figure-gfm/statsFig2-1.png)
 
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
 <table>
 
 <caption>
@@ -438,198 +440,6 @@ Recall (TP/TP+FN)
 
 <td style="text-align:left;">
 
-freebayes
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-2.5
-
-</td>
-
-<td style="text-align:right;">
-
-0.50
-
-</td>
-
-<td style="text-align:right;">
-
-99
-
-</td>
-
-<td style="text-align:right;">
-
-4
-
-</td>
-
-<td style="text-align:right;">
-
-7
-
-</td>
-
-<td style="text-align:right;">
-
-96
-
-</td>
-
-<td style="text-align:right;">
-
-0.93
-
-</td>
-
-<td style="text-align:right;">
-
-0.96
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-freebayes
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-2.0
-
-</td>
-
-<td style="text-align:right;">
-
-0.25
-
-</td>
-
-<td style="text-align:right;">
-
-49
-
-</td>
-
-<td style="text-align:right;">
-
-10
-
-</td>
-
-<td style="text-align:right;">
-
-21
-
-</td>
-
-<td style="text-align:right;">
-
-90
-
-</td>
-
-<td style="text-align:right;">
-
-0.81
-
-</td>
-
-<td style="text-align:right;">
-
-0.90
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-manta
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-2.5
-
-</td>
-
-<td style="text-align:right;">
-
-0.50
-
-</td>
-
-<td style="text-align:right;">
-
-25
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-0
-
-</td>
-
-<td style="text-align:right;">
-
-0
-
-</td>
-
-<td style="text-align:right;">
-
-NA
-
-</td>
-
-<td style="text-align:right;">
-
-0.00
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
 muse
 
 </td>
@@ -648,7 +458,7 @@ muse
 
 <td style="text-align:right;">
 
-0.25
+0.50
 
 </td>
 
@@ -660,7 +470,7 @@ muse
 
 <td style="text-align:right;">
 
-9
+11
 
 </td>
 
@@ -672,7 +482,7 @@ muse
 
 <td style="text-align:right;">
 
-91
+89
 
 </td>
 
@@ -684,7 +494,7 @@ muse
 
 <td style="text-align:right;">
 
-0.91
+0.89
 
 </td>
 
@@ -706,71 +516,7 @@ mutect2
 
 <td style="text-align:right;">
 
-2.0
-
-</td>
-
-<td style="text-align:right;">
-
-0.25
-
-</td>
-
-<td style="text-align:right;">
-
-148
-
-</td>
-
-<td style="text-align:right;">
-
-2
-
-</td>
-
-<td style="text-align:right;">
-
-0
-
-</td>
-
-<td style="text-align:right;">
-
-98
-
-</td>
-
-<td style="text-align:right;">
-
-1.00
-
-</td>
-
-<td style="text-align:right;">
-
-0.98
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-mutect2
-
-</td>
-
-<td style="text-align:right;">
-
-100
-
-</td>
-
-<td style="text-align:right;">
-
-2.0
+2.5
 
 </td>
 
@@ -782,37 +528,37 @@ mutect2
 
 <td style="text-align:right;">
 
-25
+148
 
 </td>
 
 <td style="text-align:right;">
 
-75
+30
 
 </td>
 
 <td style="text-align:right;">
 
-0
+3
 
 </td>
 
 <td style="text-align:right;">
 
-25
+70
 
 </td>
 
 <td style="text-align:right;">
 
-1.00
+0.96
 
 </td>
 
 <td style="text-align:right;">
 
-0.25
+0.70
 
 </td>
 
@@ -822,7 +568,7 @@ mutect2
 
 <td style="text-align:left;">
 
-muse
+somaticsniper
 
 </td>
 
@@ -846,13 +592,13 @@ muse
 
 <td style="text-align:right;">
 
-49
+148
 
 </td>
 
 <td style="text-align:right;">
 
-48
+93
 
 </td>
 
@@ -864,7 +610,7 @@ muse
 
 <td style="text-align:right;">
 
-52
+7
 
 </td>
 
@@ -876,7 +622,7 @@ muse
 
 <td style="text-align:right;">
 
-0.52
+0.07
 
 </td>
 
@@ -886,7 +632,7 @@ muse
 
 <td style="text-align:left;">
 
-gatk
+strelka2
 
 </td>
 
@@ -898,7 +644,7 @@ gatk
 
 <td style="text-align:right;">
 
-3.0
+2.5
 
 </td>
 
@@ -910,13 +656,7 @@ gatk
 
 <td style="text-align:right;">
 
-99
-
-</td>
-
-<td style="text-align:right;">
-
-4
+198
 
 </td>
 
@@ -928,7 +668,13 @@ gatk
 
 <td style="text-align:right;">
 
-96
+0
+
+</td>
+
+<td style="text-align:right;">
+
+100
 
 </td>
 
@@ -940,7 +686,7 @@ gatk
 
 <td style="text-align:right;">
 
-0.96
+1.00
 
 </td>
 
@@ -968,7 +714,7 @@ muse
 
 <td style="text-align:right;">
 
-0.05
+0.25
 
 </td>
 
@@ -980,7 +726,7 @@ muse
 
 <td style="text-align:right;">
 
-58
+7
 
 </td>
 
@@ -992,7 +738,7 @@ muse
 
 <td style="text-align:right;">
 
-42
+93
 
 </td>
 
@@ -1004,7 +750,7 @@ muse
 
 <td style="text-align:right;">
 
-0.42
+0.93
 
 </td>
 
@@ -1014,7 +760,263 @@ muse
 
 <td style="text-align:left;">
 
-varscan
+freebayes
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2.5
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+9
+
+</td>
+
+<td style="text-align:right;">
+
+4
+
+</td>
+
+<td style="text-align:right;">
+
+92
+
+</td>
+
+<td style="text-align:right;">
+
+0.96
+
+</td>
+
+<td style="text-align:right;">
+
+0.91
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+octopus
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2.0
+
+</td>
+
+<td style="text-align:right;">
+
+0.05
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+28
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+72
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.72
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+mutect2
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2.0
+
+</td>
+
+<td style="text-align:right;">
+
+0.50
+
+</td>
+
+<td style="text-align:right;">
+
+99
+
+</td>
+
+<td style="text-align:right;">
+
+3
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+97
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+0.97
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+gatk
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+2.5
+
+</td>
+
+<td style="text-align:right;">
+
+0.25
+
+</td>
+
+<td style="text-align:right;">
+
+148
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+100
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+<td style="text-align:right;">
+
+1.00
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+freebayes
 
 </td>
 
@@ -1032,43 +1034,43 @@ varscan
 
 <td style="text-align:right;">
 
-0.05
+0.10
 
 </td>
 
 <td style="text-align:right;">
 
-198
+25
 
 </td>
 
 <td style="text-align:right;">
 
-100
+49
 
 </td>
 
 <td style="text-align:right;">
 
-0
+6
 
 </td>
 
 <td style="text-align:right;">
 
-0
+51
 
 </td>
 
 <td style="text-align:right;">
 
-NA
+0.89
 
 </td>
 
 <td style="text-align:right;">
 
-0.00
+0.51
 
 </td>
 

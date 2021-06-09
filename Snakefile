@@ -1,16 +1,16 @@
 ## Sylvain SCHMITT
 ## 28/04/2021
 
-configfile: "config/config.experiment.yml"
+configfile: "config/config.dev.yml"
 libraries, = glob_wildcards(config["libdir"] + "/{library}_mutated_R1.fastq")
 
 rule all:
     input:
         ## mutations ##
         expand("results/mutations/{library}_{caller}.vcf", library=libraries, 
-                caller=["mutect2", "freebayes", "gatk", "strelka2", "manta", "varscan", "somaticsniper", "muse"]),
+                caller=["mutect2", "freebayes", "gatk", "strelka2", "manta", "varscan", "somaticsniper", "muse", "octopus"])
         ## qc ##
-        expand("results/{library}/multiqc_report.html", library=libraries)
+        # expand("results/{library}/multiqc_report.html", library=libraries)
 
 # Rules #
 
@@ -38,18 +38,17 @@ include: "rules/samtools_mpileup.smk"
 include: "rules/qualimap.smk"
 
 ## Mutations ##
+include: "rules/bedtools_substract.smk"
 
 ### GATK Mutect2 ###
 include: "rules/gatk_mutect2.smk"
 
 ### freebayes ###
 include: "rules/freebayes.smk"
-include: "rules/bedtools_substract.smk"
 
 ### GATK HaplotypeCaller ###
 include: "rules/gatk_haplotypecaller.smk"
 include: "rules/gatk_genotypegvcfs.smk"
-include: "rules/bedtools_substract.smk"
 
 ## Strelka2
 include: "rules/strelka2.smk"
@@ -67,7 +66,6 @@ include: "rules/varscan2vcf.smk"
 
 ## Somatic Sniper
 include: "rules/somaticsniper.smk"
-include: "rules/bedtools_substract.smk"
 
 ## CaVEMan
 include: "rules/caveman.smk"
@@ -77,6 +75,9 @@ include: "rules/muse.smk"
 
 ## RADIA
 include: "rules/radia.smk"
+
+## Octopus
+include: "rules/octopus.smk"
 
 ## results ##
 include: "rules/cp_vcfs.smk"
