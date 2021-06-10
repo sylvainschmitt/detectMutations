@@ -22,3 +22,10 @@ report.html
 *.tsv
 # results
 stats.tsv
+# msc
+msc/*.docx
+msc/*.log
+msc/*.pdf
+msc/*/*/*.png
+msc/*/*/*.pdf
+

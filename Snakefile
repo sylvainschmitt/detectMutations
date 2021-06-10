@@ -1,7 +1,7 @@
 ## Sylvain SCHMITT
 ## 28/04/2021
 
-configfile: "config/config.dev.yml"
+configfile: "config/config.experiment.yml"
 libraries, = glob_wildcards(config["libdir"] + "/{library}_mutated_R1.fastq")
 
 rule all:

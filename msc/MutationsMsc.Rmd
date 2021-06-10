@@ -2,6 +2,8 @@
 title: A roadmap for plant mutation detection tools with variable sequencing depth and allele frequency using two reproducible pipelines
 date: '`r Sys.Date()`'
 output:
+  bookdown::word_document2:
+    reference_docx: ./template/template.docx
   bookdown::html_document2:
     number_sections: false  
     toc: true
@@ -12,8 +14,6 @@ output:
       in_header: ./template/preamble.tex
     number_sections: false
     toc: false
-  bookdown::word_document2:
-    reference_docx: ./template/template.docx
 linestretch: 1.5
 csl: /home/sylvain/Documents/Bibliography/csl/molecol.csl
 bibliography: /home/sylvain/Documents/Bibliography/library.bib
@@ -97,10 +97,11 @@ theme_set(bayesplot::theme_default())
 opts_chunk$set(echo = F, message = F, warning = F, 
                fig.height = 8, fig.width = 8,
                cache = T, cache.lazy = F)
-stats <- read_tsv("../stats.tsv")
+stats <- read_tsv("stats.tsv") %>% 
+  filter(caller != "manta")
 ```
 
-```{r}
+```{r fig1}
 stats %>% 
   mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
                                "148" = "150", "198" = "200"))) %>% 
@@ -112,6 +113,15 @@ stats %>%
   filter(parameter != "N") %>% 
   mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
                             "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
+    mutate(caller = recode(caller,    
+                         "mutect2" = "Mutect2", 
+                         "freebayes" = "freebayes", 
+                         "gatk" = "GATK", 
+                         "strelka2" = "Strelka2", 
+                         "somaticsniper" = "Somatic Sniper", 
+                         "muse" = "MuSE",
+                         "varscan" = "VarScan"
+  )) %>% 
   ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
   geom_boxplot(alpha = 0.3) +
   facet_grid(metric ~ parameter, scales = "free") +
@@ -120,7 +130,7 @@ stats %>%
   scale_fill_discrete("")
 ```
 
-```{r}
+```{r fig2}
 stats %>% 
   filter(R == 2) %>% 
   mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
@@ -136,7 +146,7 @@ stats %>%
                          "gatk" = "GATK", 
                          "strelka2" = "Strelka2", 
                          "somaticsniper" = "Somatic Sniper", 
-                         "muse" = "MuSe",
+                         "muse" = "MuSE",
                          "varscan" = "VarScan"
   )) %>% 
   ggplot(aes(as.factor(AF), as.factor(C), fill = metric.value)) +
@@ -148,5 +158,34 @@ stats %>%
         legend.position = "bottom", legend.key.width = unit(75, "points"))
 ```
 
-
+```{r fig3}
+dat <- stats %>%
+  mutate(caller = recode(caller,    
+                         "mutect2" = "Mutect2", 
+                         "freebayes" = "freebayes", 
+                         "gatk" = "GATK", 
+                         "strelka2" = "Strelka2", 
+                         "somaticsniper" = "Somatic Sniper", 
+                         "muse" = "MuSE",
+                         "varscan" = "VarScan"
+  )) %>% 
+  filter(R == 2) %>% 
+  filter(Precision > 0.9) %>% 
+  group_by(AF, C) %>% 
+  filter(Recall == max(Recall)) %>% 
+  filter(Precision == max(Precision)) %>% 
+  group_by(AF, C, Precision, Recall) %>% 
+  summarise(caller = paste(caller, sep = ", ", collapse = ", "))
+dat2 <- select(dat, -caller) %>% 
+  unique() %>% 
+  mutate(label = paste0("R=", Recall, "\n", "P=", Precision))
+ggplot(dat, aes(as.factor(AF), as.factor(C))) +
+  geom_tile(aes(fill = caller)) +
+  geom_text(aes(label = label), col = "white", data = dat2) +
+  scale_fill_brewer("", palette = "Paired") +
+  theme(legend.position = "bottom") +
+  xlab("Allele Fraction") + ylab("Coverage") +
+  theme(strip.text.y = element_text(angle = 0),
+        legend.position = "bottom")
+```
 
