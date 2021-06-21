@@ -13,4 +13,4 @@ rule gatk_markduplicates:
     singularity: 
         "docker://broadinstitute/gatk"
     shell:
-        "gatk MarkDuplicates --java-options "-Xmx10G -Xms100G -Djava.io.tmpdir=tmp" -I {input[0]} -O {output[0]} -M {output[1]} -R {input[1]}"
+        "gatk MarkDuplicates --java-options \"-Xmx10G -Xms100G -Djava.io.tmpdir=tmp\" -I {input[0]} -O {output[0]} -M {output[1]} -R {input[1]}"
