@@ -48,7 +48,7 @@ trimmomatic:
   jobname: "trimmomatic"
   mem: "16G"
   cpus: 4
-  time: "01:00:00"
+  time: "10:00:00"
 
 ## Alignments ##
 
@@ -56,7 +56,7 @@ bwa_mem:
   jobname: "bwa_mem"
   mem: "32G"
   cpus: 8
-  time: "48:00:00"
+  time: "96:00:00"
   
 samtools_view:
   jobname: "samtools_view"

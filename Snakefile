@@ -11,13 +11,14 @@ chromosomes_table = pd.read_table(config["refdir"] + "/" + config["reference"] +
                                   header = None, names = ["chr", "X2", "X3", "X4", "X5"])
 chromosomes = list(chromosomes_table.chr)
 lambda wildcards: chromosomes
-# print(expand("{chromosome}", chromosome=chromosomes))
+print(expand("{chromosome}", chromosome=chromosomes))
 
 rule all:
     input:
-        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes) # aln
-        # "results/multiqc_report.html", # qc
-        # expand("results/mutations/{vcfs}_on_{chromosome}.vcf", vcfs=config["vcfs"], chromosome=chromosomes) # mut
+    	expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", library=libraries, strand=["1", "2"]), # reads
+        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes), # aln
+        "results/multiqc_report.html", # qc
+        expand("results/mutations/{vcfs}_on_{chromosome}.vcf", vcfs=config["vcfs"], chromosome=chromosomes) # mut
 
 # Rules #
 
