@@ -9,7 +9,7 @@ rule strelka2:
         expand("results/reference/{reference}_{chromosome}.fa{ext}", 
                 reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], allow_missing=True)
     output:
-        "results/mutations/{tumor}_vs_{normal}_on_{chromosome}.vcf"
+        "results/mutations/{tumor}_vs_{normal}_on_{chromosome}_strelka2.vcf"
     log:
         "results/logs/strelka2_{tumor}_vs_{normal}_{chromosome}.log"
     benchmark:
