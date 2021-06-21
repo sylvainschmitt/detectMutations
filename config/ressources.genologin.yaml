@@ -80,7 +80,7 @@ gatk_markduplicates:
   jobname: "gatk_markduplicates"
   mem: "100G"
   cpus: 1
-  time: "01:00:00"
+  time: "48:00:00"
   
 samtools_view_md:
   jobname: "samtools_view_md"

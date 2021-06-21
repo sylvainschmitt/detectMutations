@@ -5,7 +5,7 @@ rule gatk_markduplicates:
         "results/{library}/{library}_{chromosome}.sorted.cram.crai"
     output:
         temp("results/{library}/{library}_{chromosome}.md.bam"),
-        temp("results/{library}/{library}_{chromosome}.md.bam.metrics")
+        "results/{library}/{library}_{chromosome}.md.bam.metrics"
     log:
         "results/logs/gatk_markduplicates_{library}_{chromosome}.log"
     benchmark:

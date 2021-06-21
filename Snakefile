@@ -17,7 +17,7 @@ rule all:
     input:
     	expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", library=libraries, strand=["1", "2"]), # reads
         expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes), # aln
-        "results/multiqc_report.html", # qc
+        # "results/multiqc_report.html", # qc
         expand("results/mutations/{vcfs}_on_{chromosome}_strelka2.vcf", vcfs=config["vcfs"], chromosome=chromosomes) # mut
 
 # Rules #
