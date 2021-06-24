@@ -110,9 +110,9 @@ qualimap:
 
 strelka2:
   jobname: "strelka2"
-  mem: "32G"
-  cpus: 8
-  time: "48:00:00"
+  mem: "100G"
+  cpus: 10
+  time: "96:00:00"
   
 ## QC ##
   
