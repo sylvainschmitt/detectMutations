@@ -14,6 +14,7 @@ April 20, 2021
       - [Alignments](#alignments)
       - [Mutation](#mutation)
       - [Quality check](#quality-check)
+  - [Results](#results)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -195,6 +196,18 @@ quality.*
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
+## Mutation
+
+### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
+
+  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
+  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
+
+## Quality check
+
+*Combined quality information from `QualiMap`, `Picard`, `Samtools`,
+`Trimmomatic`, and `FastQC` (see previous steps).*
+
 ### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
 
   - Tools: [`Samtools
@@ -208,20 +221,12 @@ quality.*
     [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
   - Singularity: docker://pegi3s/qualimap
 
-## Mutation
-
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
-
-  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
-  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-## Quality check
-
-*Combined quality information from `QualiMap`, `Picard`, `Samtools`,
-`Trimmomatic`, and `FastQC` (see previous steps).*
-
 ### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
 
   - Tools: [`MultiQC`](https://multiqc.info/)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
+
+# Results
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->

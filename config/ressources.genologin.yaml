@@ -60,21 +60,21 @@ bwa_mem:
   
 samtools_view:
   jobname: "samtools_view"
-  mem: "32G"
-  cpus: 8
-  time: "48:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
   
 samtools_sort:
   jobname: "samtools_sort"
-  mem: "32G"
-  cpus: 8
-  time: "48:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
 
 samtools_index:
   jobname: "samtools_index"
-  mem: "32G"
-  cpus: 8
-  time: "48:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
   
 gatk_markduplicates:
   jobname: "gatk_markduplicates"
@@ -84,24 +84,12 @@ gatk_markduplicates:
   
 samtools_view_md:
   jobname: "samtools_view_md"
-  mem: "32G"
-  cpus: 8
-  time: "48:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
   
 samtools_index_md:
   jobname: "samtools_index_md"
-  mem: "16G"
-  cpus: 4
-  time: "01:00:00"
-  
-samtools_stats:
-  jobname: "samtools_stats"
-  mem: "32G"
-  cpus: 8
-  time: "48:00:00"
-  
-qualimap:
-  jobname: "qualimap"
   mem: "16G"
   cpus: 4
   time: "01:00:00"
@@ -110,11 +98,23 @@ qualimap:
 
 strelka2:
   jobname: "strelka2"
-  mem: "100G"
-  cpus: 10
+  mem: "200G"
+  cpus: 20
   time: "96:00:00"
   
 ## QC ##
+
+samtools_stats:
+  jobname: "samtools_stats"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+qualimap:
+  jobname: "qualimap"
+  mem: "16G"
+  cpus: 4
+  time: "01:00:00"
   
 multiqc:
   jobname: "multiqc"

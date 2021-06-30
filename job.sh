@@ -16,7 +16,6 @@ module load system/singularity-3.7.3
 # Variables
 CONFIG=config/ressources.genologin.yaml
 COMMAND="sbatch --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
-# COMMAND="sbatch -p unlimitq --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
 CORES=32
 mkdir -p snake_subjob_log
 
@@ -34,7 +33,4 @@ echo 'Job ID:' $SLURM_JOB_ID
 echo 'Number of nodes assigned to job:' $SLURM_JOB_NUM_NODES
 echo 'Nodes assigned to job:' $SLURM_JOB_NODELIST
 echo 'Directory:' $(pwd)
-## Detail Information:
-#echo 'scontrol show job:'
-#scontrol show job $SLURM_JOB_ID
 echo '########################################'

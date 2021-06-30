@@ -41,11 +41,11 @@ include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
-include: "rules/samtools_stats.smk"
-include: "rules/qualimap.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
 
 ## QC ##
+include: "rules/samtools_stats.smk"
+include: "rules/qualimap.smk"
 include: "rules/multiqc.smk"

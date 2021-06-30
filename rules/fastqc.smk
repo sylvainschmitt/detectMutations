@@ -9,5 +9,8 @@ rule fastqc:
         "results/benchmarks/fastqc_{library}.benchmark.txt"
     singularity: 
         "docker://biocontainers/fastqc:v0.11.9_cv8"
+    threads: 4
+    resources:
+        mem_mb=16000
     shell:
         "fastqc -t {threads} -q {input}"

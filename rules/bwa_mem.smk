@@ -15,6 +15,9 @@ rule bwa_mem:
         "results/benchmarks/bwa_mem_{library}_{chromosome}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest"
+    threads: 8
+    resources:
+        mem_mb=32000
     shell:
         "bwa mem -M -R '{params.rg}' -t {threads} {input[0]} {input[1]} {input[2]} > {output}"
         

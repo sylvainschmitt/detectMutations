@@ -1,6 +1,6 @@
 rule samtools_stats:
     input:
-        "results/{library}/{library}_{chromosome}.md.bam"
+        "results/{library}/{library}_{chromosome}.md.cram"
     output:
         temp("results/{library}/{library}_{chromosome}_md.bam.stats.out")
     log:

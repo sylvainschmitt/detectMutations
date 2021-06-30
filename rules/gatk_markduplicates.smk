@@ -12,5 +12,8 @@ rule gatk_markduplicates:
         "results/benchmarks/gatk_markduplicates_{library}_{chromosome}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
+    threads: 1
+    resources:
+        mem_mb=100000
     shell:
-        "gatk MarkDuplicates --java-options \"-Djava.io.tmpdir=tmp\" -I {input[0]} -O {output[0]} -M {output[1]} -R {input[1]}"
+        "gatk MarkDuplicates --java-options \"-Xmx100G -Xms1G -Djava.io.tmpdir=tmp\" -I {input[0]} -O {output[0]} -M {output[1]} -R {input[1]}"

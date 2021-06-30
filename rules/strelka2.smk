@@ -16,6 +16,9 @@ rule strelka2:
         "results/benchmarks/strelka2_{tumor}_vs_{normal}_{chromosome}.benchmark.txt"
     singularity: 
         "docker://quay.io/wtsicgp/strelka2-manta"
+    threads: 20
+    resources:
+        mem_mb=200000
     shell:
         "configureStrelkaSomaticWorkflow.py "
         "--normalBam {input[2]} "

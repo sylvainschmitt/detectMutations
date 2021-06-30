@@ -1,3 +1,7 @@
+# detectMutation - swiss data 0.2.0.9005
+* correct versioning
+* correct management of threads and memory
+
 # detectMutation - swiss data 0.1.9004
 * compression for reads and alignments
 * mutation detection for pairs of libraries in config
