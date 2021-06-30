@@ -20,3 +20,21 @@ bibliography: /home/sylvain/Documents/Bibliography/library.bib
 link-citations: yes
 always_allow_html: yes
 ---
+
+```{r fig1, eval=F}
+stats %>% 
+  reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
+                 variable.name = "parameter", value.name = "parameter.value") %>% 
+  reshape2::melt(c("caller", "parameter", "parameter.value"),
+                 variable.name = "metric", value.name = "metric.value") %>% 
+  filter(metric %in% c("Precision", "Recall")) %>% 
+  filter(parameter != "N") %>% 
+  mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
+                            "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
+  ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
+  geom_boxplot(alpha = 0.3) +
+  facet_grid(metric ~ parameter, scales = "free") +
+  theme(legend.position = "bottom", axis.title = element_blank()) +
+  scale_color_discrete("") +
+  scale_fill_discrete("")
+```

@@ -14,6 +14,9 @@ rule muse:
         "results/benchmarks/muse_{library}.benchmark.txt"
     singularity: 
         "docker://opengenomics/muse"
+    threads: 4
+    resources:
+        mem_mb=16000
     shell:
         "muse.py -f {input[0]} --tumor-bam {input[1]} --normal-bam {input[2]} -O {output} -n {threads} -w results/{wildcards.library}/muse/"
         

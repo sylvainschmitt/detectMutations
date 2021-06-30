@@ -4,59 +4,59 @@ __default__:
   cpus: 4
   time: "48:00:00"
 
+## Reference ## 
+
 cp_reference:
   jobname: "cp_reference"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "01:00:00"
 
 bwa_index:
   jobname: "bwa_index"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "01:00:00"
   
 samtools_faidx:
   jobname: "samtools_faidx"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "01:00:00"
   
 gatk_dict:
   jobname: "gatk_dict"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "01:00:00"
 
 cp_snps:
   jobname: "cp_snps"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "01:00:00"
   
 gatk_idx:
   jobname: "gatk_idx"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "01:00:00"
+  
+## Reads ## 
   
 cp_reads:
   jobname: "cp_reads"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
-  
-fastqc:
-  jobname: "fastqc"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
+  time: "01:00:00"
 
 trimmomatic:
   jobname: "trimmomatic"
   mem: "16G"
   cpus: 4
   time: "10:00:00"
+  
+## Alignments ## 
   
 bwa_mem:
   jobname: "bwa_mem"
@@ -66,15 +66,15 @@ bwa_mem:
   
 samtools_sort:
   jobname: "samtools_sort"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
 
 samtools_index:
   jobname: "samtools_index"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
   
 gatk_markduplicates:
   jobname: "gatk_markduplicates"
@@ -84,64 +84,42 @@ gatk_markduplicates:
   
 samtools_index_md:
   jobname: "samtools_index_md"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
-  
-samtools_stats:
-  jobname: "samtools_stats"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
   
 samtools_mpileup:
   jobname: "samtools_mpileup"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
   
-qualimap:
-  jobname: "qualimap"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
+## Detection ## 
   
 gatk_mutect2:
   jobname: "gatk_mutect2"
   mem: "16G"
-  cpus: 4
+  cpus: 1
   time: "48:00:00"
   
 freebayes:
   jobname: "freebayes"
   mem: "16G"
-  cpus: 4
+  cpus: 1
   time: "48:00:00"
-  
-bedtools_substract:
-  jobname: "bedtools_substract"
-  mem: "16G"
-  cpus: 4
-  time: "10:00:00"
   
 gatk_haplotypecaller:
   jobname: "gatk_haplotypecaller"
   mem: "16G"
-  cpus: 4
+  cpus: 1
   time: "48:00:00"
   
 gatk_genotypegvcfs:
   jobname: "gatk_genotypegvcfs"
   mem: "16G"
-  cpus: 4
+  cpus: 1
   time: "48:00:00"
 
-manta:
-  jobname: "manta"
-  mem: "16G"
-  cpus: 4
-  time: "48:00:00"
-  
 strelka2:
   jobname: "strelka2"
   mem: "16G"
@@ -151,7 +129,7 @@ strelka2:
 varscan:
   jobname: "varscan"
   mem: "16G"
-  cpus: 4
+  cpus: 1
   time: "48:00:00"
   
 varscan2vcf:
@@ -171,6 +149,40 @@ muse:
   mem: "16G"
   cpus: 4
   time: "48:00:00"
+
+## Mutations ## 
+
+cp_vcfs:
+  jobname: "cp_vcfs"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+bedtools_substract:
+  jobname: "bedtools_substract"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+## QC ## 
+  
+fastqc:
+  jobname: "fastqc"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
+samtools_stats:
+  jobname: "samtools_stats"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+
+qualimap:
+  jobname: "qualimap"
+  mem: "16G"
+  cpus: 4
+  time: "01:00:00"
   
 multiqc:
   jobname: "multiqc"

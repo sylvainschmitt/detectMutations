@@ -9,6 +9,9 @@ rule qualimap:
         "results/benchmarks/qualimap_{library}.benchmark.txt"
     singularity: 
         "docker://pegi3s/qualimap"
+    threads: 4
+    resources:
+        mem_mb=16000
     shell:
         "qualimap bamqc -bam {input[0]} --paint-chromosome-limits -nt {threads} -skip-duplicated --skip-dup-mode " 
         "0 -outdir results/{wildcards.library}/qualimap_mutated -outformat HTML ; "

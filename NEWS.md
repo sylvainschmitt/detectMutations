@@ -1,3 +1,8 @@
+# detectMutation 0.2.0.9016
+* correct versioning
+* correct threading and memory
+* new ecperiment
+
 # detectMutation 0.1.9015
 * new caller: octopus
 

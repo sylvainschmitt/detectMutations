@@ -144,12 +144,6 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 * Tools: `cp`
 
-### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
-
-* Tools: [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
-* Singularity: docker://biocontainers/fastqc:v0.11.9_cv8
-
-
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
 * Tools: [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
@@ -184,45 +178,24 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 * Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
+### [samtools_mpileup](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_mpileup.smk)
 
-* Tools: [`Samtools stats`](http://www.htslib.org/doc/samtools-stats.html)
+* Tools: [`Samtools mpileup`](http://www.htslib.org/doc/samtools-mpileup.html)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
-
-* Tools: [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
-* Singularity: docker://pegi3s/qualimap
-
-## Mutation
+## Detection
 
 *Detect mutations.*
-
-#### [cp_vcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_vcfs.smk)
-
-* Tools: `cp`
-
-### Mutect2
 
 #### [gatk_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_mutect2.smk)
 
 * Tools: [`gatk Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
 * Singularity: docker://broadinstitute/gatk
 
-### freebayes
-
 #### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes.smk)
 
 * Tools: [`freebayes`](https://github.com/freebayes/freebayes)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/freebayes/freebayes:latest
-
-
-#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
-
-* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### GATK
 
 #### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_haplotypecaller.smk)
 
@@ -234,32 +207,10 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 * Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
 * Singularity: docker://broadinstitute/gatk
 
-#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
-
-* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### Strelka2
-
-#### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
-
-* Tools: [`Manta`](https://github.com/Illumina/manta)
-* Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
 #### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
 
 * Tools: [`Strelka2`](https://github.com/Illumina/strelka)
 * Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-### Manta
-
-#### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
-
-* Tools: [`Manta`](https://github.com/Illumina/manta)
-* Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-
-### VarScan
 
 #### [varscan](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/varscan.smk)
 
@@ -271,46 +222,45 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 * Script: [`varscan2vcf.R`](https://github.com/sylvainschmitt/detectMutations/blob/main/scripts/varscan2vcf.R)
 * Singularity: https://github.com/sylvainschmitt/singularity-template/releases/download/0.0.1/sylvainschmitt-singularity-tidyverse-Biostrings.latest.sif
 
-### Somatic Sniper
-
 #### [somaticsniper](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/somaticsniper.smk)
 
 * Tools: [`Somatic Sniper`](http://gmt.genome.wustl.edu/packages/somatic-sniper/)
 * Singularity: docker://lethalfang/somaticsniper:1.0.5.0
-
-#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
-
-* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### CaVEMan 
-
-**BUG!**
-
-#### [caveman](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/caveman.smk)
-
-* Tools: [`CaVEMan`](https://github.com/cancerit/CaVEMan)
-* Singularity: docker://leukgen/docker-caveman:v1.0.0
-
-### MuSe 
 
 #### [muse](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/muse.smk)
 
 * Tools: [`MuSe`](https://bioinformatics.mdanderson.org/public-software/muse/ )
 * Singularity: docker://opengenomics/muse
 
-### RADIA
+## Mutations
 
-**BUG!**
+#### [cp_vcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_vcfs.smk)
 
-#### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
+* Tools: `cp`
 
-* Tools: [`RADIA`](https://github.com/aradenbaugh/radia/)
-* Singularity: docker://opengenomics/radia
+#### [bedtools_substract](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bedtools_substract.smk)
+
+* Tools: [`bedtools substract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
 
 ## Quality check
 
 *Combined quality information from `QualiMap`, `Picard`, `Samtools`, `Trimmomatic`, and `FastQC` (see previous steps).*
+
+### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
+
+* Tools: [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
+* Singularity: docker://biocontainers/fastqc:v0.11.9_cv8
+
+### [samtools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
+
+* Tools: [`Samtools stats`](http://www.htslib.org/doc/samtools-stats.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
+
+* Tools: [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
+* Singularity: docker://pegi3s/qualimap
 
 ### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
 
@@ -362,9 +312,7 @@ get_stats <- function(callfile, mutationsfile){
 ```
 
 ```{r stats, eval=F}
-config.file <- "config.dev.yml"
-config <- yaml::read_yaml(file.path("config", config.file))
-refL <- width(readDNAStringSet(file.path(config$refdir, paste0(config$reference, ".fa"))))
+refL <- width(readDNAStringSet("../generateMutations/data/Qrob_PM1N_1M.fa"))
 data.frame(vcf = list.files("results/mutations", full.names = T)) %>% 
   mutate(vcf = as.character(vcf)) %>% 
   mutate(libraries = gsub("results/mutations/", "", vcf)) %>% 
@@ -372,48 +320,18 @@ data.frame(vcf = list.files("results/mutations", full.names = T)) %>%
   separate(libraries, c("N", "R", "AF", "NR", "caller"), sep = "_") %>% 
   mutate_at(c("N", "R", "AF", "NR"), funs(as.numeric(gsub("[[:alpha:]]", "", .)))) %>% 
   mutate(mutations = file.path("..", "generateMutations", "results", "mutations", 
-                               paste0(config$reference, "_mutated_N", N, "_R", R, ".tsv"))) %>% 
+                               paste0("Qrob_PM1N_1M_Qrob_Chr01", "_mutated_N", N, "_R", R, ".tsv"))) %>% 
   group_by(N, R, AF, NR, caller) %>% 
   do(stats = get_stats(.$vcf, .$mutations)) %>% 
   unnest(stats) %>% 
   select(-`.`) %>% 
   mutate(C = round((NR*150)/refL)) %>% 
   select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall) %>% 
-  write_tsv("stats.dev.tsv")
+  write_tsv("stats.experiment2.tsv")
 ```
 
-```{r statsFig, fig.cap="Caller assesment."}
-read_tsv("stats.dev.tsv") %>% 
-  filter(caller != "manta") %>% 
-  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
-                               "148" = "150", "198" = "200"))) %>% 
-  reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
-                 variable.name = "parameter", value.name = "parameter.value") %>% 
-  reshape2::melt(c("caller", "parameter", "parameter.value"),
-                 variable.name = "metric", value.name = "metric.value") %>% 
-  filter(metric %in% c("Precision", "Recall")) %>% 
-  filter(parameter != "N") %>% 
-  mutate(parameter = recode(parameter, "N" = "Number\nof mutations", "R" = "Transition\nTransversion Ratio",
-                            "AF" = "Allele\nFrequency", "C" = "Coverage")) %>% 
-    mutate(caller = recode(caller,    
-                         "mutect2" = "Mutect2", 
-                         "freebayes" = "freebayes", 
-                         "gatk" = "GATK", 
-                         "strelka2" = "Strelka2", 
-                         "somaticsniper" = "Somatic Sniper", 
-                         "muse" = "MuSE",
-                         "varscan" = "VarScan"
-  )) %>% 
-  ggplot(aes(as.factor(parameter.value), metric.value, col = caller, fill = caller)) +
-  geom_boxplot(alpha = 0.3) +
-  facet_grid(metric ~ parameter, scales = "free") +
-  theme(legend.position = "bottom", axis.title = element_blank()) +
-  scale_color_discrete("") +
-  scale_fill_discrete("")
-```
-
-```{r statsFig2, fig.cap="Caller assesment."}
-read_tsv("stats.dev.tsv") %>% 
+```{r }
+read_tsv("stats.experiment1.tsv") %>% 
   filter(caller != "manta") %>% 
   filter(R == 2) %>% 
   mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
@@ -442,7 +360,7 @@ read_tsv("stats.dev.tsv") %>%
 ```
 
 ```{r}
-dat <- read_tsv("stats.dev.tsv") %>%
+dat <- read_tsv("stats.experiment1.tsv") %>%
   filter(caller != "manta") %>%
   mutate(caller = recode(caller,    
                          "mutect2" = "Mutect2", 
@@ -473,13 +391,28 @@ ggplot(dat, aes(as.factor(AF), as.factor(C))) +
   guides(fill=guide_legend(nrow = 3))
 ```
 
-```{r statsTable}
-read_tsv("stats.dev.tsv") %>% 
-  sample_n(10) %>% 
-kable(col.names = c("Caller", "Number of mutations", "Transition Transversion Ratio", "Allele frequency", "Coverage",
-                           "False Negative", "False Positive", "True Positive", "Precision (TP/TP+FP)", "Recall (TP/TP+FN)"),
-      caption = "Caller assesments.")
-```
+# Miscellaneous
 
+*Due to bug, poor performance, or slow speed.*
 
+## Unused callers
 
+#### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
+
+* Tools: [`Manta`](https://github.com/Illumina/manta)
+* Singularity: docker://quay.io/wtsicgp/strelka2-manta
+
+#### [caveman](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/caveman.smk)
+
+* Tools: [`CaVEMan`](https://github.com/cancerit/CaVEMan)
+* Singularity: docker://leukgen/docker-caveman:v1.0.0
+
+#### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
+
+* Tools: [`RADIA`](https://github.com/aradenbaugh/radia/)
+* Singularity: docker://opengenomics/radia
+
+#### [octopus](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/octopussmk)
+
+* Tools: [`octopus`](https://github.com/luntergroup/octopus)
+* Singularity: https://github.com/sylvainschmitt/singularity-octopus/releases/download/0.0.1/sylvainschmitt-singularity-octopus.latest.sif

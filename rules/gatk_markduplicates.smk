@@ -11,6 +11,8 @@ rule gatk_markduplicates:
         "results/benchmarks/gatk_markduplicates_{library}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
+    resources:
+        mem_mb=16000
     shell:
-        "gatk MarkDuplicates I={input[0]} O={output[0]} M={output[2]} ; "
-        "gatk MarkDuplicates I={input[1]} O={output[1]} M={output[3]}"
+        "gatk MarkDuplicates --java-options \"-Xmx16G -Xms1G -Djava.io.tmpdir=tmp\" I={input[0]} O={output[0]} M={output[2]} ; "
+        "gatk MarkDuplicates --java-options \"-Xmx16G -Xms1G -Djava.io.tmpdir=tmp\" I={input[1]} O={output[1]} M={output[3]}"
