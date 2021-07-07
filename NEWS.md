@@ -1,3 +1,6 @@
+# detectMutation - swiss data 0.2.0.9006
+* bahs to get swiss data
+
 # detectMutation - swiss data 0.2.0.9005
 * correct versioning
 * correct management of threads and memory

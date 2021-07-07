@@ -30,7 +30,6 @@ include: "rules/gatk_dict.smk"
 
 ## Reads ##
 include: "rules/cp_reads.smk"
-include: "rules/fastqc.smk"
 include: "rules/trimmomatic.smk"
 
 ## Alignments ##
@@ -46,6 +45,7 @@ include: "rules/samtools_index_md.smk"
 include: "rules/strelka2.smk"
 
 ## QC ##
+include: "rules/fastqc.smk"
 include: "rules/samtools_stats.smk"
 include: "rules/qualimap.smk"
 include: "rules/multiqc.smk"

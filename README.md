@@ -69,7 +69,11 @@ Reference genome 3P from <http://urgi.versailles.inra.fr/download/oak>.
 Raw reads from ENA project PRJEB8388.
 
 ``` bash
-# code to be given
+cd data/swiss
+mkdir out
+sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_data.sh
+rm -rf out
+sh megre_data.sh
 ```
 
 ## Locally
@@ -85,7 +89,7 @@ snakemake --report report.html # report
 ## HPC
 
 ``` bash
-module purge ; module load bioinfo/snakemake-5.25.0 # for test on node
+module load bioinfo/snakemake-5.25.0 # for test on node
 snakemake -np # dry run
 sbatch job.sh # run
 snakemake --dag | dot -Tsvg > dag/dag.svg # dag
@@ -130,12 +134,6 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 ### [cp\_reads](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reads.smk)
 
   - Tools: `cp`
-
-### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
-
-  - Tools:
-    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
-  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
@@ -207,6 +205,12 @@ quality.*
 
 *Combined quality information from `QualiMap`, `Picard`, `Samtools`,
 `Trimmomatic`, and `FastQC` (see previous steps).*
+
+### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
+
+  - Tools:
+    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
+  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
 
 ### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
 
