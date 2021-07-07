@@ -3,15 +3,15 @@ title: A roadmap for plant mutation detection tools with variable sequencing dep
 author: (**Alphabetic**) Myriam Heuertz, Thibault leroy, Sylvain Schmitt, Niklas Tysklind
 date: '`r Sys.Date()`'
 output:
+  bookdown::html_document2:
+    number_sections: false
+    toc: true
+    toc_float: yes
   bookdown::pdf_document2:
     template: ./template/templateSuppMatMolEcol.tex
     number_sections: false
     toc: false
     keep_tex: true
-  bookdown::html_document2:
-    number_sections: false
-    toc: true
-    toc_float: yes
   bookdown::word_document2:
     reference_docx: ./template/template.docx
 linestretch: 1.5
@@ -21,7 +21,33 @@ link-citations: yes
 always_allow_html: yes
 ---
 
-```{r fig1, eval=F}
+
+```{r config, message=FALSE, warning=FALSE, include=FALSE}
+rm(list = ls()); invisible(gc())
+library(knitr)
+library(tidyverse)
+library(bayesplot)
+theme_set(bayesplot::theme_default())
+opts_chunk$set(echo = F, message = F, warning = F, 
+               fig.height = 6, fig.width = 8,
+               cache = T, cache.lazy = F)
+stats <- read_tsv("stats.experiment4.tsv") %>% 
+  group_by(caller, N, R, AF, C) %>% 
+  summarise_at(c("FN", "FP", "TP", "Precision", "Recall"), mean, na.rm = T) %>% 
+  mutate(caller = recode(caller,    
+                         "mutect2" = "Mutect2", 
+                         "freebayes" = "freebayes", 
+                         "gatk" = "GATK", 
+                         "strelka2" = "Strelka2", 
+                         "somaticsniper" = "Somatic Sniper", 
+                         "muse" = "MuSE",
+                         "varscan" = "VarScan"
+  )) %>% 
+  ungroup()
+```
+
+
+```{r fig1}
 stats %>% 
   reshape2::melt(c("caller", "FN", "FP", "TP", "Precision", "Recall"),
                  variable.name = "parameter", value.name = "parameter.value") %>% 
@@ -38,3 +64,20 @@ stats %>%
   scale_color_discrete("") +
   scale_fill_discrete("")
 ```
+
+```{r fig2}
+stats %>%
+  filter(C %in% c(50, 150)) %>% 
+  mutate(C = recode(C, "50" = "low coverage (50X)", "150" = "high coverage (150X)")) %>% 
+  select(caller, C, AF, Recall, Precision) %>% 
+  reshape2::melt(c("caller", "C", "AF")) %>% 
+  group_by(caller, C, AF, variable) %>% 
+  ggplot(aes(AF, value, col = caller)) +
+  geom_line() +
+  facet_grid(variable ~ C) +
+  xlab("Allele frequency") +
+  ylab("") +
+  scale_color_brewer("", palette = "Paired")
+```
+
+

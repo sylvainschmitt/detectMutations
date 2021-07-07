@@ -269,12 +269,9 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 # Results
 
-```{r get_stats, eval=F}
+```{r get_stats, echo=T}
 options(dplyr.summarise.inform = FALSE)
 get_stats <- function(callfile, mutationsfile){
-  # print(callfile) ; print(mutationsfile) # debug
-  # callfile <- "results/N100_R2_AF0.1_NR7000/varscan/N100_R2_AF0.1_NR7000.vcf"
-  # mutationsfile <- "../generateMutations/results/reference//../mutations/Qrob_PM1N_7k_Qrob_Chr01_mutated_N100_R2.tsv"
   mutations <- read_tsv(mutationsfile, col_types = cols(
     CHROM = col_character(),
     POS = col_double(),
@@ -311,84 +308,30 @@ get_stats <- function(callfile, mutationsfile){
 }
 ```
 
-```{r stats, eval=F}
-refL <- width(readDNAStringSet("../generateMutations/data/Qrob_PM1N_1M.fa"))
-data.frame(vcf = list.files("results/mutations", full.names = T)) %>% 
+```{r stats, eval=F, echo=T}
+refL <- width(readDNAStringSet("../genologin/experiment4/mutations_tsv/Qrob_PM1N_1M_Qrob_Chr01_mutated_N1000_R2.fa"))
+for(i in 1:10)
+  data.frame(vcf = list.files("../genologin/experiment4/mutations_vcf", full.names = T)) %>% 
   mutate(vcf = as.character(vcf)) %>% 
-  mutate(libraries = gsub("results/mutations/", "", vcf)) %>% 
+  mutate(libraries = gsub("../genologin/experiment4/mutations_vcf/", "", vcf)) %>% 
   mutate(libraries = gsub(".vcf", "", libraries)) %>% 
-  separate(libraries, c("N", "R", "AF", "NR", "caller"), sep = "_") %>% 
-  mutate_at(c("N", "R", "AF", "NR"), funs(as.numeric(gsub("[[:alpha:]]", "", .)))) %>% 
-  mutate(mutations = file.path("..", "generateMutations", "results", "mutations", 
+  separate(libraries, c("N", "R", "AF", "NR", "REP", "caller"), sep = "_") %>% 
+  mutate_at(c("N", "R", "AF", "NR", "REP"), funs(as.numeric(gsub("[[:alpha:]]", "", .)))) %>% 
+  mutate(mutations = file.path("..", "genologin", "experiment4", "mutations_tsv", 
                                paste0("Qrob_PM1N_1M_Qrob_Chr01", "_mutated_N", N, "_R", R, ".tsv"))) %>% 
-  group_by(N, R, AF, NR, caller) %>% 
+  group_by(N, R, AF, NR, REP, caller) %>% 
+  filter(REP %in% i) %>% 
   do(stats = get_stats(.$vcf, .$mutations)) %>% 
   unnest(stats) %>% 
   select(-`.`) %>% 
   mutate(C = round((NR*150)/refL)) %>% 
-  select(caller, N, R, AF, C, FN, FP, TP, Precision, Recall) %>% 
-  write_tsv("stats.experiment2.tsv")
-```
-
-```{r }
-read_tsv("stats.experiment1.tsv") %>% 
-  filter(caller != "manta") %>% 
-  filter(R == 2) %>% 
-  mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
-  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
-                               "148" = "150", "198" = "200"))) %>% 
-  reshape2::melt(c("caller", "N", "R", "AF", "C"),
-                 variable.name = "metric", value.name = "metric.value") %>% 
-  filter(metric %in% c("Precision", "Recall")) %>% 
-  filter(R == 2) %>% 
-  mutate(caller = recode(caller,    
-                         "mutect2" = "Mutect2", 
-                         "freebayes" = "freebayes", 
-                         "gatk" = "GATK", 
-                         "strelka2" = "Strelka2", 
-                         "somaticsniper" = "Somatic Sniper", 
-                         "muse" = "MuSE",
-                         "varscan" = "VarScan"
-  )) %>% 
-  ggplot(aes(as.factor(AF), as.factor(C), fill = metric.value)) +
-  geom_tile() +
-  facet_grid(caller ~ metric) +
-  viridis::scale_fill_viridis("", option = "inferno") +
-  xlab("Allele Fraction") + ylab("Coverage") +
-  theme(strip.text.y = element_text(angle = 0),
-        legend.position = "bottom", legend.key.width = unit(75, "points"))
-```
-
-```{r}
-dat <- read_tsv("stats.experiment1.tsv") %>%
-  filter(caller != "manta") %>%
-  mutate(caller = recode(caller,    
-                         "mutect2" = "Mutect2", 
-                         "freebayes" = "freebayes", 
-                         "gatk" = "GATK", 
-                         "strelka2" = "Strelka2", 
-                         "somaticsniper" = "Somatic Sniper", 
-                         "muse" = "MuSE",
-                         "varscan" = "VarScan"
-  )) %>% 
-  filter(R == 2) %>% 
-  filter(Precision > 0.9) %>% 
-  group_by(AF, C) %>% 
-  filter(Recall == max(Recall)) %>% 
-  filter(Precision == max(Precision)) %>% 
-  group_by(AF, C, Precision, Recall) %>% 
-  summarise(caller = paste(caller, sep = ", ", collapse = ", "))
-dat2 <- select(dat, -caller) %>% 
-  unique() %>% 
-  mutate(label = paste0("R=", Recall, "\n", "P=", Precision))
-ggplot(dat, aes(as.factor(AF), as.factor(C))) +
-  geom_tile(aes(fill = caller)) +
-  geom_text(aes(label = label), col = "white", data = dat2) +
-  scale_fill_brewer("", palette = "Paired") +
-  xlab("Allele Fraction") + ylab("Coverage") +
-  theme(strip.text.y = element_text(angle = 0),
-        legend.position = "bottom") +
-  guides(fill=guide_legend(nrow = 3))
+  select(caller, N, R, AF, C, REP, FN, FP, TP, Precision, Recall) %>% 
+  write_tsv(paste0("stats.experiment4.rep", i, ".tsv"))
+stats <- list.files(pattern = "stats.experiment4")
+lapply(stats, vroom::vroom) %>% 
+  bind_rows() %>% 
+  write_tsv(paste0("stats.experiment4.tsv"))
+unlink(stats)
 ```
 
 # Miscellaneous

@@ -1,4 +1,8 @@
 # detectMutation 0.2.0.9016
+* rm results from README
+* SI: high/low C fig
+
+# detectMutation 0.2.0.9016
 * correct versioning
 * correct threading and memory
 * new ecperiment

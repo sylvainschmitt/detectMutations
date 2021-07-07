@@ -97,11 +97,9 @@ theme_set(bayesplot::theme_default())
 opts_chunk$set(echo = F, message = F, warning = F, 
                fig.height = 8, fig.width = 8,
                cache = T, cache.lazy = F)
-stats <- lapply(list.files(".", ".tsv"), read_tsv) %>% 
-  bind_rows(.id = "experiment") %>% 
-  filter(caller != "manta") %>% 
-  mutate(C = as.numeric(recode(as.character(C), "49" = "50", "99" = "100",
-                               "148" = "150", "198" = "200"))) %>% 
+stats <- read_tsv("stats.experiment4.tsv") %>% 
+  group_by(caller, N, R, AF, C) %>% 
+  summarise_at(c("FN", "FP", "TP", "Precision", "Recall"), mean, na.rm = T) %>% 
   mutate(caller = recode(caller,    
                          "mutect2" = "Mutect2", 
                          "freebayes" = "freebayes", 
@@ -110,48 +108,65 @@ stats <- lapply(list.files(".", ".tsv"), read_tsv) %>%
                          "somaticsniper" = "Somatic Sniper", 
                          "muse" = "MuSE",
                          "varscan" = "VarScan"
-  )) %>% 
-  select(-experiment) %>% 
-  group_by(caller, N, R, AF, C) %>% 
-  # summarise_all(max, na.rm = T) %>% 
-  ungroup()
+  ))
 ```
 
-```{r fig, fig.width=10, fig.height=6}
-g1 <- stats %>% 
-  filter(R == 2) %>% 
-  mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
+
+```{r fig1, fig.height=8}
+stats %>% 
+  # mutate(Precision = ifelse(is.na(Precision), 0, Precision)) %>% 
   reshape2::melt(c("caller", "N", "R", "AF", "C"),
                  variable.name = "metric", value.name = "metric.value") %>% 
   filter(metric %in% c("Precision", "Recall")) %>% 
-  filter(R == 2) %>% 
   mutate(metric = factor(metric, level = c("Recall", "Precision"))) %>% 
-  ggplot(aes(as.factor(AF), as.factor(C), fill = metric.value)) +
+  ggplot(aes(AF, C, fill = metric.value)) +
   geom_tile() +
   facet_grid(caller ~ metric) +
   viridis::scale_fill_viridis("", option = "inferno") +
   xlab("Allele Fraction") + ylab("Coverage") +
   theme(strip.text.y = element_text(angle = 0),
-        legend.position = "bottom", legend.key.width = unit(50, "points"))
-dat <- stats %>%
-  filter(R == 2) %>% 
+        legend.position = "bottom",
+        legend.key.width = unit(40, "points"))
+```
+
+
+```{r fig2, fig.width=8}
+stats %>%
   filter(Precision > 0.9) %>% 
   group_by(AF, C) %>% 
   filter(Recall == max(Recall)) %>% 
   filter(Precision == max(Precision)) %>% 
   group_by(AF, C, Precision, Recall) %>% 
-  summarise(caller = paste(unique(caller), sep = ", ", collapse = ", "))
-dat2 <- select(dat, -caller) %>% 
-  unique() %>% 
-  mutate(label = paste0("R=", Recall, "\n", "P=", Precision))
-g2 <- ggplot(dat, aes(as.factor(AF), as.factor(C))) +
-  geom_tile(aes(fill = caller)) +
-  geom_text(aes(label = label), col = "white", data = dat2) +
+  summarise(caller = paste(unique(caller), sep = ", ", collapse = ", ")) %>% 
+  ggplot(aes(AF, C)) +
+  geom_tile(aes(fill = caller, alpha = Recall)) +
+  geom_text(aes(label = round(Recall, 2)), col = "black", size	= 3) +
   scale_fill_brewer("", palette = "Paired") +
   theme(legend.position = "bottom") +
   xlab("Allele Fraction") + ylab("Coverage") +
   theme(strip.text.y = element_text(angle = 0),
         legend.position = "bottom") +
-  guides(fill = guide_legend(nrow = 4))
-cowplot::plot_grid(g1, g2, labels = LETTERS[1:2])
+  guides(fill = guide_legend(nrow = 4)) +
+  scale_alpha_continuous(guide = "none")
 ```
+
+```{r fig3, fig.width=8}
+stats %>%
+  mutate(Precision = round(TP/(TP+FP), 4), Recall = round(TP/(TP+FN), 4)) %>% 
+  filter(Precision > 0.9) %>% 
+  group_by(AF, C) %>% 
+  filter(Recall == max(Recall)) %>% 
+  filter(Precision == max(Precision)) %>% 
+  group_by(AF, C, Precision, Recall) %>% 
+  summarise(caller = paste(unique(caller), sep = ", ", collapse = ", ")) %>% 
+  ggplot(aes(AF, C)) +
+  geom_tile(aes(fill = caller, alpha = Recall)) +
+  geom_text(aes(label = round(Recall, 3)), col = "black", size	= 3) +
+  scale_fill_brewer("", palette = "Accent") +
+  theme(legend.position = "bottom") +
+  xlab("Allele Fraction") + ylab("Coverage") +
+  theme(strip.text.y = element_text(angle = 0),
+        legend.position = "bottom") +
+  scale_alpha_continuous(guide = "none")
+```
+
