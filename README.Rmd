@@ -76,7 +76,9 @@ cd data/swiss
 mkdir out
 sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
 sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
+sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  compress_reads.sh
 rm -rf out
+rm SRR*
 sh get_genome.sh 
 ```
 
