@@ -72,8 +72,8 @@ Raw reads from ENA project PRJEB8388.
 cd data/swiss
 mkdir out
 sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
+sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
 rm -rf out
-sh megre_data.sh
 sh get_genome.sh 
 ```
 
@@ -234,4 +234,34 @@ quality.*
 
 # Results
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+``` r
+# bedtools intersect -a lower_vs_upper_on_Qrob_Chr01_strelka2.vcf -b upper_vs_lower_on_Qrob_Chr01_strelka2.vcf -header > intersect.vcf
+library(vcfR)
+mutations <- read.vcfR("results/mutations/intersect.vcf", 
+                       verbose = F) %>% 
+  vcfR2tidy()
+mutations$fix %>% 
+  left_join(filter(mutations$gt, Indiv == "TUMOR")) %>% 
+  mutate(ID = paste0(CHROM, "_POS", POS)) %>% 
+  mutate(AF = gt_DP/DP) %>% 
+  mutate(logQSS = log(QSS), logSomaticEVS = log(SomaticEVS), logSNVSB = log(SNVSB)) %>% 
+  filter(DP < 250) %>% 
+  select(ID, logQSS, DP, MQ, ReadPosRankSum, logSNVSB, logSomaticEVS, AF) %>% 
+  reshape2::melt("ID") %>% 
+  mutate(variable = recode(variable, 
+                           "logQSS" = "log of Quality Score",
+                           "DP" = "Combined Depth",
+                           "MQ" = "RMS Mapping Quality",
+                           "ReadPosRankSum" = "Z-score from\nWilcoxon rank sum test",
+                           "logSNVSB" = "log of Somatic SNV\nsite strand bias",
+                           "logSomaticEVS" = "log of\nSomatic Empirical Variant Score",
+                           "AF" = "Allele Frequency")) %>% 
+  ggplot(aes(value)) +
+  geom_histogram() +
+  facet_wrap(~variable, scales = "free") +
+  geom_vline(aes(xintercept = value), col = "red", linewidth = 1.5,
+             data = data.frame(value = c(NA, 126, NA, 0, NA, 0, 0.5), 
+                               variable = c("log of Quality Score", "Combined Depth", "RMS Mapping Quality",
+                                            "Z-score from\nWilcoxon rank sum test", "log of Somatic SNV\nsite strand bias", 
+                                            "log of\nSomatic Empirical Variant Score", "Allele Frequency")))
+```
