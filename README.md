@@ -71,9 +71,10 @@ Raw reads from ENA project PRJEB8388.
 ``` bash
 cd data/swiss
 mkdir out
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_data.sh
+sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
 rm -rf out
 sh megre_data.sh
+sh get_genome.sh 
 ```
 
 ## Locally
