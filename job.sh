@@ -15,12 +15,12 @@ module load system/singularity-3.7.3
 
 # Variables
 CONFIG=config/ressources.genologin.yaml
-COMMAND="sbatch --cpus-per-task={cluster.cpus} --parsable --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
+COMMAND="sbatch --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
 CORES=32
 mkdir -p snake_subjob_log
 
 # Workflow
-snakemake -s Snakefile --use-singularity --singularity-args "\-\-containall" -j $CORES --cluster-config $CONFIG --cluster "$COMMAND" --keep-going --cluster-status config/status.py
+snakemake -s Snakefile --use-singularity --singularity-args "\-\-containall" -j $CORES --cluster-config $CONFIG --cluster "$COMMAND" --keep-going
 
 ## Session informations
 echo '########################################'
