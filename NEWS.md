@@ -1,3 +1,9 @@
+# detectMutation - swiss data 0.2.0.9007
+* samtools sort time limit on most Chr (1 hour)
+* samtools view time limit on Chr08 (1 hour)
+* increase samtools sort & view time to 10 hours
+* adding --cluster-status to snkamake in job.sh to detect time limit as fails
+
 # detectMutation - swiss data 0.2.0.9006
 * bahs to get swiss data
 
