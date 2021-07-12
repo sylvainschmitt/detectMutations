@@ -14,7 +14,7 @@ rule gatk_genotypegvcfs:
         "results/benchmarks/gatk_genotypegvcfs_{tumor}_vs_{normal}_{chromosome}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
-    threads: 1
+    threads: 4
     resources:
         mem_mb=100000
     params:
