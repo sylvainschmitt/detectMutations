@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-configfile: "config/config.dag.yml"
+configfile: "config/config.swiss.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
@@ -15,8 +15,10 @@ lambda wildcards: chromosomes
 
 rule all:
     input:
-        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes), # aln
-        expand("results/mutations/{vcfs}_on_{chromosome}_{caller}.vcf", vcfs=config["vcfs"], chromosome=chromosomes, caller=["strelka2", "gatk"]) # mut
+        # expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes), # aln
+        expand("results/mutations/{vcfs}_on_{chromosome}_{caller}.vcf", vcfs=config["vcfs"], chromosome=chromosomes, caller=["strelka2"]), # mut raw
+        expand("results/mutations_unique/{vcfs}_on_{chromosome}_{caller}.vcf", vcfs=config["vcfs"], chromosome=chromosomes, caller=["strelka2"]), # mut uniq
+        expand("results/mutations_filtered/{vcfs}_on_{chromosome}_{caller}.tsv", vcfs=config["vcfs"], chromosome=chromosomes, caller=["strelka2"]) # mut filtered
 
 # Rules #
 
@@ -40,6 +42,8 @@ include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
 
 ## Mutations ##
-include: "rules/strelka2.smk"
-include: "rules/gatk_haplotypecaller.smk"
-include: "rules/gatk_genotypegvcfs.smk"
+# include: "rules/strelka2.smk"
+# include: "rules/gatk_haplotypecaller.smk"
+# include: "rules/gatk_genotypegvcfs.smk"
+include: "rules/bedtools_substract.smk"
+include: "rules/filter_mutations.smk"

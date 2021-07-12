@@ -11,3 +11,8 @@ libdir: "data/swiss"
 
 # results
 vcfs: ["upper_vs_lower", "lower_vs_upper"]
+
+# filter
+normalAC: 0
+mutationsAC: 10
+singleDP: 100

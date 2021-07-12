@@ -22,3 +22,6 @@ dag/dag.svg
 *.fa
 *.fa.fai
 data/fai.save
+*.bed
+*.sam
+*.tsv

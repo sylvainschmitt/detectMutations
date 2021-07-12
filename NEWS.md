@@ -1,3 +1,7 @@
+# detectMutation - swiss data 0.2.0.9009
+* aligning swiss mutation on PM1N
+* filtering mutations
+
 # detectMutation - swiss data 0.2.0.9008
 * better local ressources
 * gatk to detect mutations

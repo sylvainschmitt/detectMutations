@@ -211,33 +211,47 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 # Results
 
 ```{r, eval=F, echo=T}
-# bedtools intersect -a lower_vs_upper_on_Qrob_Chr01_strelka2.vcf -b upper_vs_lower_on_Qrob_Chr01_strelka2.vcf -header > intersect.vcf
-library(vcfR)
-mutations <- read.vcfR("results/mutations/intersect.vcf", 
-                       verbose = F) %>% 
-  vcfR2tidy()
-mutations$fix %>% 
-  left_join(filter(mutations$gt, Indiv == "TUMOR")) %>% 
-  mutate(ID = paste0(CHROM, "_POS", POS)) %>% 
-  mutate(AF = gt_DP/DP) %>% 
-  mutate(logQSS = log(QSS), logSomaticEVS = log(SomaticEVS), logSNVSB = log(SNVSB)) %>% 
-  filter(DP < 250) %>% 
-  select(ID, logQSS, DP, MQ, ReadPosRankSum, logSNVSB, logSomaticEVS, AF) %>% 
-  reshape2::melt("ID") %>% 
-  mutate(variable = recode(variable, 
-                           "logQSS" = "log of Quality Score",
-                           "DP" = "Combined Depth",
-                           "MQ" = "RMS Mapping Quality",
-                           "ReadPosRankSum" = "Z-score from\nWilcoxon rank sum test",
-                           "logSNVSB" = "log of Somatic SNV\nsite strand bias",
-                           "logSomaticEVS" = "log of\nSomatic Empirical Variant Score",
-                           "AF" = "Allele Frequency")) %>% 
-  ggplot(aes(value)) +
+mutations <- lapply(list.files("results/mutations_filtered/", full.names = T), read_tsv, 
+              col_types = cols(
+                .default = col_double(),
+                CHROM = col_character(),
+                ID = col_logical(),
+                REF = col_character(),
+                ALT = col_character(),
+                QUAL = col_logical(),
+                FILTER = col_character(),
+                NT = col_character(),
+                SGT = col_character(),
+                SOMATIC = col_logical(),
+                PNOISE = col_logical(),
+                PNOISE2 = col_logical(),
+                tumor = col_character(),
+                normal = col_character(),
+                caller = col_character()
+              )) %>% bind_rows() %>% 
+  mutate(label = paste("SVN", 1:nrow(.)))
+```
+
+```{r AF}
+ggplot(mutations, aes(mutation_AF)) +
   geom_histogram() +
-  facet_wrap(~variable, scales = "free") +
-  geom_vline(aes(xintercept = value), col = "red", linewidth = 1.5,
-             data = data.frame(value = c(NA, 126, NA, 0, NA, 0, 0.5), 
-                               variable = c("log of Quality Score", "Combined Depth", "RMS Mapping Quality",
-                                            "Z-score from\nWilcoxon rank sum test", "log of Somatic SNV\nsite strand bias", 
-                                            "log of\nSomatic Empirical Variant Score", "Allele Frequency")))
+  geom_label(x = 0.2, y = 1.5, aes(label = paste("N =", N)), 
+            data =  group_by(mutations, tumor) %>% summarise(N = n())) +
+  facet_wrap(~ tumor)
+```
+
+```{r genome}
+read_tsv("data/swiss/Qrob_PM1N.fa.fai", 
+         col_names = c("CHROM", "length", "bytesindex", "basesperline", "bytesperline")) %>% 
+  select(CHROM, length) %>% 
+  mutate(start = 0, stop = length/10^6) %>% 
+  ggplot(aes(x = CHROM, xend = CHROM)) +
+  geom_segment(aes(y = start, yend = stop), size = 3, col = "grey") +
+  geom_point(aes(y = POS/10^6, col = tumor), data = mutations, size = 3) +
+  ggrepel::geom_label_repel(aes(y = POS/10^6, col = tumor, label = label), data = mutations, size = 2) +
+  coord_flip() +
+  ylab("Position (Mb)") +
+  theme(axis.line.y = element_blank(), axis.title.y = element_blank(), 
+        axis.ticks.y = element_blank(), legend.position = c(0.8, 0.8)) +
+  scale_color_discrete("Branch")
 ```
