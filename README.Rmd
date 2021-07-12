@@ -255,3 +255,51 @@ read_tsv("data/swiss/Qrob_PM1N.fa.fai",
         axis.ticks.y = element_blank(), legend.position = c(0.8, 0.8)) +
   scale_color_discrete("Branch")
 ```
+
+```{r}
+napoleon <- read_tsv("data/swiss/Napoleon/Naopleon_mutations.out",
+         col_names = c("Mutation", "CHROM", "Perc_Ident", "Alignment_length", "Mismatches",
+                       "Gap_openings", "R_start", "R_end", "S_start", "S_end", "E", "Bits")) %>% 
+  group_by(Mutation) %>% 
+  # filter(Perc_Ident == 100) %>% 
+  filter(Perc_Ident == max(Perc_Ident)) %>% 
+  filter(E == max(E)) %>% 
+  filter(grepl("Chr", CHROM)) %>% 
+  mutate(POS = S_start + 501 - R_start) # approximation
+```
+
+```{r}
+read_tsv("data/swiss/Qrob_PM1N.fa.fai", 
+         col_names = c("CHROM", "length", "bytesindex", "basesperline", "bytesperline")) %>% 
+  select(CHROM, length) %>% 
+  mutate(start = 0, stop = length/10^6) %>% 
+  ggplot(aes(x = CHROM, xend = CHROM)) +
+  geom_segment(aes(y = start, yend = stop), size = 3, col = "grey") +
+  geom_segment(aes(y = S_start/10^6 - 1, yend = S_end/10^6 + 1), size = 3, col = "red", napoleon) +
+  # geom_point(aes(y = POS/10^6), data = napoleon, size = 3) +
+  # ggrepel::geom_label_repel(aes(y = POS/10^6, label = Mutation), data = napoleon, size = 2) +
+  coord_flip() +
+  ylab("Position (Mb)") +
+  theme(axis.line.y = element_blank(), axis.title.y = element_blank(), 
+        axis.ticks.y = element_blank(), legend.position = c(0.8, 0.8)) +
+  scale_color_discrete("Branch")
+```
+
+```{r genome}
+read_tsv("data/swiss/Qrob_PM1N.fa.fai", 
+         col_names = c("CHROM", "length", "bytesindex", "basesperline", "bytesperline")) %>% 
+  select(CHROM, length) %>% 
+  mutate(start = 0, stop = length/10^6) %>% 
+  ggplot(aes(x = CHROM, xend = CHROM)) +
+  geom_segment(aes(y = start, yend = stop), size = 3, col = "grey") +
+  geom_segment(aes(y = S_start/10^6 - 1, yend = S_end/10^6 + 1), size = 3, col = "red", napoleon) +
+  # geom_point(aes(y = POS/10^6), data = napoleon, size = 3) +
+  geom_point(aes(y = POS/10^6), col = "black", data = mutations, size = 1) +
+  # ggrepel::geom_label_repel(aes(y = POS/10^6, col = tumor, label = label), data = mutations, size = 2) +
+  # ggrepel::geom_label_repel(aes(y = POS/10^6, label = Mutation), data = napoleon, size = 2) +
+  coord_flip() +
+  ylab("Position (Mb)") +
+  theme(axis.line.y = element_blank(), axis.title.y = element_blank(), 
+        axis.ticks.y = element_blank(), legend.position = c(0.8, 0.8)) +
+  scale_color_discrete("Branch")
+```

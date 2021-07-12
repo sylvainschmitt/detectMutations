@@ -1,5 +1,5 @@
 # bash
-cd data/swiss
+cd data/swiss/Napoleon
 zcat Napoleon_genome.fa.gz > Napoleon_genome.fa
 sed -i "s/ //g" Napoleon_genome.fa
 samtools faidx Napoleon_genome.fa
@@ -25,5 +25,5 @@ genome %>%
 # bash
 bedtools getfasta -fi Napoleon_genome.fa -bed Naopleon_mutations.bed -fo Naopleon_mutations.fa
 bwa index Qrob_PM1N.fa
-makeblastdb -in Qrob_PM1N.fa -parse_seqids -blastdb_version 5 -title "Qrob_PM1N" -dbtype prot
-blastn –db nt –query Naopleon_mutations –out Naopleon_mutations.out  
+makeblastdb -in Qrob_PM1N.fa -parse_seqids -blastdb_version 5 -title "Qrob_PM1N" -dbtype nucl
+blastn -db Qrob_PM1N.fa -query Naopleon_mutations.fa -out Naopleon_mutations.out -evalue 1e-10 -best_hit_score_edge 0.05 -best_hit_overhang 0.25 -outfmt 6 -perc_identity 75 -max_target_seqs 1
