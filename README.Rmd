@@ -85,11 +85,9 @@ sh get_genome.sh
 ## Locally
 
 ```{bash, eval=F, echo=T}
-snakemake -np # dry run
+snakemake -np -j 3 --resources mem_mb=10000 # dry run
 snakemake --dag | dot -Tsvg > dag/dag.svg # dag
-snakemake --use-singularity --cores 4 # run
-snakemake --use-singularity --cores 1 --verbose # debug
-snakemake --report report.html # report
+snakemake --use-singularity -j 3 --resources mem_mb=10000 # run
 ```
 
 ## HPC

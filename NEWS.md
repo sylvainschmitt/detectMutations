@@ -1,3 +1,8 @@
+# detectMutation - swiss data 0.2.0.9008
+* better local ressources
+* gatk to detect mutations
+* cleaned intermediate files
+
 # detectMutation - swiss data 0.2.0.9007
 * samtools sort time limit on most Chr (1 hour)
 * samtools view time limit on Chr08 (1 hour)
