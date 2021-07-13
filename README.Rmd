@@ -25,7 +25,7 @@ opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8
 [`singularity` & `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity) workflow to detect mutations with several alignment and mutation detection tools.
 
 ```{r dag}
-knitr::include_graphics("dag/dag.svg")
+knitr::include_graphics("dag/dag.minimal.svg")
 ```
 
 # Installation

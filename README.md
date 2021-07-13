@@ -21,7 +21,7 @@ April 20, 2021
 workflow to detect mutations with several alignment and mutation
 detection tools.
 
-![](dag/dag.svg)<!-- -->
+![](dag/dag.minimal.svg)<!-- -->
 
 # Installation
 
@@ -82,11 +82,9 @@ sh get_genome.sh
 ## Locally
 
 ``` bash
-snakemake -np # dry run
+snakemake -np -j 3 --resources mem_mb=10000 # dry run
 snakemake --dag | dot -Tsvg > dag/dag.svg # dag
-snakemake --use-singularity --cores 4 # run
-snakemake --use-singularity --cores 1 --verbose # debug
-snakemake --report report.html # report
+snakemake --use-singularity -j 3 --resources mem_mb=10000 # run
 ```
 
 ## HPC
@@ -237,33 +235,31 @@ quality.*
 # Results
 
 ``` r
-# bedtools intersect -a lower_vs_upper_on_Qrob_Chr01_strelka2.vcf -b upper_vs_lower_on_Qrob_Chr01_strelka2.vcf -header > intersect.vcf
-library(vcfR)
-mutations <- read.vcfR("results/mutations/intersect.vcf", 
-                       verbose = F) %>% 
-  vcfR2tidy()
-mutations$fix %>% 
-  left_join(filter(mutations$gt, Indiv == "TUMOR")) %>% 
-  mutate(ID = paste0(CHROM, "_POS", POS)) %>% 
-  mutate(AF = gt_DP/DP) %>% 
-  mutate(logQSS = log(QSS), logSomaticEVS = log(SomaticEVS), logSNVSB = log(SNVSB)) %>% 
-  filter(DP < 250) %>% 
-  select(ID, logQSS, DP, MQ, ReadPosRankSum, logSNVSB, logSomaticEVS, AF) %>% 
-  reshape2::melt("ID") %>% 
-  mutate(variable = recode(variable, 
-                           "logQSS" = "log of Quality Score",
-                           "DP" = "Combined Depth",
-                           "MQ" = "RMS Mapping Quality",
-                           "ReadPosRankSum" = "Z-score from\nWilcoxon rank sum test",
-                           "logSNVSB" = "log of Somatic SNV\nsite strand bias",
-                           "logSomaticEVS" = "log of\nSomatic Empirical Variant Score",
-                           "AF" = "Allele Frequency")) %>% 
-  ggplot(aes(value)) +
-  geom_histogram() +
-  facet_wrap(~variable, scales = "free") +
-  geom_vline(aes(xintercept = value), col = "red", linewidth = 1.5,
-             data = data.frame(value = c(NA, 126, NA, 0, NA, 0, 0.5), 
-                               variable = c("log of Quality Score", "Combined Depth", "RMS Mapping Quality",
-                                            "Z-score from\nWilcoxon rank sum test", "log of Somatic SNV\nsite strand bias", 
-                                            "log of\nSomatic Empirical Variant Score", "Allele Frequency")))
+library(vroom)
+library(csv2sql)
+mutations <- lapply(list.files("results/mutations_tsv/", full.names = T), vroom, 
+                    col_types = cols(
+                      .default = col_double(),
+                      CHROM = col_character(),
+                      ID = col_logical(),
+                      REF = col_character(),
+                      ALT = col_character(),
+                      QUAL = col_logical(),
+                      FILTER = col_character(),
+                      NT = col_character(),
+                      SGT = col_character(),
+                      SOMATIC = col_logical(),
+                      PNOISE = col_logical(),
+                      PNOISE2 = col_logical(),
+                      tumor = col_character(),
+                      normal = col_character(),
+                      caller = col_character()
+                    )) %>% bind_rows()
+vroom_write(mutations, path = "results/mutations_strelka2.csv", delim = ",")
+rm(mutations)
+unlink("results/mutations_strelka2.sql")
+csv_to_sqlite(csv_name = "results/mutations_strelka2.csv", 
+              db_name = "results/mutations_strelka2.sql", 
+              table_name = "mutations")
+unlink("results/mutations_strelka2.csv")
 ```
