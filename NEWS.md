@@ -1,3 +1,7 @@
+# detectMutation - swiss data 0.2.0.9010
+* aligning swiss mutation on PM1N: to be cleaned in the main workflow
+* srtelka2tsv & tsv2sql: to be cleaned in the main workflow
+
 # detectMutation - swiss data 0.2.0.9009
 * aligning swiss mutation on PM1N
 * filtering mutations
