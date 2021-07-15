@@ -10,11 +10,10 @@ April 20, 2021
       - [HPC](#hpc)
   - [Workflow](#workflow)
       - [Reference](#reference)
+      - [Napoleon](#napoleon)
       - [Reads](#reads)
       - [Alignments](#alignments)
-      - [Mutation](#mutation)
-      - [Quality check](#quality-check)
-  - [Results](#results)
+      - [Mutations](#mutations)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -65,8 +64,15 @@ cd detectMutations
 
 ## Get data
 
-Reference genome 3P from <http://urgi.versailles.inra.fr/download/oak>.
-Raw reads from ENA project PRJEB8388.
+  - Reference genome 3P from
+    <http://urgi.versailles.inra.fr/download/oak>
+  - Raw reads from ENA project PRJEB8388
+  - Napoleon’s genome
+    (<https://www.ebi.ac.uk/ena/browser/api/fasta/GCA_003013145.1?download=true&gzip=true>)
+  - Napoleon’s original mutations
+    (<https://docs.google.com/spreadsheets/d/10SmTGXCfQKU6M8KLqF_lzHDFM4A64pdpVUeNdI7MapA/edit#gid=0>)
+
+<!-- end list -->
 
 ``` bash
 cd data/swiss
@@ -102,41 +108,80 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 *Copy and index reference for software to work with.*
 
-### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_faidx_split.smk)
+### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx_split.smk)
 
   - Tools: [`samtools
     faidx`](http://www.htslib.org/doc/samtools-faidx.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
+### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bwa_index.smk)
 
   - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
-### [samtools\_faidx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_faidx.smk)
+### [samtools\_faidx](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx.smk)
 
   - Tools: [`samtools
     faidx`](http://www.htslib.org/doc/samtools-faidx.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [gatk\_dict](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_dict.smk)
+### [gatk\_dict](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_dict.smk)
 
   - Tools: [`gatk
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
+## Napoleon
+
+*Get the position of original mutations from Napoleon on the 3P genome.*
+
+### [cp\_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/cp_napo.smk)
+
+  - Tools: `cp`
+
+### [samtools\_faidx\_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx_napo.smk)
+
+  - Tools: [`samtools
+    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [napomutations2bed](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/napomutations2bed.smk)
+
+  - Script:
+    [`napomutations2bed.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/napomutations2bed.R)
+  - Singularity: to be added, currently uses local install
+
+### [bedtools\_getfasta](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bedtools_getfasta.smk)
+
+  - Tools: [`bedtools
+    getfasta`](https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+
+### [blat](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/blat.smk)
+
+  - Tools: [\`blat](http://genome.ucsc.edu/FAQ/FAQblat.html)
+  - Singularity: to be added, currently uses local install
+
+### [psl2pos](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/psl2pos.smk)
+
+  - Script:
+    [`psl2pos.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/psl2pos.R)
+  - Singularity: to be added, currently uses local install
+
 ## Reads
 
 *Copy reads, report quality and trim.*
 
-### [cp\_reads](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reads.smk)
+### [cp\_reads](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/cp_reads.smk)
 
   - Tools: `cp`
 
-### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
+### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/trimmomatic.smk)
 
   - Tools:
     [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
@@ -148,118 +193,80 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 *Align reads against reference, mark duplicated, and report alignment
 quality.*
 
-### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_mem.smk)
+### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bwa_mem.smk)
 
   - Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
-### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_view.smk)
+### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_view.smk)
 
   - Tools: [`Samtools
     view`](http://www.htslib.org/doc/samtools-view.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_sort.smk)
+### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_sort.smk)
 
   - Tools: [`Samtools
     sort`](http://www.htslib.org/doc/samtools-sort.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_index.smk)
+### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_index.smk)
 
   - Tools: [`Samtools
     index`](http://www.htslib.org/doc/samtools-index.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_markduplicates.smk)
+### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_markduplicates.smk)
 
   - Tools: [`gatk
     MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
-### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_view_md.smk)
+### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_view_md.smk)
 
   - Tools: [`Samtools
     view`](http://www.htslib.org/doc/samtools-view.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_index_md.smk)
+### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_index_md.smk)
 
   - Tools: [`Samtools
     index`](http://www.htslib.org/doc/samtools-index.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-## Mutation
+## Mutations
 
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
+### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2.smk)
 
   - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
   - Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-## Quality check
+### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2tsv.smk)
 
-*Combined quality information from `QualiMap`, `Picard`, `Samtools`,
-`Trimmomatic`, and `FastQC` (see previous steps).*
+  - Script:
+    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2tsv.R)
+  - Singularity: to be added, currently uses local install
 
-### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
+### [strelkatsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelkatsv2sql.smk)
 
-  - Tools:
-    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
-  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
+  - Script:
+    [`strelkatsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelkatsv2sql.R)
+  - Singularity: to be added, currently uses local install
 
-### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
+### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
 
-  - Tools: [`Samtools
-    stats`](http://www.htslib.org/doc/samtools-stats.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+  - Tools: [`gatk
+    HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+  - Singularity: docker://broadinstitute/gatk
 
-### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
+### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_genotypegvcfs.smk)
 
-  - Tools:
-    [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
-  - Singularity: docker://pegi3s/qualimap
-
-### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
-
-  - Tools: [`MultiQC`](https://multiqc.info/)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
-
-# Results
-
-``` r
-library(vroom)
-library(csv2sql)
-mutations <- lapply(list.files("results/mutations_tsv/", full.names = T), vroom, 
-                    col_types = cols(
-                      .default = col_double(),
-                      CHROM = col_character(),
-                      ID = col_logical(),
-                      REF = col_character(),
-                      ALT = col_character(),
-                      QUAL = col_logical(),
-                      FILTER = col_character(),
-                      NT = col_character(),
-                      SGT = col_character(),
-                      SOMATIC = col_logical(),
-                      PNOISE = col_logical(),
-                      PNOISE2 = col_logical(),
-                      tumor = col_character(),
-                      normal = col_character(),
-                      caller = col_character()
-                    )) %>% bind_rows()
-vroom_write(mutations, path = "results/mutations_strelka2.csv", delim = ",")
-rm(mutations)
-unlink("results/mutations_strelka2.sql")
-csv_to_sqlite(csv_name = "results/mutations_strelka2.csv", 
-              db_name = "results/mutations_strelka2.sql", 
-              table_name = "mutations")
-unlink("results/mutations_strelka2.csv")
-```
+  - Tools: [`gatk
+    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
+  - Singularity: docker://broadinstitute/gatk

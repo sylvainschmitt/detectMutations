@@ -105,14 +105,14 @@ strelka2:
 gatk_haplotypecaller:
   jobname: "gatk_haplotypecaller"
   mem: "100G"
-  cpus: 4
-  time: "48:00:00"
+  cpus: 20
+  time: "96:00:00"
   
 gatk_genotypegvcfs:
   jobname: "gatk_genotypegvcfs"
   mem: "100G"
-  cpus: 4
-  time: "48:00:00"
+  cpus: 20
+  time: "96:00:00"
   
 ## QC ##
 

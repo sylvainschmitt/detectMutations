@@ -41,7 +41,7 @@ mutations <- raw$fix %>%
   left_join(norm) %>% 
   mutate(tumor = snakemake@wildcards$tumor) %>% 
   mutate(normal = snakemake@wildcards$normal) %>% 
-  mutate(caller = snakemake@wildcards$caller)
+  mutate(caller = "strelka2")
 rm(mut, norm, gt)
 
 write_tsv(mutations, tsv)

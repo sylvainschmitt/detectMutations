@@ -17,7 +17,7 @@ rule gatk_haplotypecaller:
         "results/benchmarks/gatk_haplotypecaller_{tumor}_vs_{normal}_{chromosome}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
-    threads: 4
+    threads: 20
     resources:
         mem_mb=100000
     params:

@@ -1,11 +1,11 @@
 rule strelka2tsv:
     input:
-        "results/mutations_unique/{tumor}_vs_{normal}_on_{chromosome}_{caller}.vcf"
+        "results/mutations/{tumor}_vs_{normal}_on_{chromosome}_strelka2.vcf"
     output:
-        "results/mutations_tsv/{tumor}_vs_{normal}_on_{chromosome}_{caller}.tsv"
+        temp("results/mutations/{tumor}_vs_{normal}_on_{chromosome}_strelka2.tsv")
     log:
-        "results/logs/strelka2tsv_{tumor}_{normal}_{chromosome}_{caller}.log"
+        "results/logs/strelka2tsv_{tumor}_{normal}_{chromosome}_strelka2.log"
     benchmark:
-        "results/benchmarks/strelka2tsv_{tumor}_{normal}_{chromosome}_{caller}.benchmark.txt"
+        "results/benchmarks/strelka2tsv_{tumor}_{normal}_{chromosome}_strelka2.benchmark.txt"
     script:
         "../scripts/strelka2tsv.R"
