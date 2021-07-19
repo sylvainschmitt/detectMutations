@@ -253,12 +253,6 @@ quality.*
     [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2tsv.R)
   - Singularity: to be added, currently uses local install
 
-### [strelkatsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelkatsv2sql.smk)
-
-  - Script:
-    [`strelkatsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelkatsv2sql.R)
-  - Singularity: to be added, currently uses local install
-
 ### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
 
   - Tools: [`gatk
@@ -270,3 +264,15 @@ quality.*
   - Tools: [`gatk
     GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
   - Singularity: docker://broadinstitute/gatk
+
+### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
+
+  - Script:
+    [`gatk2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2tsv.R)
+  - Singularity: to be added, currently uses local install
+
+### [tsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/tsv2sql.smk)
+
+  - Script:
+    [`tsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/tsv2sql.R)
+  - Singularity: to be added, currently uses local install
