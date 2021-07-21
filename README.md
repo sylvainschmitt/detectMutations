@@ -201,3 +201,56 @@ quality.*
   - Singularity: to be added, currently uses local install
 
 # Results
+
+``` r
+# tips
+tips <- list.files("data/tips", pattern = ".tsv", full.names = T)
+names(tips) <- gsub(".tsv", "", unlist(lapply(tips, basename)))
+tips <- lapply(tips, read_tsv) %>% 
+  bind_rows(.id = "sample") %>% 
+  separate(sample, c("branch", "tip"), remove = F) %>% 
+  mutate(origin = "tip")
+
+# branches
+branches <- list.files("data/branch", pattern = ".tsv", full.names = T)
+names(branches) <- gsub(".tsv", "", unlist(lapply(branches, basename)))
+branches <- lapply(branches, read_tsv) %>% 
+  bind_rows(.id = "branch") %>% 
+  rowwise %>% 
+  mutate(tip = list(unique(tips$tip))) %>% 
+  unnest() %>% 
+  mutate(sample = paste0(branch, "_", tip)) %>% 
+  mutate(origin = "branch")
+
+# all
+generated <- bind_rows(tips, branches) %>% 
+  arrange(sample, origin) %>% 
+  mutate(CHROM = gsub("_mutated", "", CHROM)) %>% 
+  mutate(generated = 1)
+rm(tips, branches)
+
+# mutations
+mutations <- list.files("results/mutations", pattern = ".tsv", full.names = T)
+names(mutations) <- gsub("_on_Qrob_Chr01.tip.tsv", "", unlist(lapply(mutations, basename)))
+mutations <- lapply(mutations, read_tsv) %>% 
+  bind_rows(.id = "sample") %>% 
+  unique() %>% 
+  mutate(detected = 1)
+
+# result
+results <- generated %>% 
+  full_join(mutations) %>% 
+  mutate(generated = ifelse(is.na(generated), 0, generated)) %>% 
+  mutate(detected = ifelse(is.na(detected), 0, detected)) %>% 
+  mutate(status = recode(paste0(generated, detected), "11" = "TP", "10" = "FN", "01" = "FP"))
+write_tsv(results, file = "experiment1.tsv")
+
+# summary
+results %>% 
+  group_by(sample, status) %>% 
+  summarise(N = n()) %>% 
+  reshape2::dcast(sample ~ status) %>% 
+  mutate(FN = 0, FP = 0) %>% 
+  mutate(Precision = round(TP/(TP+FP), 2), 
+         Recall = round(TP/(TP+FN), 2))
+```
