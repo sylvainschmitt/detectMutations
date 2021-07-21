@@ -66,18 +66,45 @@ stats %>%
 ```
 
 ```{r fig2}
-stats %>%
+read_tsv("stats.experiment4.tsv") %>%
   filter(C %in% c(50, 150)) %>% 
   mutate(C = recode(C, "50" = "low coverage (50X)", "150" = "high coverage (150X)")) %>% 
   select(caller, C, AF, Recall, Precision) %>% 
   reshape2::melt(c("caller", "C", "AF")) %>% 
   group_by(caller, C, AF, variable) %>% 
-  ggplot(aes(AF, value, col = caller)) +
-  geom_line() +
+  na.omit() %>% 
+  mutate(m = mean(value), q5 = quantile(value, 0.05), q95 = quantile(value, 0.95)) %>% 
+  ggplot(aes(x = AF, col = caller, fill = caller)) +
+  geom_ribbon(aes(ymin = q5, ymax = q95), alpha = 0.3, col = NA) +
+  geom_line(aes(y = m)) +
+  geom_point(aes(y = value), alpha = 0.5) +
   facet_grid(variable ~ C) +
   xlab("Allele frequency") +
   ylab("") +
-  scale_color_brewer("", palette = "Paired")
+  scale_color_brewer("", palette = "Paired") +
+  scale_fill_brewer("", palette = "Paired")
+```
+
+```{r fig2}
+read_tsv("stats.experiment4.tsv") %>%
+  filter(C %in% c(25, 75, 150)) %>% 
+  mutate(C = paste0(C, "X")) %>% 
+  mutate(C = factor(C, levels = c("25X", "75X", "150X"))) %>% 
+  select(caller, C, AF, Recall, Precision) %>% 
+  reshape2::melt(c("caller", "C", "AF")) %>% 
+  group_by(caller, C, AF, variable) %>% 
+  na.omit() %>% 
+  mutate(m = mean(value), q5 = quantile(value, 0.05), q95 = quantile(value, 0.95)) %>% 
+  ggplot(aes(x = AF, col = caller, fill = caller)) +
+  geom_ribbon(aes(ymin = q5, ymax = q95), alpha = 0.3, col = NA) +
+  geom_line(aes(y = m)) +
+  geom_point(aes(y = value), alpha = 0.5) +
+  facet_grid(C ~ variable) +
+  xlab("Allele frequency") +
+  ylab("") +
+  scale_color_brewer("", palette = "Paired") +
+  scale_fill_brewer("", palette = "Paired") +
+  theme(legend.position = "bottom")
 ```
 
 
