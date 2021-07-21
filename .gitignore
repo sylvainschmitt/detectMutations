@@ -21,8 +21,8 @@ dag/dag.svg
 *.fastq.gz
 *.fa
 *.fa.fai
-data/fai.save
 *.bed
 *.sam
 *.tsv
-data/swiss/Napoleon
+data/trunk
+data/reads

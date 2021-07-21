@@ -1,12 +1,12 @@
 rule bwa_mem:
     input:
         expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True),
-        expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", strand=["1", "2"], allow_missing=True),
-        expand("results/reference/{reference}_{chromosome}{ext}", 
-                reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"],
+        expand("results/reads/{library}_R{strand}.trimmed.paired.fq", strand=["1", "2"], allow_missing=True),
+        expand("results/reference/{reference}_{chromosome}.{ext}", 
+                reference=config["reference"], ext=["fa.amb", "fa.ann", "fa.bwt", "fa.pac", "fa.sa"],
                 allow_missing=True)
     output:
-        temp("results/{library}/{library}_{chromosome}.sam")
+        temp("results/alns/{library}_on_{chromosome}.sam")
     params:
         rg=r"@RG\tID:{library}_{chromosome}\tSM:{library}_{chromosome}"
     log:

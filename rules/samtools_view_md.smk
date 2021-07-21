@@ -1,9 +1,9 @@
 rule samtools_view_md:
     input:
-        "results/{library}/{library}_{chromosome}.md.bam",
+        "results/alns/{library}_on_{chromosome}.md.bam",
         expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True)
     output:
-        "results/{library}/{library}_{chromosome}.md.cram"
+        "results/alns/{library}_on_{chromosome}.md.cram"
     log:
         "results/logs/samtools_view_md_{library}_{chromosome}.log"
     benchmark:

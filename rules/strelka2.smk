@@ -2,18 +2,16 @@ rule strelka2:
     input:
         expand("results/reference/{reference}_{chromosome}.fa", 
                 reference=config["reference"], allow_missing=True),
-        "results/{tumor}/{tumor}_{chromosome}.md.cram",
-        "results/{normal}/{normal}_{chromosome}.md.cram",
-        "results/{tumor}/{tumor}_{chromosome}.md.cram.crai",
-        "results/{normal}/{normal}_{chromosome}.md.cram.crai",
-        expand("results/reference/{reference}_{chromosome}.fa{ext}", 
-                reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], allow_missing=True)
+        "results/alns/B{branch}_T{tip}_L{repetition}_on_{chromosome}.md.cram",
+        "results/alns/C{repetition}_on_{chromosome}.md.cram",
+        "results/alns/B{branch}_T{tip}_L{repetition}_on_{chromosome}.md.cram.crai",
+        "results/alns/C{repetition}_on_{chromosome}.md.cram.crai"
     output:
-        "results/mutations/{tumor}_vs_{normal}_on_{chromosome}_strelka2.vcf"
+        temp("results/mutations/B{branch}_T{tip}_L{repetition}_on_{chromosome}.raw.vcf",)
     log:
-        "results/logs/strelka2_{tumor}_vs_{normal}_{chromosome}.log"
+        "results/logs/strelka2_B{branch}_T{tip}_L{repetition}_on_{chromosome}.log"
     benchmark:
-        "results/benchmarks/strelka2_{tumor}_vs_{normal}_{chromosome}.benchmark.txt"
+        "results/benchmarks/strelka2_B{branch}_T{tip}_L{repetition}_on_{chromosome}.benchmark.txt"
     singularity: 
         "docker://quay.io/wtsicgp/strelka2-manta"
     threads: 20
@@ -24,7 +22,8 @@ rule strelka2:
         "--normalBam {input[2]} "
         "--tumorBam {input[1]} "
         "--referenceFasta {input[0]} "
-        "--runDir results/strelka2/{wildcards.tumor}_vs_{wildcards.normal}_on_{wildcards.chromosome} ; "
-        "results/strelka2/{wildcards.tumor}_vs_{wildcards.normal}_on_{wildcards.chromosome}/runWorkflow.py -m local -j {threads} ; "
-        "zcat results/strelka2/{wildcards.tumor}_vs_{wildcards.normal}_on_{wildcards.chromosome}/results/variants/somatic.snvs.vcf.gz > {output}"
+        "--runDir results/strelka2_B{wildcards.branch}_T{wildcards.tip}_L{wildcards.repetition}_on_{wildcards.chromosome} ; "
+        "results/strelka2_B{wildcards.branch}_T{wildcards.tip}_L{wildcards.repetition}_on_{wildcards.chromosome}/runWorkflow.py -m local -j {threads} ; "
+        "zcat results/strelka2_B{wildcards.branch}_T{wildcards.tip}_L{wildcards.repetition}_on_{wildcards.chromosome}/results/variants/somatic.snvs.vcf.gz > {output} ;"
+        "rm -r results/strelka2_B{wildcards.branch}_T{wildcards.tip}_L{wildcards.repetition}_on_{wildcards.chromosome}"
         

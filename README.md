@@ -1,26 +1,29 @@
-detect Mutations - Swiss data
+detect Mutations - Angela
 ================
 Sylvain Schmitt
-April 20, 2021
+Jully 21, 2021
 
+  - [Sampling scheme](#sampling-scheme)
   - [Installation](#installation)
   - [Usage](#usage)
       - [Get data](#get-data)
       - [Locally](#locally)
       - [HPC](#hpc)
   - [Workflow](#workflow)
-      - [Reference](#reference)
-      - [Napoleon](#napoleon)
-      - [Reads](#reads)
+      - [Reference & reads](#reference--reads)
       - [Alignments](#alignments)
       - [Mutations](#mutations)
+  - [Results](#results)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
-workflow to detect mutations with several alignment and mutation
-detection tools.
+workflow to detect mutations corresponding to Angela sampling scheme.
 
 ![](dag/dag.minimal.svg)<!-- -->
+
+# Sampling scheme
+
+<img src="dag/sampling.png" width="636" />
 
 # Installation
 
@@ -64,25 +67,15 @@ cd detectMutations
 
 ## Get data
 
-  - Reference genome 3P from
-    <http://urgi.versailles.inra.fr/download/oak>
-  - Raw reads from ENA project PRJEB8388
-  - Napoleon’s genome
-    (<https://www.ebi.ac.uk/ena/browser/api/fasta/GCA_003013145.1?download=true&gzip=true>)
-  - Napoleon’s original mutations
-    (<https://docs.google.com/spreadsheets/d/10SmTGXCfQKU6M8KLqF_lzHDFM4A64pdpVUeNdI7MapA/edit#gid=0>)
-
-<!-- end list -->
+Generate data using the [Angela branch of the generate
+Mutations](https://github.com/sylvainschmitt/detectMutations/tree/angela)
+workflow.
 
 ``` bash
-cd data/swiss
-mkdir out
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  compress_reads.sh
-rm -rf out
-rm SRR*
-sh get_genome.sh 
+git clone git@github.com:sylvainschmitt/generateMutations.git
+git checkout -b angela
+cd generateMutations
+snakemake --use-singularity --cores 4
 ```
 
 ## Locally
@@ -104,84 +97,24 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 # Workflow
 
-## Reference
+## Reference & reads
 
-*Copy and index reference for software to work with.*
+*Copy and index reference for software to work with and trim reads.*
 
-### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx_split.smk)
+### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_faidx_split.smk)
 
   - Tools: [`samtools
     faidx`](http://www.htslib.org/doc/samtools-faidx.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bwa_index.smk)
+### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_index.smk)
 
   - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
-### [samtools\_faidx](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx.smk)
-
-  - Tools: [`samtools
-    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### [gatk\_dict](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_dict.smk)
-
-  - Tools: [`gatk
-    CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
-  - Singularity: docker://broadinstitute/gatk
-
-## Napoleon
-
-*Get the position of original mutations from Napoleon on the 3P genome.*
-
-### [cp\_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/cp_napo.smk)
-
-  - Tools: `cp`
-
-### [samtools\_faidx\_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx_napo.smk)
-
-  - Tools: [`samtools
-    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### [napomutations2bed](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/napomutations2bed.smk)
-
-  - Script:
-    [`napomutations2bed.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/napomutations2bed.R)
-  - Singularity: to be added, currently uses local install
-
-### [bedtools\_getfasta](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bedtools_getfasta.smk)
-
-  - Tools: [`bedtools
-    getfasta`](https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### [blat](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/blat.smk)
-
-  - Tools: [\`blat](http://genome.ucsc.edu/FAQ/FAQblat.html)
-  - Singularity: to be added, currently uses local install
-
-### [psl2pos](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/psl2pos.smk)
-
-  - Script:
-    [`psl2pos.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/psl2pos.R)
-  - Singularity: to be added, currently uses local install
-
-## Reads
-
-*Copy reads, report quality and trim.*
-
-### [cp\_reads](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/cp_reads.smk)
-
-  - Tools: `cp`
-
-### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/trimmomatic.smk)
+### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/trimmomatic.smk)
 
   - Tools:
     [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
@@ -193,47 +126,47 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 *Align reads against reference, mark duplicated, and report alignment
 quality.*
 
-### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bwa_mem.smk)
+### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_mem.smk)
 
   - Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
-### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_view.smk)
+### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view.smk)
 
   - Tools: [`Samtools
     view`](http://www.htslib.org/doc/samtools-view.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_sort.smk)
+### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_sort.smk)
 
   - Tools: [`Samtools
     sort`](http://www.htslib.org/doc/samtools-sort.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_index.smk)
+### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index.smk)
 
   - Tools: [`Samtools
     index`](http://www.htslib.org/doc/samtools-index.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_markduplicates.smk)
+### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_markduplicates.smk)
 
   - Tools: [`gatk
     MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
-### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_view_md.smk)
+### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view_md.smk)
 
   - Tools: [`Samtools
     view`](http://www.htslib.org/doc/samtools-view.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_index_md.smk)
+### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index_md.smk)
 
   - Tools: [`Samtools
     index`](http://www.htslib.org/doc/samtools-index.html)
@@ -242,37 +175,29 @@ quality.*
 
 ## Mutations
 
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2.smk)
+### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk)
 
   - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
   - Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2tsv.smk)
+### [bedtools\_subtract](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_subtract.smk)
+
+  - Tools: [`bedtools
+    subtract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+
+### [bedtools\_intersect](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_intersect.smk)
+
+  - Tools: [`bedtools
+    intersect`](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+
+### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2tsv.smk)
 
   - Script:
-    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2tsv.R)
+    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
   - Singularity: to be added, currently uses local install
 
-### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
-
-  - Tools: [`gatk
-    HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-  - Singularity: docker://broadinstitute/gatk
-
-### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_genotypegvcfs.smk)
-
-  - Tools: [`gatk
-    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-  - Singularity: docker://broadinstitute/gatk
-
-### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
-
-  - Script:
-    [`gatk2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2tsv.R)
-  - Singularity: to be added, currently uses local install
-
-### [tsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/tsv2sql.smk)
-
-  - Script:
-    [`tsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/tsv2sql.R)
-  - Singularity: to be added, currently uses local install
+# Results

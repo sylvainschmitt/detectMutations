@@ -1,8 +1,8 @@
 rule samtools_index_md:
     input:
-        "results/{library}/{library}_{chromosome}.md.cram"
+        "results/alns/{library}_on_{chromosome}.md.cram"
     output:
-        "results/{library}/{library}_{chromosome}.md.cram.crai"
+        "results/alns/{library}_on_{chromosome}.md.cram.crai"
     log:
         "results/logs/samtools_index_md_{library}_{chromosome}.log"
     benchmark:

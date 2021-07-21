@@ -1,9 +1,9 @@
 rule samtools_view:
     input:
-        "results/{library}/{library}_{chromosome}.sam",
+        "results/alns/{library}_on_{chromosome}.sam",
         expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True)
     output:
-        temp("results/{library}/{library}_{chromosome}.raw.cram")
+        temp("results/alns/{library}_on_{chromosome}.raw.cram")
     log:
         "results/logs/samtools_view_{library}_{chromosome}.log"
     benchmark:

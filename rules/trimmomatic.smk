@@ -1,10 +1,10 @@
 rule trimmomatic:
     input:
-        expand("results/{library}/{library}_{strand}.raw.fastq.gz", strand=["1", "2"], allow_missing=True)
+        expand("{reads}/{library}_R{strand}.fq", reads=config["reads"] , strand=["1", "2"], allow_missing=True)
     output:
-        temp(expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", strand=["1", "2"], allow_missing=True)),
-        temp(expand("results/{library}/{library}_{strand}.trimmed.unpaired.fastq.gz", strand=["1", "2"], allow_missing=True)),
-        temp("results/{library}/trim_out.log")
+        expand("results/reads/{library}_R{strand}.trimmed.paired.fq", strand=["1", "2"], allow_missing=True),
+        temp(expand("results/reads/{library}_R{strand}.trimmed.unpaired.fq", strand=["1", "2"], allow_missing=True)),
+        temp("results/reads/{library}_trim_out.log")
     log:
         "results/logs/trimmomatic_{library}.log"
     benchmark:

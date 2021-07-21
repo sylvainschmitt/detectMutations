@@ -1,13 +1,16 @@
 ## Sylvain SCHMITT
-## 28/04/2021
+## 21/07/2021
 
 # Ressources
-ressources: "ressources.local.yaml"
+ressources: "ressources.genologin.yaml"
 
-# data
-refdir: "data/generated"
-reference: "Qrob_PM1N_2Chr_7k"
-libdir: "data/generated"
+# Data
+refdir: "data/trunk"
+reference: "trunk"
+hz: "trunk_snps.vcf"
+reads: "data/reads"
 
-# results
-vcfs: ["test1_vs_test2"]
+# Sampling
+branches: [1]
+tips: ["L", "O"]
+repetitions: [1, 2, 3]
