@@ -16,7 +16,8 @@ lambda wildcards: chromosomes
 rule all:
     input:
         expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", 
-                strand=["1", "2"], library=libraries, chromosome=chromosomes) # trim
+                strand=["1", "2"], library=libraries, chromosome=chromosomes), # trim
+        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes) # aln
 
 
 # Rules #
@@ -39,12 +40,3 @@ include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
-
-## Mutations ##
-include: "rules/strelka2.smk"
-include: "rules/strelka2tsv.smk"
-include: "rules/strelka2sql.smk"
-include: "rules/gatk_haplotypecaller.smk"
-include: "rules/gatk_genotypegvcfs.smk"
-include: "rules/gatk2tsv.smk"
-include: "rules/gatk2sql.smk"

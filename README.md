@@ -10,10 +10,8 @@ April 20, 2021
       - [HPC](#hpc)
   - [Workflow](#workflow)
       - [Reference](#reference)
-      - [Napoleon](#napoleon)
       - [Reads](#reads)
       - [Alignments](#alignments)
-      - [Mutations](#mutations)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -67,22 +65,39 @@ cd detectMutations
   - Reference genome 3P from
     <http://urgi.versailles.inra.fr/download/oak>
   - Raw reads from ENA project PRJEB8388
-  - Napoleon’s genome
-    (<https://www.ebi.ac.uk/ena/browser/api/fasta/GCA_003013145.1?download=true&gzip=true>)
-  - Napoleon’s original mutations
-    (<https://docs.google.com/spreadsheets/d/10SmTGXCfQKU6M8KLqF_lzHDFM4A64pdpVUeNdI7MapA/edit#gid=0>)
+  - Reads branch from supplementary table 9 from
+    <https://static-content.springer.com/esm/art%3A10.1038%2Fs41477-018-0172-3/MediaObjects/41477_2018_172_MOESM1_ESM.pdf>
 
 <!-- end list -->
 
+``` r
+data.frame(
+  branch = rep(paste0("L", 1:3), each = 4),
+  ncbi = c("ERX697294", "ERX1886616", "ERX1886622", "ERX1886621",
+           "ERX697297", "ERX697298", "ERX697296", "ERX1886620", "ERX697292",
+           "ERX1886619", "ERX1886617", "ERX1886618")
+) %>% 
+  left_join(read_tsv("data/bordeaux/filereport_read_run_PRJEB8388_tsv.txt") %>% 
+              dplyr::select(experiment_accession, run_accession) %>% 
+              dplyr::rename(ncbi = experiment_accession, ena = run_accession)) %>% 
+  mutate(R1 = paste0(ena, "_1.fastq.gz"), R2 = paste0(ena, "_2.fastq.gz")) %>% 
+  dplyr::select(branch, R1, R2) %>% 
+  group_by(branch) %>% 
+  summarise(R1 = paste(R1, collapse = " "),
+            R2 = paste(R2, collapse = " ")) %>% 
+  reshape2::melt("branch", variable.name = "strand", value.name = "command") %>% 
+  mutate(command = paste0("module purge ;  zcat ", command, " | gzip > ", branch, "_", strand, ".fastq.gz ; rm ", command)) %>% 
+  select(-branch, -strand) %>% 
+  write_tsv(file = "data/bordeaux/merge_reads.sh", col_names = F)
+```
+
 ``` bash
-cd data/swiss
-mkdir out
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  compress_reads.sh
-rm -rf out
-rm SRR*
+cd data/bordeaux
 sh get_genome.sh 
+mkdir out
+sarray -J bdxDat -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
+sarray -J bdxDat -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
+rm -rf out
 ```
 
 ## Locally
@@ -133,45 +148,6 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
   - Tools: [`gatk
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
   - Singularity: docker://broadinstitute/gatk
-
-## Napoleon
-
-*Get the position of original mutations from Napoleon on the 3P genome.*
-
-### [cp\_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/cp_napo.smk)
-
-  - Tools: `cp`
-
-### [samtools\_faidx\_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx_napo.smk)
-
-  - Tools: [`samtools
-    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### [napomutations2bed](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/napomutations2bed.smk)
-
-  - Script:
-    [`napomutations2bed.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/napomutations2bed.R)
-  - Singularity: to be added, currently uses local install
-
-### [bedtools\_getfasta](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bedtools_getfasta.smk)
-
-  - Tools: [`bedtools
-    getfasta`](https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### [blat](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/blat.smk)
-
-  - Tools: [\`blat](http://genome.ucsc.edu/FAQ/FAQblat.html)
-  - Singularity: to be added, currently uses local install
-
-### [psl2pos](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/psl2pos.smk)
-
-  - Script:
-    [`psl2pos.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/psl2pos.R)
-  - Singularity: to be added, currently uses local install
 
 ## Reads
 
@@ -239,40 +215,3 @@ quality.*
     index`](http://www.htslib.org/doc/samtools-index.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-## Mutations
-
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2.smk)
-
-  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
-  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2tsv.smk)
-
-  - Script:
-    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2tsv.R)
-  - Singularity: to be added, currently uses local install
-
-### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
-
-  - Tools: [`gatk
-    HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-  - Singularity: docker://broadinstitute/gatk
-
-### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_genotypegvcfs.smk)
-
-  - Tools: [`gatk
-    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-  - Singularity: docker://broadinstitute/gatk
-
-### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
-
-  - Script:
-    [`gatk2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2tsv.R)
-  - Singularity: to be added, currently uses local install
-
-### [tsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/tsv2sql.smk)
-
-  - Script:
-    [`tsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/tsv2sql.R)
-  - Singularity: to be added, currently uses local install

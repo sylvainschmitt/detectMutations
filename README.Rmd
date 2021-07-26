@@ -97,8 +97,8 @@ data.frame(
 cd data/bordeaux
 sh get_genome.sh 
 mkdir out
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
+sarray -J bdxDat -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
+sarray -J bdxDat -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
 rm -rf out
 ```
 
@@ -144,39 +144,6 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 * Tools: [`gatk CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
 * Singularity: docker://broadinstitute/gatk
-
-## Napoleon
-
-*Get the position of original mutations from Napoleon on the 3P genome.*
-
-### [cp_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/cp_napo.smk)
-
-* Tools: `cp`
-
-### [samtools_faidx_napo](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx_napo.smk)
-
-* Tools: [`samtools faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### [napomutations2bed](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/napomutations2bed.smk)
-
-* Script: [`napomutations2bed.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/napomutations2bed.R)
-* Singularity: to be added, currently uses local install
-
-### [bedtools_getfasta](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bedtools_getfasta.smk)
-
-* Tools: [`bedtools getfasta`](https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### [blat](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/blat.smk)
-
-* Tools: [`blat](http://genome.ucsc.edu/FAQ/FAQblat.html)
-* Singularity: to be added, currently uses local install
-
-### [psl2pos](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/psl2pos.smk)
-
-* Script: [`psl2pos.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/psl2pos.R)
-* Singularity: to be added, currently uses local install
 
 ## Reads
 
@@ -229,35 +196,3 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 * Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-## Mutations
-
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2.smk)
-
-* Tools: [`Strelka2`](https://github.com/Illumina/strelka)
-* Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2tsv.smk)
-
-* Script: [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2tsv.R)
-* Singularity: to be added, currently uses local install
-
-### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
-
-* Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-* Singularity: docker://broadinstitute/gatk
-
-### [gatk_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_genotypegvcfs.smk)
-
-* Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-* Singularity: docker://broadinstitute/gatk
-
-### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
-
-* Script: [`gatk2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2tsv.R)
-* Singularity: to be added, currently uses local install
-
-### [tsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/tsv2sql.smk)
-
-* Script: [`tsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/tsv2sql.R)
-* Singularity: to be added, currently uses local install

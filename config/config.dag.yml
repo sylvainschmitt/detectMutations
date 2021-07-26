@@ -2,12 +2,12 @@
 ## 28/04/2021
 
 # Ressources
-ressources: "ressources.local.yaml"
+ressources: "ressources.genologin.yaml"
 
 # data
-refdir: "data/generated"
-reference: "Qrob_PM1N_2Chr_7k"
-libdir: "data/generated"
+refdir: "data/dag"
+reference: "Qrob_PM1N"
+libdir: "data/dag"
 
 # results
-vcfs: ["test1_vs_test2"]
+vcfs: ["L1_vs_L2", "L2_vs_L1"]
