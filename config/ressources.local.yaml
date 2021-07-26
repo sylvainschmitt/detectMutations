@@ -1,5 +1,0 @@
-__default__:
-  jobname: "default"
-  mem: "10G"
-  cpus: 3
-  time: "01:00:00"

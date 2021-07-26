@@ -5,9 +5,9 @@
 ressources: "ressources.genologin.yaml"
 
 # data
-refdir: "data/swiss"
+refdir: "data/bordeaux"
 reference: "Qrob_PM1N"
-libdir: "data/swiss"
+libdir: "data/bordeaux"
 
 # results
-vcfs: ["upper_vs_lower", "lower_vs_upper"]
+vcfs: ["L1_vs_L2", "L2_vs_L1", "L1_vs_L3", "L3_vs_L1", "L2_vs_L3", "L3_vs_L2"]

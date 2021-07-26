@@ -1,0 +1,6 @@
+module purge ;  zcat ERR753558_1.fastq.gz ERR1824213_1.fastq.gz ERR1824218_1.fastq.gz ERR1824219_1.fastq.gz | gzip > L1_R1.fastq.gz ; rm ERR753558_1.fastq.gz ERR1824213_1.fastq.gz ERR1824218_1.fastq.gz ERR1824219_1.fastq.gz
+module purge ;  zcat ERR753561_1.fastq.gz ERR753563_1.fastq.gz ERR753564_1.fastq.gz ERR1824216_1.fastq.gz | gzip > L2_R1.fastq.gz ; rm ERR753561_1.fastq.gz ERR753563_1.fastq.gz ERR753564_1.fastq.gz ERR1824216_1.fastq.gz
+module purge ;  zcat ERR753559_1.fastq.gz ERR1824215_1.fastq.gz ERR1824214_1.fastq.gz ERR1824217_1.fastq.gz | gzip > L3_R1.fastq.gz ; rm ERR753559_1.fastq.gz ERR1824215_1.fastq.gz ERR1824214_1.fastq.gz ERR1824217_1.fastq.gz
+module purge ;  zcat ERR753558_2.fastq.gz ERR1824213_2.fastq.gz ERR1824218_2.fastq.gz ERR1824219_2.fastq.gz | gzip > L1_R2.fastq.gz ; rm ERR753558_2.fastq.gz ERR1824213_2.fastq.gz ERR1824218_2.fastq.gz ERR1824219_2.fastq.gz
+module purge ;  zcat ERR753561_2.fastq.gz ERR753563_2.fastq.gz ERR753564_2.fastq.gz ERR1824216_2.fastq.gz | gzip > L2_R2.fastq.gz ; rm ERR753561_2.fastq.gz ERR753563_2.fastq.gz ERR753564_2.fastq.gz ERR1824216_2.fastq.gz
+module purge ;  zcat ERR753559_2.fastq.gz ERR1824215_2.fastq.gz ERR1824214_2.fastq.gz ERR1824217_2.fastq.gz | gzip > L3_R2.fastq.gz ; rm ERR753559_2.fastq.gz ERR1824215_2.fastq.gz ERR1824214_2.fastq.gz ERR1824217_2.fastq.gz

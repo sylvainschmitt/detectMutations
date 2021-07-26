@@ -26,3 +26,4 @@ data/fai.save
 *.sam
 *.tsv
 data/swiss/Napoleon
+*.txt

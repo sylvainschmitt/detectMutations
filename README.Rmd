@@ -70,18 +70,36 @@ cd detectMutations
 
 * Reference genome 3P from http://urgi.versailles.inra.fr/download/oak
 * Raw reads from ENA project PRJEB8388
-* Napoleon's genome (https://www.ebi.ac.uk/ena/browser/api/fasta/GCA_003013145.1?download=true&gzip=true)
-* Napoleon's original mutations (https://docs.google.com/spreadsheets/d/10SmTGXCfQKU6M8KLqF_lzHDFM4A64pdpVUeNdI7MapA/edit#gid=0)
+* Reads branch from supplementary table 9 from https://static-content.springer.com/esm/art%3A10.1038%2Fs41477-018-0172-3/MediaObjects/41477_2018_172_MOESM1_ESM.pdf
+
+```{r, eval=F, echo=T}
+data.frame(
+  branch = rep(paste0("L", 1:3), each = 4),
+  ncbi = c("ERX697294", "ERX1886616", "ERX1886622", "ERX1886621",
+           "ERX697297", "ERX697298", "ERX697296", "ERX1886620", "ERX697292",
+           "ERX1886619", "ERX1886617", "ERX1886618")
+) %>% 
+  left_join(read_tsv("data/bordeaux/filereport_read_run_PRJEB8388_tsv.txt") %>% 
+              dplyr::select(experiment_accession, run_accession) %>% 
+              dplyr::rename(ncbi = experiment_accession, ena = run_accession)) %>% 
+  mutate(R1 = paste0(ena, "_1.fastq.gz"), R2 = paste0(ena, "_2.fastq.gz")) %>% 
+  dplyr::select(branch, R1, R2) %>% 
+  group_by(branch) %>% 
+  summarise(R1 = paste(R1, collapse = " "),
+            R2 = paste(R2, collapse = " ")) %>% 
+  reshape2::melt("branch", variable.name = "strand", value.name = "command") %>% 
+  mutate(command = paste0("module purge ;  zcat ", command, " | gzip > ", branch, "_", strand, ".fastq.gz ; rm ", command)) %>% 
+  select(-branch, -strand) %>% 
+  write_tsv(file = "data/bordeaux/merge_reads.sh", col_names = F)
+```
 
 ```{bash, eval=F, echo=T}
-cd data/swiss
+cd data/bordeaux
+sh get_genome.sh 
 mkdir out
 sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
 sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  compress_reads.sh
 rm -rf out
-rm SRR*
-sh get_genome.sh 
 ```
 
 ## Locally
