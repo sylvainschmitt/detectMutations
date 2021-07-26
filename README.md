@@ -1,4 +1,4 @@
-detect Mutations - Swiss data
+detect Mutations - Bordeaux's data
 ================
 Sylvain Schmitt
 April 20, 2021
