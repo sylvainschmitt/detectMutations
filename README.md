@@ -80,11 +80,11 @@ data.frame(
   left_join(read_tsv("data/bordeaux/filereport_read_run_PRJEB8388_tsv.txt") %>% 
               dplyr::select(experiment_accession, run_accession) %>% 
               dplyr::rename(ncbi = experiment_accession, ena = run_accession)) %>% 
-  mutate(R1 = paste0(ena, "_1.fastq.gz"), R2 = paste0(ena, "_2.fastq.gz")) %>% 
-  dplyr::select(branch, R1, R2) %>% 
+  mutate(`1` = paste0(ena, "_1.fastq.gz"), `2` = paste0(ena, "_2.fastq.gz")) %>% 
+  dplyr::select(branch, `1`, `2`) %>% 
   group_by(branch) %>% 
-  summarise(R1 = paste(R1, collapse = " "),
-            R2 = paste(R2, collapse = " ")) %>% 
+  summarise(`1` = paste(`1`, collapse = " "),
+            `2` = paste(`2`, collapse = " ")) %>% 
   reshape2::melt("branch", variable.name = "strand", value.name = "command") %>% 
   mutate(command = paste0("module purge ;  zcat ", command, " | gzip > ", branch, "_", strand, ".fastq.gz ; rm ", command)) %>% 
   select(-branch, -strand) %>% 
