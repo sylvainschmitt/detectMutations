@@ -1,5 +1,5 @@
 ---
-title: "detect Mutations - Swiss data"
+title: "detect Mutations - Bordeaux's data"
 author: Sylvain Schmitt
 date: April 20, 2021
 output:
