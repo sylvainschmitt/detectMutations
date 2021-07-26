@@ -1,11 +1,11 @@
 rule gatk2tsv:
     input:
-        "results/mutations/{tumor}_vs_{normal}_on_{chromosome}_gatk.vcf"
+        expand("results/mutations/{vcfs}_on_{chromosome}_gatk.vcf", vcfs=config["vcfs"], allow_missing = True)
     output:
-        "results/mutations/{tumor}_vs_{normal}_on_{chromosome}_gatk.tsv"
+        "results/mutations/{chromosome}_gatk.tsv"
     log:
-        "results/logs/gatk2tsv_{tumor}_{normal}_{chromosome}.log"
+        "results/logs/gatk2tsv_{chromosome}.log"
     benchmark:
-        "results/benchmarks/gatk2tsv_{tumor}_{normal}_{chromosome}.benchmark.txt"
+        "results/benchmarks/gatk2tsv_{chromosome}.benchmark.txt"
     script:
         "../scripts/gatk2tsv.R"

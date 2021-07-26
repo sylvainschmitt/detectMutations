@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-configfile: "config/config.dag.yml"
+configfile: "config/config.swiss.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
@@ -17,8 +17,8 @@ rule all:
     input:
         # expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes), # aln
         # expand("results/mutations/{vcfs}_on_{chromosome}_{caller}.vcf", vcfs=config["vcfs"], chromosome=chromosomes, caller=["strelka2", "gatk"]), # mut raw vcf
-        expand("results/mutations/{vcfs}_on_{chromosome}_{caller}.tsv", vcfs=config["vcfs"], chromosome=chromosomes, caller=["gatk"]), # mut raw tsv
-               "results/napoleon_mutations.tsv",
+        expand("results/mutations/{chromosome}_{caller}.tsv", vcfs=config["vcfs"], chromosome=chromosomes, caller=["gatk"]), # mut raw tsv
+        "results/napoleon_mutations.tsv",
         expand("results/{caller}_raw.sql", caller=["strelka2", "gatk"])
 
 
@@ -54,7 +54,8 @@ include: "rules/samtools_index_md.smk"
 ## Mutations ##
 # include: "rules/strelka2.smk"
 include: "rules/strelka2tsv.smk"
+include: "rules/strelka2sql.smk"
 # include: "rules/gatk_haplotypecaller.smk"
 # include: "rules/gatk_genotypegvcfs.smk"
 include: "rules/gatk2tsv.smk"
-include: "rules/tsv2sql.smk"
+include: "rules/gatk2sql.smk"
