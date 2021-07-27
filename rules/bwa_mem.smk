@@ -14,9 +14,9 @@ rule bwa_mem:
         "results/benchmarks/bwa_mem_{library}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest"
-    threads: 20
+    threads: 40
     resources:
-        mem_mb=200000
+        mem_mb=400000
     shell:
         "bwa mem -M -R '{params.rg}' -t {threads} {input[0]} {input[1]} {input[2]} > {output}"
         

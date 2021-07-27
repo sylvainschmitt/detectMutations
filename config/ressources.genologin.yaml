@@ -54,9 +54,10 @@ trimmomatic:
 
 bwa_mem:
   jobname: "bwa_mem"
-  mem: "200G"
-  cpus: 20
+  mem: "400G"
+  cpus: 40
   time: "96:00:00"
+  disk: "1T"
   
 samtools_view:
   jobname: "samtools_view"

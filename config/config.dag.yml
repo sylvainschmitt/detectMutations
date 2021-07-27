@@ -2,7 +2,7 @@
 ## 28/04/2021
 
 # Ressources
-ressources: "ressources.local.yaml"
+ressources: "ressources.genologin.yaml"
 
 # data
 refdir: "data/dag"

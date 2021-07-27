@@ -1,9 +1,7 @@
 ## Sylvain SCHMITT
-## 28/04/2021
+## 27/07/2021
 
-import pandas as pd
-
-configfile: "config/config.dag.yml"
+configfile: "config/config.swiss.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
