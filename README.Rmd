@@ -69,19 +69,52 @@ cd detectMutations
 ## Get data
 
 * Reference genome 3P from http://urgi.versailles.inra.fr/download/oak
-* Raw reads from ENA project PRJEB8388
+* Raw reads from ENA project PRJNA327502
 * Napoleon's genome (https://www.ebi.ac.uk/ena/browser/api/fasta/GCA_003013145.1?download=true&gzip=true)
 * Napoleon's original mutations (https://docs.google.com/spreadsheets/d/10SmTGXCfQKU6M8KLqF_lzHDFM4A64pdpVUeNdI7MapA/edit#gid=0)
 
+```{r swissDat, echo=T, eval=F}
+# files
+files <- data.frame(
+  branch = c("upper", "lower"),
+  ncbi = c("SRR386", "SRR388")
+) %>% 
+  left_join(read_tsv("data/swiss/filereport_read_run_PRJNA327502_tsv.txt") %>% 
+              mutate(ncbi = substr(run_accession, 1, 6))) %>% 
+  separate(fastq_ftp, c("fastq_ftp_1", "fastq_ftp_2"), sep = ";") %>% 
+  filter(!grepl("consensus", fastq_ftp_1)) %>% 
+  filter(!grepl("subreads", fastq_ftp_1))
+
+# get reads
+files %>% 
+  select(branch, fastq_ftp_1, fastq_ftp_2) %>% 
+  reshape2::melt("branch") %>% 
+  mutate(command = paste0("wget ", value)) %>% 
+  select(command) %>% 
+  write_tsv(file = "data/swiss/get_reads.sh", col_names = F)
+
+# merge reads
+files %>% 
+  select(branch, run_accession) %>% 
+  mutate(`1` = paste0(run_accession, "_1.fastq.gz"), `2` = paste0(run_accession, "_2.fastq.gz")) %>% 
+  dplyr::select(branch, `1`, `2`) %>% 
+  group_by(branch) %>% 
+  summarise(`1` = paste(`1`, collapse = " "),
+            `2` = paste(`2`, collapse = " ")) %>% 
+  reshape2::melt("branch", variable.name = "strand", value.name = "command") %>% 
+  mutate(command = paste0("zcat ", command, " | gzip > ", branch, "_", strand, ".fastq.gz ; rm ", command)) %>% 
+  select(-branch, -strand) %>% 
+  write_tsv(file = "data/swiss/merge_reads.sh", col_names = F)
+```
+
+
 ```{bash, eval=F, echo=T}
 cd data/swiss
+sh get_genome.sh 
 mkdir out
 sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  get_reads.sh
 sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  merge_reads.sh
-sarray -J swissData -o out/%j.out -e out/%j.err -t 1:00:00 --mail-type=ALL  compress_reads.sh
 rm -rf out
-rm SRR*
-sh get_genome.sh 
 ```
 
 ## Locally
