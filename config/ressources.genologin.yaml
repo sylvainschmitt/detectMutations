@@ -54,45 +54,45 @@ trimmomatic:
 
 bwa_mem:
   jobname: "bwa_mem"
-  mem: "32G"
-  cpus: 8
+  mem: "200G"
+  cpus: 20
   time: "96:00:00"
   
 samtools_view:
   jobname: "samtools_view"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "96:00:00"
   
 samtools_sort:
   jobname: "samtools_sort"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "96:00:00"
 
 samtools_index:
   jobname: "samtools_index"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "96:00:00"
   
 gatk_markduplicates:
   jobname: "gatk_markduplicates"
   mem: "100G"
   cpus: 1
-  time: "48:00:00"
+  time: "96:00:00"
   
 samtools_view_md:
   jobname: "samtools_view_md"
   mem: "4G"
   cpus: 1
-  time: "10:00:00"
+  time: "96:00:00"
   
 samtools_index_md:
   jobname: "samtools_index_md"
   mem: "16G"
   cpus: 4
-  time: "10:00:00"
+  time: "96:00:00"
   
 ## Mutations ##
 

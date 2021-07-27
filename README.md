@@ -108,12 +108,9 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 *Copy and index reference for software to work with.*
 
-### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/samtools_faidx_split.smk)
+### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/cp_reference.smk)
 
-  - Tools: [`samtools
-    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+  - Tools: `cp`
 
 ### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/bwa_index.smk)
 

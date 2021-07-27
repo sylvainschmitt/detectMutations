@@ -1,13 +1,13 @@
 rule samtools_view:
     input:
-        "results/{library}/{library}_{chromosome}.sam",
-        expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True)
+        "results/{library}/{library}.sam",
+        expand("results/reference/{reference}.fa", reference=config["reference"])
     output:
-        temp("results/{library}/{library}_{chromosome}.raw.cram")
+        temp("results/{library}/{library}.raw.cram")
     log:
-        "results/logs/samtools_view_{library}_{chromosome}.log"
+        "results/logs/samtools_view_{library}.log"
     benchmark:
-        "results/benchmarks/samtools_view_{library}_{chromosome}.benchmark.txt"
+        "results/benchmarks/samtools_view_{library}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:

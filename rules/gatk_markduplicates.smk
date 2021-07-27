@@ -1,15 +1,15 @@
 rule gatk_markduplicates:
     input:
-        "results/{library}/{library}_{chromosome}.sorted.cram",
-         expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], allow_missing = True),
-        "results/{library}/{library}_{chromosome}.sorted.cram.crai"
+        "results/{library}/{library}.sorted.cram",
+         expand("results/reference/{reference}.fa", reference=config["reference"]),
+        "results/{library}/{library}.sorted.cram.crai"
     output:
-        temp("results/{library}/{library}_{chromosome}.md.bam"),
-        temp("results/{library}/{library}_{chromosome}.md.bam.metrics")
+        temp("results/{library}/{library}.md.bam"),
+        temp("results/{library}/{library}.md.bam.metrics")
     log:
-        "results/logs/gatk_markduplicates_{library}_{chromosome}.log"
+        "results/logs/gatk_markduplicates_{library}.log"
     benchmark:
-        "results/benchmarks/gatk_markduplicates_{library}_{chromosome}.benchmark.txt"
+        "results/benchmarks/gatk_markduplicates_{library}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     threads: 1
