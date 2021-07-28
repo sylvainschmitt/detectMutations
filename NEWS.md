@@ -1,3 +1,6 @@
+# detectMutation - swiss data 0.2.0.9014
+* Strelka2 & GATK Best Practice whole genome
+
 # detectMutation - swiss data 0.2.0.9013
 * full alignment
 

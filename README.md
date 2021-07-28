@@ -13,7 +13,8 @@ April 20, 2021
       - [Napoleon](#napoleon)
       - [Reads](#reads)
       - [Alignments](#alignments)
-      - [Mutations](#mutations)
+      - [Mutations - `Strelka2`](#mutations---strelka2)
+      - [Mutations - `GATK`](#mutations---gatk)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -269,7 +270,7 @@ quality.*
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-## Mutations
+## Mutations - `Strelka2`
 
 ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2.smk)
 
@@ -282,16 +283,33 @@ quality.*
     [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2tsv.R)
   - Singularity: to be added, currently uses local install
 
+### [strelka2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2sql.smk)
+
+  - Script:
+    [`strelka2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2sql.R)
+  - Singularity: to be added, currently uses local install
+
+## Mutations - `GATK`
+
+[Best
+Practice](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)
+
 ### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
 
   - Tools: [`gatk
     HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
   - Singularity: docker://broadinstitute/gatk
 
-### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_genotypegvcfs.smk)
+### [gatk\_cnnscorevariants](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_cnnscorevariants.smk)
 
   - Tools: [`gatk
-    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
+    CNNScoreVariants`](https://gatk.broadinstitute.org/hc/en-us/articles/360037226672-CNNScoreVariants)
+  - Singularity: docker://broadinstitute/gatk
+
+### [gatk\_filtervarianttranches](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_filtervarianttranches.smk)
+
+  - Tools: [`gatk
+    FilterVariantTranches`](https://gatk.broadinstitute.org/hc/en-us/articles/360040098912-FilterVariantTranches)
   - Singularity: docker://broadinstitute/gatk
 
 ### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
@@ -300,8 +318,8 @@ quality.*
     [`gatk2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2tsv.R)
   - Singularity: to be added, currently uses local install
 
-### [tsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/tsv2sql.smk)
+### [gatk2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2sql.smk)
 
   - Script:
-    [`tsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/tsv2sql.R)
+    [`gatk2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2sql.R)
   - Singularity: to be added, currently uses local install

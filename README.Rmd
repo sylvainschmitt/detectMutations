@@ -244,7 +244,7 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 * Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-## Mutations
+## Mutations - `Strelka2`
 
 ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2.smk)
 
@@ -256,22 +256,40 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 * Script: [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2tsv.R)
 * Singularity: to be added, currently uses local install
 
+### [strelka2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/strelka2sql.smk)
+
+* Script: [`strelka2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/strelka2sql.R)
+* Singularity: to be added, currently uses local install
+
+## Mutations - `GATK` 
+
+[Best Practice](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)
+
 ### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
 
 * Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
 * Singularity: docker://broadinstitute/gatk
 
-### [gatk_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_genotypegvcfs.smk)
+### [gatk_cnnscorevariants](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_cnnscorevariants.smk)
 
-* Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
+* Tools: [`gatk CNNScoreVariants`](https://gatk.broadinstitute.org/hc/en-us/articles/360037226672-CNNScoreVariants)
 * Singularity: docker://broadinstitute/gatk
+
+### [gatk_filtervarianttranches](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_filtervarianttranches.smk)
+
+* Tools: [`gatk FilterVariantTranches`](https://gatk.broadinstitute.org/hc/en-us/articles/360040098912-FilterVariantTranches)
+* Singularity: docker://broadinstitute/gatk
+
 
 ### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
 
 * Script: [`gatk2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2tsv.R)
 * Singularity: to be added, currently uses local install
 
-### [tsv2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/tsv2sql.smk)
+### [gatk2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2sql.smk)
 
-* Script: [`tsv2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/tsv2sql.R)
+* Script: [`gatk2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2sql.R)
 * Singularity: to be added, currently uses local install
+
+
+
