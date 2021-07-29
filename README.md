@@ -234,7 +234,7 @@ quality.*
   - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
   - Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-#### [mutect2](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/mutect2.smk)
+### [mutect2](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/mutect2.smk)
 
   - Tools: [`gatk
     Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
