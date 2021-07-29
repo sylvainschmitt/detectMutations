@@ -4,44 +4,18 @@ __default__:
   cpus: 4
   time: "48:00:00"
 
-## Reference ## 
+## Reference & Reads ## 
 
-samtools_faidx_split:  
-  jobname: "samtools_faidx_split"
+cp_reference:
+  jobname: "cp_reference"
   mem: "4G"
   cpus: 1
   time: "01:00:00"
-
+  
 bwa_index:
   jobname: "bwa_index"
   mem: "4G"
   cpus: 1
-  time: "01:00:00"
-  
-samtools_faidx:
-  jobname: "samtools_faidx"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"
-  
-gatk_dict:
-  jobname: "gatk_dict"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"
-
-## Reads ##
-
-cp_reads:
-  jobname: "cp_reads"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"
-  
-fastqc:
-  jobname: "fastqc"
-  mem: "16G"
-  cpus: 4
   time: "01:00:00"
 
 trimmomatic:
@@ -54,9 +28,10 @@ trimmomatic:
 
 bwa_mem:
   jobname: "bwa_mem"
-  mem: "32G"
-  cpus: 8
+  mem: "400G"
+  cpus: 40
   time: "96:00:00"
+  disk: "1T"
   
 samtools_view:
   jobname: "samtools_view"
@@ -102,34 +77,3 @@ strelka2:
   cpus: 20
   time: "96:00:00"
 
-gatk_haplotypecaller:
-  jobname: "gatk_haplotypecaller"
-  mem: "100G"
-  cpus: 20
-  time: "96:00:00"
-  
-gatk_genotypegvcfs:
-  jobname: "gatk_genotypegvcfs"
-  mem: "100G"
-  cpus: 20
-  time: "96:00:00"
-  
-## QC ##
-
-samtools_stats:
-  jobname: "samtools_stats"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"
-  
-qualimap:
-  jobname: "qualimap"
-  mem: "16G"
-  cpus: 4
-  time: "01:00:00"
-  
-multiqc:
-  jobname: "multiqc"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"

@@ -4,12 +4,6 @@
 import pandas as pd
 configfile: "config/config.dag.yml"
 
-chromosomes_table = pd.read_table(config["refdir"] + "/" + config["reference"] + ".fa.fai",
-                                  header = None, names = ["chr", "X2", "X3", "X4", "X5"])
-chromosomes = list(chromosomes_table.chr)
-lambda wildcards: chromosomes
-# print(expand("{chromosome}", chromosome=chromosomes))
-
 libraries = expand("C{repetition}", repetition=config["repetitions"])
 libraries.extend(expand("B{branch}_T{tip}_L{repetition}", branch=config["branches"], tip=config["tips"], repetition=config["repetitions"]))
 lambda wildcards: libraries
@@ -17,16 +11,15 @@ lambda wildcards: libraries
 
 rule all:
     input:
-        expand("results/reference/{reference}_{chromosome}.fa", reference=config["reference"], chromosome=chromosomes), # ref
+        expand("results/reference/{reference}.fa", reference=config["reference"]), # ref
         expand("results/reads/{library}_R{strand}.trimmed.paired.fq", library=libraries, strand=["1", "2"]), # reads
-        expand("results/alns/{library}_on_{chromosome}.md.cram", library=libraries, chromosome=chromosomes), # alns
-        expand("results/mutations/B{branch}_T{tip}_on_{chromosome}.tip.{ext}", 
-                branch=config["branches"], tip=config["tips"], chromosome=chromosomes, ext=["vcf", "tsv"]) # muts
+        expand("results/alns/{library}.md.cram", library=libraries), # alns
+        expand("results/mutations/B{branch}_T{tip}.tip.{ext}", branch=config["branches"], tip=config["tips"], ext=["vcf", "tsv"]) # muts
 
 # Rules #
 
 ## Reference & reads ##
-include: "rules/samtools_faidx_split.smk"
+include: "rules/cp_reference.smk"
 include: "rules/bwa_index.smk"
 include: "rules/trimmomatic.smk"
 

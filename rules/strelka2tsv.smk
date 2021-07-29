@@ -1,11 +1,11 @@
 rule strelka2tsv:
     input:
-        "results/mutations/B{branch}_T{tip}_on_{chromosome}.tip.vcf"
+        "results/mutations/B{branch}_T{tip}.tip.vcf"
     output:
-        "results/mutations/B{branch}_T{tip}_on_{chromosome}.tip.tsv"
+        "results/mutations/B{branch}_T{tip}.tip.tsv"
     log:
-        "results/logs/strelka2tsv_B{branch}_T{tip}_on_{chromosome}.log"
+        "results/logs/strelka2tsv_B{branch}_T{tip}.log"
     benchmark:
-        "results/benchmarks/strelka2tsv_B{branch}_T{tip}_on_{chromosome}.benchmark.txt"
+        "results/benchmarks/strelka2tsv_B{branch}_T{tip}.benchmark.txt"
     script:
         "../scripts/strelka2tsv.R"

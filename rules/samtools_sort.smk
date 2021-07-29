@@ -1,12 +1,12 @@
 rule samtools_sort:
     input:
-        "results/alns/{library}_on_{chromosome}.raw.cram"
+        "results/alns/{library}.raw.cram"
     output:
-        temp("results/alns/{library}_on_{chromosome}.sorted.cram")
+        temp("results/alns/{library}.sorted.cram")
     log:
-        "results/logs/samtools_sort_{library}_{chromosome}.log"
+        "results/logs/samtools_sort_{library}.log"
     benchmark:
-        "results/benchmarks/samtools_sort_{library}_{chromosome}.benchmark.txt"
+        "results/benchmarks/samtools_sort_{library}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:

@@ -26,3 +26,5 @@ dag/dag.svg
 *.tsv
 data/trunk
 data/reads
+data/bordeaux
+data/dag
