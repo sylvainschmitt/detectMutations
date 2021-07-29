@@ -5,8 +5,7 @@
 #SBATCH -e swiss.%N.%j.err
 #SBATCH --mem=1G
 #SBATCH --cpus-per-task=1
-#SBATCH --mail-type=ALL
-####SBATCH -p unlimitq
+####SBATCH --mail-type=ALL
 
 # Environment
 module purge

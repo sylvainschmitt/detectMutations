@@ -7,23 +7,16 @@ configfile: "config/config.bordeaux.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
 
-chromosomes_table = pd.read_table(config["refdir"] + "/" + config["reference"] + ".fa.fai",
-                                  header = None, names = ["chr", "X2", "X3", "X4", "X5"])
-chromosomes = list(chromosomes_table.chr)
-lambda wildcards: chromosomes
-# print(expand("{chromosome}", chromosome=chromosomes))
-
 rule all:
     input:
-        expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", 
-                strand=["1", "2"], library=libraries, chromosome=chromosomes), # trim
-        expand("results/{library}/{library}_{chromosome}.md.cram", library=libraries, chromosome=chromosomes) # aln
+        expand("results/{library}/{library}.md.cram", library=libraries), # aln
+        expand("results/mutations/{vcfs}_{caller}.vcf", vcfs=config["vcfs"], caller=["strelka2", "mutect2"]) # mut raw vcf
 
 
 # Rules #
 
 ## Reference ##
-include: "rules/samtools_faidx_split.smk"
+include: "rules/cp_reference.smk"
 include: "rules/bwa_index.smk"
 include: "rules/samtools_faidx.smk"
 include: "rules/gatk_dict.smk"
@@ -40,3 +33,7 @@ include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
+
+## Mutations ##
+include: "rules/strelka2.smk"
+include: "rules/mutect2.smk"
