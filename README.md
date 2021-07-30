@@ -291,27 +291,6 @@ quality.*
 
 ## Mutations - `GATK`
 
-**May need to be parallelized using interval `-L` options for
-efficiency.**
-
-[Split](https://gatk.broadinstitute.org/hc/en-us/articles/360040509611-SplitIntervals):
-
-``` 
- gatk SplitIntervals \
-   -R ref_fasta.fa \
-   -L intervals.list \
-   --scatter-count 10 \
-   -O interval-files-folder
-```
-
-[Gather](https://gatk.broadinstitute.org/hc/en-us/articles/360041849471-GatherVcfs-Picard-):
-
-``` 
- gatk GatherVcfs \
-   -I input1.vcf \
-   -O output.vcf
-```
-
 [Best
 Practice](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)
 
@@ -319,6 +298,12 @@ Practice](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germlin
 
   - Tools: [`gatk
     HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+  - Singularity: docker://broadinstitute/gatk
+
+### [gatk\_gathervcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_gathervcfs.smk)
+
+  - Tools: [`gatk
+    GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
 ### [gatk\_cnnscorevariants](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_cnnscorevariants.smk)
