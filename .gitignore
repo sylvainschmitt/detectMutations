@@ -27,3 +27,6 @@ data/fai.save
 *.tsv
 data/swiss/Napoleon
 data/bordeaux
+data/reads
+data/trunk
+data/swiss/intervals

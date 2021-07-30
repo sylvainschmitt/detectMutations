@@ -270,6 +270,11 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 * Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
 * Singularity: docker://broadinstitute/gatk
 
+### [gatk_gathervcfs](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_gathervcfs.smk)
+
+* Tools: [`gatk GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
+* Singularity: docker://broadinstitute/gatk
+
 ### [gatk_cnnscorevariants](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_cnnscorevariants.smk)
 
 * Tools: [`gatk CNNScoreVariants`](https://gatk.broadinstitute.org/hc/en-us/articles/360037226672-CNNScoreVariants)

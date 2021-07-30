@@ -1,3 +1,6 @@
+# detectMutation - swiss data 0.2.0.9015
+* GATK split & gather to speed-up
+
 # detectMutation - swiss data 0.2.0.9014
 * Strelka2 & GATK Best Practice whole genome
 

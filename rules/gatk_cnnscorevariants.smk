@@ -2,7 +2,7 @@ rule gatk_cnnscorevariants:
     input:
         expand("results/reference/{reference}.fa", 
                 reference=config["reference"], allow_missing=True),
-        "results/mutations/{tumor}_vs_{normal}_gatk.raw.vcf",
+        "results/mutations/{tumor}_vs_{normal}.gatk.raw.vcf",
         expand("results/reference/{reference}.fa{ext}", 
                 reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], allow_missing=True)
     output:
@@ -13,9 +13,9 @@ rule gatk_cnnscorevariants:
         "results/benchmarks/gatk_cnnscorevariants_{tumor}_vs_{normal}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
-    threads: 20
+    threads: 1
     resources:
-        mem_mb=100000
+        mem_mb=10000
     params:
         max_mem = lambda wildcards, resources: resources.mem_mb
     shell:

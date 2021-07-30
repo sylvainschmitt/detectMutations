@@ -1,6 +1,6 @@
 rule strelka2sql:
     input:
-        expand("results/mutations/{vcfs}_on_{chromosome}_strelka2.tsv", vcfs=config["vcfs"], chromosome=chromosomes)
+        expand("results/mutations/{vcfs}_strelka2.tsv", vcfs=config["vcfs"])
     output:
         temp("results/strelka2_raw.csv"),
         "results/strelka2_raw.sql"

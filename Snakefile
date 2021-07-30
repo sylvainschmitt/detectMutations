@@ -4,14 +4,15 @@
 configfile: "config/config.swiss.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
+intervals, = glob_wildcards(config["libdir"] + "/intervals/{intervals}")
 
 rule all:
     input:
-        # expand("results/{library}/{library}.md.cram", library=libraries), # aln
-        expand("results/mutations/{vcfs}_{caller}.vcf", vcfs=config["vcfs"], caller=["strelka2", "gatk"]) # mut raw vcf
-        # expand("results/mutations/{chromosome}_{caller}.tsv", vcfs=config["vcfs"], chromosome=chromosomes, caller=["gatk"]), # mut raw tsv
+        expand("results/mutations/{vcfs}_{caller}.vcf", vcfs=config["vcfs"], caller=["strelka2", "gatk"]), # mut raw vcf
+        # expand("results/mutations/{chromosome}_{caller}.tsv", vcfs=config["vcfs"], caller=["gatk"]), # mut raw tsv
         # "results/napoleon_mutations.tsv",
         # expand("results/{caller}_raw.sql", caller=["strelka2", "gatk"])
+        expand("results/{caller}_raw.sql", caller=["strelka2"])
 
 
 # Rules #
@@ -45,9 +46,10 @@ include: "rules/samtools_index_md.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
-# include: "rules/strelka2tsv.smk"
-# include: "rules/strelka2sql.smk"
+include: "rules/strelka2tsv.smk"
+include: "rules/strelka2sql.smk"
 include: "rules/gatk_haplotypecaller.smk"
+include: "rules/gatk_gathervcfs.smk"
 include: "rules/gatk_cnnscorevariants.smk"
 include: "rules/gatk_filtervarianttranches.smk"
 # include: "rules/gatk2tsv.smk"

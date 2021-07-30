@@ -105,32 +105,24 @@ strelka2:
 
 gatk_haplotypecaller:
   jobname: "gatk_haplotypecaller"
-  mem: "100G"
-  cpus: 20
+  mem: "10G"
+  cpus: 1
   time: "96:00:00"
   
-gatk_genotypegvcfs:
-  jobname: "gatk_genotypegvcfs"
-  mem: "100G"
-  cpus: 20
+gatk_haplotypecaller:
+  jobname: "gatk_haplotypecaller"
+  mem: "10G"
+  cpus: 1
   time: "96:00:00"
   
-## QC ##
-
-samtools_stats:
-  jobname: "samtools_stats"
-  mem: "4G"
+gatk_gathervcfs:
+  jobname: "gatk_gathervcfs"
+  mem: "10G"
   cpus: 1
-  time: "01:00:00"
+  time: "96:00:00"
   
-qualimap:
-  jobname: "qualimap"
-  mem: "16G"
-  cpus: 4
-  time: "01:00:00"
-  
-multiqc:
-  jobname: "multiqc"
-  mem: "4G"
+gatk_filtervarianttranches:
+  jobname: "gatk_filtervarianttranches"
+  mem: "10G"
   cpus: 1
-  time: "01:00:00"
+  time: "96:00:00"

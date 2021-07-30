@@ -9,9 +9,9 @@ rule gatk_filtervarianttranches:
         "results/benchmarks/gatk_filtervarianttranches_{tumor}_vs_{normal}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
-    threads: 20
+    threads: 1
     resources:
-        mem_mb=100000
+        mem_mb=10000
     params:
         max_mem = lambda wildcards, resources: resources.mem_mb
     shell:
