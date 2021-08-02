@@ -27,3 +27,6 @@ data/fai.save
 *.tsv
 data/swiss/Napoleon
 *.txt
+data/reads
+data/swiss
+data/trunk

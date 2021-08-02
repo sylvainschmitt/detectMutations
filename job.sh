@@ -15,7 +15,7 @@ module load system/singularity-3.7.3
 # Variables
 CONFIG=config/ressources.genologin.yaml
 COMMAND="sbatch --cpus-per-task={cluster.cpus} --time={cluster.time} --mem={cluster.mem} -J {cluster.jobname} -o snake_subjob_log/{cluster.jobname}.%N.%j.out -e snake_subjob_log/{cluster.jobname}.%N.%j.err"
-CORES=32
+CORES=100
 mkdir -p snake_subjob_log
 
 # Workflow

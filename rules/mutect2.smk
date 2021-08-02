@@ -23,6 +23,6 @@ rule mutect2:
         max_mem = lambda wildcards, resources: resources.mem_mb
     shell:
         "gatk Mutect2 --java-options \"-Xmx{params.max_mem}M -Xms1G -Djava.io.tmpdir=tmp\""
-        "-R {input[0]} -I {input[1]} -tumor {wildcards.tumor}  -I {input[2]} -normal {wildcards.normal}"
+        "-R {input[0]} -I {input[1]} -tumor {wildcards.tumor}  -I {input[2]} -normal {wildcards.normal} "
         "-dont-use-soft-clipped-bases true -O {output}"
         
