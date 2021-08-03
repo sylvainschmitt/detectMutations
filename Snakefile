@@ -9,10 +9,9 @@ intervals, = glob_wildcards(config["libdir"] + "/intervals/{intervals}")
 rule all:
     input:
         expand("results/mutations/{vcfs}_{caller}.vcf", vcfs=config["vcfs"], caller=["strelka2", "gatk"]), # mut raw vcf
-        # expand("results/mutations/{chromosome}_{caller}.tsv", vcfs=config["vcfs"], caller=["gatk"]), # mut raw tsv
+        # expand("results/mutations/{chromosome}_{caller}.tsv", vcfs=config["vcfs"], caller=["gatk"]) # mut raw tsv
         # "results/napoleon_mutations.tsv",
-        # expand("results/{caller}_raw.sql", caller=["strelka2", "gatk"])
-        expand("results/{caller}_raw.sql", caller=["strelka2"])
+        expand("results/{caller}_raw.sql", caller=["strelka2", "gatk"])
 
 
 # Rules #
@@ -50,7 +49,8 @@ include: "rules/strelka2tsv.smk"
 include: "rules/strelka2sql.smk"
 include: "rules/gatk_haplotypecaller.smk"
 include: "rules/gatk_gathervcfs.smk"
-include: "rules/gatk_cnnscorevariants.smk"
-include: "rules/gatk_filtervarianttranches.smk"
-# include: "rules/gatk2tsv.smk"
-# include: "rules/gatk2sql.smk"
+include: "rules/gatk_selectsnps.smk"
+include: "rules/gatk_variantfiltration.smk"
+include: "rules/gatk_selectfiltered.smk"
+include: "rules/gatk2tsv.smk"
+include: "rules/gatk2sql.smk"

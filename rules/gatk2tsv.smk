@@ -1,11 +1,11 @@
 rule gatk2tsv:
     input:
-        expand("results/mutations/{vcfs}_on_{chromosome}_gatk.vcf", vcfs=config["vcfs"], allow_missing = True)
+        expand("results/mutations/{vcfs}_gatk.vcf", vcfs=config["vcfs"])
     output:
-        "results/mutations/{chromosome}_gatk.tsv"
+        "results/mutations/gatk.raw.tsv"
     log:
-        "results/logs/gatk2tsv_{chromosome}.log"
+        "results/logs/gatk2tsv.log"
     benchmark:
-        "results/benchmarks/gatk2tsv_{chromosome}.benchmark.txt"
+        "results/benchmarks/gatk2tsv.benchmark.txt"
     script:
         "../scripts/gatk2tsv.R"

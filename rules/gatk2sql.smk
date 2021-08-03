@@ -1,6 +1,6 @@
 rule gatk2sql:
     input:
-        expand("results/mutations/{chromosome}_gatk.tsv", chromosome=chromosomes)
+        "results/mutations/gatk.raw.tsv"
     output:
         temp("results/gatk_raw.csv"),
         "results/gatk_raw.sql"

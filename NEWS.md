@@ -1,3 +1,6 @@
+# detectMutation - swiss data 0.2.0.9016
+* GATK Hard filtering (run perfectly locally)
+
 # detectMutation - swiss data 0.2.0.9015
 * GATK split & gather to speed-up
 

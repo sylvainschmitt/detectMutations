@@ -291,8 +291,10 @@ quality.*
 
 ## Mutations - `GATK`
 
-[Best
+Using [Best
 Practice](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)
+& [Hard
+filtering](https://gatk.broadinstitute.org/hc/en-us/articles/360035531112--How-to-Filter-variants-either-with-VQSR-or-by-hard-filtering#2).
 
 ### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_haplotypecaller.smk)
 
@@ -306,16 +308,22 @@ Practice](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germlin
     GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
-### [gatk\_cnnscorevariants](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_cnnscorevariants.smk)
+### [gatk\_selectsnps](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_selectsnps.smk)
 
-  - Tools: [`gatk
-    CNNScoreVariants`](https://gatk.broadinstitute.org/hc/en-us/articles/360037226672-CNNScoreVariants)
+  - Tools: [`gatk SelectVariants -select-type
+    SNP`](https://gatk.broadinstitute.org/hc/en-us/articles/360037055952-SelectVariants)
   - Singularity: docker://broadinstitute/gatk
 
-### [gatk\_filtervarianttranches](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_filtervarianttranches.smk)
+### [gatk\_variantfiltration](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_variantfiltration.smk)
 
   - Tools: [`gatk
-    FilterVariantTranches`](https://gatk.broadinstitute.org/hc/en-us/articles/360040098912-FilterVariantTranches)
+    VariantFiltration`](https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration)
+  - Singularity: docker://broadinstitute/gatk
+
+### [gatk\_selectfiltered](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk_selectfiltered.smk)
+
+  - Tools: [`gatk SelectVariants
+    --exclude-filtered`](https://gatk.broadinstitute.org/hc/en-us/articles/360037055952-SelectVariants)
   - Singularity: docker://broadinstitute/gatk
 
 ### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
