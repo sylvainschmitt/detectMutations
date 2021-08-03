@@ -10,7 +10,7 @@ rule gatk_mutect2:
         expand("results/reference/{reference}.fa{ext}", 
                 reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], allow_missing=True)
     output:
-        "results/mutations/{tumor}_vs_{normal}_on_{interval}_mutect2.interval.vcf"
+        temp("results/mutations/{tumor}_vs_{normal}_on_{interval}_mutect2.interval.vcf")
     log:
         "results/logs/gatk_mutect2_{tumor}_vs_{normal}_{interval}.log"
     benchmark:
