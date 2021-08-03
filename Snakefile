@@ -6,6 +6,7 @@ import pandas as pd
 configfile: "config/config.bordeaux.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
+intervals, = glob_wildcards("results/reference/intervals/{intervals}")
 
 rule all:
     input:
@@ -36,4 +37,5 @@ include: "rules/samtools_index_md.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
-include: "rules/mutect2.smk"
+include: "rules/gatk_mutect2.smk"
+include: "rules/gatk_gathervcfs.smk"
