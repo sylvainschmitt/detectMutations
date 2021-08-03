@@ -105,6 +105,6 @@ strelka2:
   
 mutect2:
   jobname: "mutect2"
-  mem: "100G"
+  mem: "10G"
   cpus: 1
   time: "96:00:00"
