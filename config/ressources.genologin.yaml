@@ -103,8 +103,14 @@ strelka2:
   cpus: 20
   time: "96:00:00"
   
-mutect2:
-  jobname: "mutect2"
+gatk_mutect2:
+  jobname: "gatk_mutect2"
+  mem: "10G"
+  cpus: 1
+  time: "96:00:00"
+  
+gatk_gathervcfs:
+  jobname: "gatk_gathervcfs"
   mem: "10G"
   cpus: 1
   time: "96:00:00"
