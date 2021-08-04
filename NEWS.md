@@ -1,3 +1,6 @@
+# detectMutation - swiss data 0.2.0.9017
+* updated dag and gatk to tsv and sql done
+
 # detectMutation - swiss data 0.2.0.9016
 * GATK Hard filtering (run perfectly locally)
 

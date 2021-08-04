@@ -8,9 +8,7 @@ intervals, = glob_wildcards(config["libdir"] + "/intervals/{intervals}")
 
 rule all:
     input:
-        expand("results/mutations/{vcfs}_{caller}.vcf", vcfs=config["vcfs"], caller=["strelka2", "gatk"]), # mut raw vcf
-        # expand("results/mutations/{chromosome}_{caller}.tsv", vcfs=config["vcfs"], caller=["gatk"]) # mut raw tsv
-        # "results/napoleon_mutations.tsv",
+        "results/napoleon_mutations.tsv",
         expand("results/{caller}_raw.sql", caller=["strelka2", "gatk"])
 
 

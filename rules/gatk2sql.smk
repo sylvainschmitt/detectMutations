@@ -1,6 +1,6 @@
 rule gatk2sql:
     input:
-        "results/mutations/gatk.raw.tsv"
+        expand("results/mutations/{vcfs}_gatk.tsv", vcfs=config["vcfs"])
     output:
         temp("results/gatk_raw.csv"),
         "results/gatk_raw.sql"

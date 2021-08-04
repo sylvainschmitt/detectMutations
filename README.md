@@ -329,7 +329,7 @@ filtering](https://gatk.broadinstitute.org/hc/en-us/articles/360035531112--How-t
 ### [gatk2tsv](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2tsv.smk)
 
   - Script:
-    [`gatk2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/gatk2tsv.R)
+    [`bcftools`](http://samtools.github.io/bcftools/bcftools.html)
   - Singularity: to be added, currently uses local install
 
 ### [gatk2sql](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/gatk2sql.smk)
