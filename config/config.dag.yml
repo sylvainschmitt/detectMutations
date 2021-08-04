@@ -1,13 +1,14 @@
 ## Sylvain SCHMITT
+## Sylvain SCHMITT
 ## 28/04/2021
 
 # Ressources
 ressources: "ressources.genologin.yaml"
 
 # data
-refdir: "data/dag"
+refdir: "data/bordeaux"
 reference: "Qrob_PM1N"
-libdir: "data/dag"
+libdir: "data/bordeaux"
 
 # results
 vcfs: ["L1_vs_L2", "L2_vs_L1"]

@@ -1,3 +1,6 @@
+# detectMutation - bordeaux data 0.1.9004
+* mutect and strelka to tsv & sql
+
 # detectMutation - bordeaux data 0.1.9003
 * whole genome & raw mutations
 

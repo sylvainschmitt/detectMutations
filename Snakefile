@@ -10,9 +10,7 @@ intervals, = glob_wildcards("results/reference/intervals/{intervals}")
 
 rule all:
     input:
-        expand("results/{library}/{library}.md.cram", library=libraries), # aln
-        expand("results/mutations/{vcfs}_{caller}.vcf", vcfs=config["vcfs"], caller=["strelka2", "mutect2"]) # mut raw vcf
-
+        expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
 
 # Rules #
 
@@ -37,5 +35,9 @@ include: "rules/samtools_index_md.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
+include: "rules/strelka2tsv.smk"
+include: "rules/strelka2sql.smk"
 include: "rules/gatk_mutect2.smk"
 include: "rules/gatk_gathervcfs.smk"
+include: "rules/mutect2tsv.smk"
+include: "rules/mutect2sql.smk"

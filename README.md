@@ -12,7 +12,8 @@ April 20, 2021
       - [Reference](#reference)
       - [Reads](#reads)
       - [Alignments](#alignments)
-      - [Mutations](#mutations)
+      - [Mutations - `Strelka2`](#mutations---strelka2)
+      - [Mutations - `Mutect 2`](#mutations---mutect-2)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -227,15 +228,47 @@ quality.*
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-## Mutations
+## Mutations - `Strelka2`
 
 ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/strelka2.smk)
 
   - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
   - Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-### [mutect2](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/mutect2.smk)
+### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/strelka2tsv.smk)
+
+  - Script:
+    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/strelka2tsv.R)
+  - Singularity: to be added, currently uses local install
+
+### [strelka2sql](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/strelka2sql.smk)
+
+  - Script:
+    [`strelka2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/strelka2sql.R)
+  - Singularity: to be added, currently uses local install
+
+## Mutations - `Mutect 2`
+
+### [gatk\_mutect2](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/gatk_mutect2.smk)
 
   - Tools: [`gatk
     Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
   - Singularity: docker://broadinstitute/gatk
+
+### [gatk\_gathervcfs](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/gatk_gathervcfs.smk)
+
+  - Tools: [`gatk
+    GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
+  - Singularity: docker://broadinstitute/gatk
+
+### [mutect2tsv](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/mutect2tsv.smk)
+
+  - Script:
+    [`mutect2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/mutect2tsv.R)
+  - Singularity: to be added, currently uses local install
+
+### [mutect2sql](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/mutect2sql.smk)
+
+  - Script:
+    [`mutect2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/mutect2sql.R)
+  - Singularity: to be added, currently uses local install
