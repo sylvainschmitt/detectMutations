@@ -101,7 +101,7 @@ files %>%
   summarise(`1` = paste(`1`, collapse = " "),
             `2` = paste(`2`, collapse = " ")) %>% 
   reshape2::melt("branch", variable.name = "strand", value.name = "command") %>% 
-  mutate(command = paste0("zcat ", command, " | gzip > ", branch, "_", strand, ".fastq.gz ; rm ", command)) %>% 
+  mutate(command = paste0("cat ", command, " > ", branch, "_", strand, ".fastq.gz")) %>% 
   select(-branch, -strand) %>% 
   write_tsv(file = "data/bordeaux/merge_reads.sh", col_names = F)
 ```
