@@ -10,7 +10,8 @@ intervals, = glob_wildcards("results/reference/intervals/{intervals}")
 
 rule all:
     input:
-        expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
+        expand("results/{library}/{library}.md.cram", library=libraries)
+        # expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
 
 # Rules #
 

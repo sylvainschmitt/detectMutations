@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --time=96:00:00
 #SBATCH -J swiss
-#SBATCH -o swiss.%N.%j.out
-#SBATCH -e swiss.%N.%j.err
+#SBATCH -o bdx.%N.%j.out
+#SBATCH -e bdx.%N.%j.err
 #SBATCH --mem=1G
 #SBATCH --cpus-per-task=1
 ####SBATCH --mail-type=ALL
