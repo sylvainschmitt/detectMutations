@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --time=96:00:00
-#SBATCH -J swiss
+#SBATCH -J bdx
 #SBATCH -o bdx.%N.%j.out
 #SBATCH -e bdx.%N.%j.err
 #SBATCH --mem=1G

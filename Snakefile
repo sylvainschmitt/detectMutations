@@ -6,23 +6,20 @@ import pandas as pd
 configfile: "config/config.bordeaux.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fastq.gz")
-intervals, = glob_wildcards("results/reference/intervals/{intervals}")
+intervals, = glob_wildcards(config["refdir"] + "/intervals/{intervals}")
 
 rule all:
     input:
-        expand("results/{library}/{library}.md.cram", library=libraries)
-        # expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
+        expand("results/{library}/{library}.md.cram", library=libraries),
+        expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
 
 # Rules #
 
-## Reference ##
+## Reference & Reads ##
 include: "rules/cp_reference.smk"
 include: "rules/bwa_index.smk"
 include: "rules/samtools_faidx.smk"
 include: "rules/gatk_dict.smk"
-
-## Reads ##
-include: "rules/cp_reads.smk"
 include: "rules/trimmomatic.smk"
 
 ## Alignments ##

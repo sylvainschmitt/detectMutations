@@ -6,9 +6,9 @@
 ressources: "ressources.genologin.yaml"
 
 # data
-refdir: "data/bordeaux"
+refdir: "data/dag"
 reference: "Qrob_PM1N"
-libdir: "data/bordeaux"
+libdir: "data/dag"
 
 # results
 vcfs: ["L1_vs_L2", "L2_vs_L1"]

@@ -1,6 +1,6 @@
 rule trimmomatic:
     input:
-        expand("results/{library}/{library}_{strand}.raw.fastq.gz", strand=["1", "2"], allow_missing=True)
+        expand("{libdir}/{library}_{strand}.fastq.gz", libdir=config["libdir"], strand=["1", "2"], allow_missing=True)
     output:
         temp(expand("results/{library}/{library}_{strand}.trimmed.paired.fastq.gz", strand=["1", "2"], allow_missing=True)),
         temp(expand("results/{library}/{library}_{strand}.trimmed.unpaired.fastq.gz", strand=["1", "2"], allow_missing=True)),

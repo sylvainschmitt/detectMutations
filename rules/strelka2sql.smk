@@ -8,6 +8,8 @@ rule strelka2sql:
         "results/logs/strelka2sql.log"
     benchmark:
         "results/benchmarks/strelka2sql.benchmark.txt"
+    singularity: 
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.1/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     script:
         "../scripts/strelka2sql.R"
         

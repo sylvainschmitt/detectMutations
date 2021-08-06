@@ -4,7 +4,7 @@ rule gatk_mutect2:
                 reference=config["reference"], allow_missing=True),
         "results/{tumor}/{tumor}.md.cram",
         "results/{normal}/{normal}.md.cram",
-        "results/reference/intervals/{interval}",
+         expand("{refdir}/intervals/{interval}", refdir=config["refdir"], allow_missing=True),
         "results/{tumor}/{tumor}.md.cram.crai",
         "results/{normal}/{normal}.md.cram.crai",
         expand("results/reference/{reference}.fa{ext}", 

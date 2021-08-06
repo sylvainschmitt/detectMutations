@@ -1,3 +1,6 @@
+# detectMutation - bordeaux data 0.1.9005
+* singularity image for R scripts
+
 # detectMutation - bordeaux data 0.1.9004
 * mutect and strelka to tsv & sql
 

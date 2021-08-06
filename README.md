@@ -239,13 +239,15 @@ quality.*
 
   - Script:
     [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/strelka2tsv.R)
-  - Singularity: to be added, currently uses local install
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.1/sylvainschmitt-singularity-r-bioinfo.latest.sif>
 
 ### [strelka2sql](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/strelka2sql.smk)
 
   - Script:
     [`strelka2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/strelka2sql.R)
-  - Singularity: to be added, currently uses local install
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.1/sylvainschmitt-singularity-r-bioinfo.latest.sif>
 
 ## Mutations - `Mutect 2`
 
@@ -265,10 +267,12 @@ quality.*
 
   - Script:
     [`mutect2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/mutect2tsv.R)
-  - Singularity: to be added, currently uses local install
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.1/sylvainschmitt-singularity-r-bioinfo.latest.sif>
 
 ### [mutect2sql](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/mutect2sql.smk)
 
   - Script:
     [`mutect2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/mutect2sql.R)
-  - Singularity: to be added, currently uses local install
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.1/sylvainschmitt-singularity-r-bioinfo.latest.sif>

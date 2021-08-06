@@ -4,10 +4,10 @@ __default__:
   cpus: 4
   time: "48:00:00"
 
-## Reference ## 
+## Reference & Reads ## 
 
-samtools_faidx_split:  
-  jobname: "samtools_faidx_split"
+cp_reference:  
+  jobname: "cp_reference"
   mem: "4G"
   cpus: 1
   time: "01:00:00"
@@ -28,20 +28,6 @@ gatk_dict:
   jobname: "gatk_dict"
   mem: "4G"
   cpus: 1
-  time: "01:00:00"
-
-## Reads ##
-
-cp_reads:
-  jobname: "cp_reads"
-  mem: "4G"
-  cpus: 1
-  time: "01:00:00"
-  
-fastqc:
-  jobname: "fastqc"
-  mem: "16G"
-  cpus: 4
   time: "01:00:00"
 
 trimmomatic:
@@ -103,6 +89,18 @@ strelka2:
   cpus: 20
   time: "96:00:00"
   
+strelka2tsv:
+  jobname: "strelka2tsv"
+  mem: "20G"
+  cpus: 1
+  time: "10:00:00"
+  
+strelka2sql:
+  jobname: "strelka2sql"
+  mem: "20G"
+  cpus: 1
+  time: "10:00:00"
+  
 gatk_mutect2:
   jobname: "gatk_mutect2"
   mem: "10G"
@@ -114,3 +112,15 @@ gatk_gathervcfs:
   mem: "10G"
   cpus: 1
   time: "96:00:00"
+  
+mutect2tsv:
+  jobname: "mutect2tsv"
+  mem: "20G"
+  cpus: 1
+  time: "10:00:00"
+  
+mutect2sql:
+  jobname: "mutect2sql"
+  mem: "20G"
+  cpus: 1
+  time: "10:00:00"
