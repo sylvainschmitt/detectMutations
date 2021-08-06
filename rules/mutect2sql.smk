@@ -9,7 +9,7 @@ rule mutect2sql:
     benchmark:
         "results/benchmarks/mutect2sql.benchmark.txt"
     singularity: 
-        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.1/sylvainschmitt-singularity-r-bioinfo.latest.sif"
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.2/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     script:
         "../scripts/mutect2sql.R"
         

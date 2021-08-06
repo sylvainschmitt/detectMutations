@@ -8,7 +8,7 @@ rule strelka2tsv:
     benchmark:
         "results/benchmarks/strelka2tsv_{tumor}_{normal}_strelka2.benchmark.txt"
     singularity: 
-        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.1/sylvainschmitt-singularity-r-bioinfo.latest.sif"
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.2/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     script:
         "../scripts/strelka2tsv.R"
         
