@@ -9,8 +9,8 @@ April 20, 2021
       - [Locally](#locally)
       - [HPC](#hpc)
   - [Workflow](#workflow)
-      - [Reference](#reference)
-      - [Reads](#reads)
+      - [Reference & Reads](#reference--reads)
+      - [3P](#3p)
       - [Alignments](#alignments)
       - [Mutations - `Strelka2`](#mutations---strelka2)
       - [Mutations - `Mutect 2`](#mutations---mutect-2)
@@ -134,9 +134,9 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 # Workflow
 
-## Reference
+## Reference & Reads
 
-*Copy and index reference for software to work with.*
+*Copy and index reference for software to work with and trim reads.*
 
 ### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/cp_reference.smk)
 
@@ -161,20 +161,49 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
-## Reads
-
-*Copy reads, report quality and trim.*
-
-### [cp\_reads](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/cp_reads.smk)
-
-  - Tools: `cp`
-
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/trimmomatic.smk)
 
   - Tools:
     [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/trimmomatic/trimmomatic:latest
+
+## 3P
+
+*Get the position of the original mutations on the 3P genome.*
+
+### [samtools\_faidx\_haplome](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/samtools_faidx_napo.smk)
+
+  - Tools: [`samtools
+    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [mutations2bed](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/napomutations2bed.smk)
+
+  - Script:
+    [`mutations2bed.R`](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/scripts/napomutations2bed.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.2/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [bedtools\_getfasta](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/bedtools_getfasta.smk)
+
+  - Tools: [`bedtools
+    getfasta`](https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+
+### [blat](https://github.com/sylvainschmitt/detectMutations/blob/bordeaux/rules/blat.smk)
+
+  - Tools: [\`blat](http://genome.ucsc.edu/FAQ/FAQblat.html)
+  - Singularity: to be added, currently uses local install
+
+### [psl2pos](https://github.com/sylvainschmitt/detectMutations/blob/swiss/rules/psl2pos.smk)
+
+  - Script:
+    [`psl2pos.R`](https://github.com/sylvainschmitt/detectMutations/blob/swiss/scripts/psl2pos.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.2/sylvainschmitt-singularity-r-bioinfo.latest.sif>
 
 ## Alignments
 

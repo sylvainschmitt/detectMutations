@@ -10,9 +10,11 @@ intervals, = glob_wildcards(config["refdir"] + "/intervals/{intervals}")
 
 rule all:
     input:
-        expand("results/{library}/{library}.md.cram", library=libraries),
-        expand("results/{library}/{library}.md.cram.crai", library=libraries),
-        # expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
+        "results/3P/mutations.tsv",
+        # expand("results/{library}/{library}.md.cram", library=libraries),
+        # expand("results/{library}/{library}.md.cram.crai", library=libraries),
+        expand("results/{library}/{library}.regions.bed.gz", library=libraries),
+        expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
 
 # Rules #
 
@@ -23,6 +25,13 @@ include: "rules/samtools_faidx.smk"
 include: "rules/gatk_dict.smk"
 include: "rules/trimmomatic.smk"
 
+## 3P ## 
+include: "rules/samtools_faidx_haplome.smk"
+include: "rules/mutations2bed.smk"
+include: "rules/bedtools_getfasta.smk"
+include: "rules/blat.smk"
+include: "rules/psl2pos.smk"
+
 ## Alignments ##
 include: "rules/bwa_mem.smk"
 include: "rules/samtools_view.smk"
@@ -31,6 +40,7 @@ include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
+include: "rules/mosdepth.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
