@@ -11,7 +11,8 @@ intervals, = glob_wildcards(config["refdir"] + "/intervals/{intervals}")
 rule all:
     input:
         expand("results/{library}/{library}.md.cram", library=libraries),
-        expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
+        expand("results/{library}/{library}.md.cram.crai", library=libraries),
+        # expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
 
 # Rules #
 
