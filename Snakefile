@@ -10,11 +10,11 @@ intervals, = glob_wildcards(config["refdir"] + "/intervals/{intervals}")
 
 rule all:
     input:
-        "results/3P/mutations.tsv",
-        # expand("results/{library}/{library}.md.cram", library=libraries),
-        # expand("results/{library}/{library}.md.cram.crai", library=libraries),
+        # "results/3P/mutations.tsv",
+        expand("results/{library}/{library}.md.cram", library=libraries),
+        expand("results/{library}/{library}.md.cram.crai", library=libraries),
         expand("results/{library}/{library}.regions.bed.gz", library=libraries),
-        expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
+        # expand("results/{caller}_raw.sql", caller=["strelka2", "mutect2"])
 
 # Rules #
 
