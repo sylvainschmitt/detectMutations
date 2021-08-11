@@ -9,7 +9,7 @@ rule strelka2sql:
     benchmark:
         "results/benchmarks/strelka2sql.benchmark.txt"
     singularity: 
-        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.2/sylvainschmitt-singularity-r-bioinfo.latest.sif"
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     script:
         "../scripts/strelka2sql.R"
         
