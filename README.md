@@ -3,27 +3,19 @@ detect Mutations - Angela
 Sylvain Schmitt
 Jully 21, 2021
 
-  - [Sampling scheme](#sampling-scheme)
   - [Installation](#installation)
   - [Usage](#usage)
       - [Get data](#get-data)
       - [Locally](#locally)
       - [HPC](#hpc)
   - [Workflow](#workflow)
-      - [Reference & reads](#reference--reads)
-      - [Alignments](#alignments)
-      - [Mutations](#mutations)
-  - [Results](#results)
+      - [Reads](#reads)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
 workflow to detect mutations corresponding to Angela sampling scheme.
 
 ![](dag/dag.minimal.svg)<!-- -->
-
-# Sampling scheme
-
-<img src="dag/sampling.png" width="636" />
 
 # Installation
 
@@ -97,22 +89,9 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 # Workflow
 
-## Reference & reads
+## Reads
 
-*Copy and index reference for software to work with and trim reads.*
-
-### [samtools\_faidx\_split](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_faidx_split.smk)
-
-  - Tools: [`samtools
-    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_index.smk)
-
-  - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+*Trim and quality checkreads.*
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/trimmomatic.smk)
 
@@ -121,136 +100,86 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/trimmomatic/trimmomatic:latest
 
-## Alignments
+### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
 
-*Align reads against reference, mark duplicated, and report alignment
-quality.*
+  - Tools:
+    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
+  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
 
-### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_mem.smk)
+### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
 
-  - Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
+  - Tools: [`MultiQC`](https://multiqc.info/)
   - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+    oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
-### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view.smk)
+<!-- ## Alignments -->
 
-  - Tools: [`Samtools
-    view`](http://www.htslib.org/doc/samtools-view.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+<!-- *Align reads against reference, mark duplicated, and report alignment quality.* -->
 
-### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_sort.smk)
+<!-- ### [bwa_mem](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_mem.smk) -->
 
-  - Tools: [`Samtools
-    sort`](http://www.htslib.org/doc/samtools-sort.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+<!-- * Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml) -->
 
-### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index.smk)
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest -->
 
-  - Tools: [`Samtools
-    index`](http://www.htslib.org/doc/samtools-index.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+<!-- ### [samtools_view](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view.smk) -->
 
-### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_markduplicates.smk)
+<!-- * Tools: [`Samtools view`](http://www.htslib.org/doc/samtools-view.html) -->
 
-  - Tools: [`gatk
-    MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
-  - Singularity: docker://broadinstitute/gatk
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
 
-### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view_md.smk)
+<!-- ### [samtools_sort](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_sort.smk) -->
 
-  - Tools: [`Samtools
-    view`](http://www.htslib.org/doc/samtools-view.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+<!-- * Tools: [`Samtools sort`](http://www.htslib.org/doc/samtools-sort.html) -->
 
-### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index_md.smk)
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
 
-  - Tools: [`Samtools
-    index`](http://www.htslib.org/doc/samtools-index.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+<!-- ### [samtools_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index.smk) -->
 
-## Mutations
+<!-- * Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html) -->
 
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk)
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
 
-  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
-  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
+<!-- ### [gatk_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_markduplicates.smk) -->
 
-### [bedtools\_subtract](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_subtract.smk)
+<!-- * Tools: [`gatk MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-) -->
 
-  - Tools: [`bedtools
-    subtract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+<!-- * Singularity: docker://broadinstitute/gatk -->
 
-### [bedtools\_intersect](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_intersect.smk)
+<!-- ### [samtools_view_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view_md.smk) -->
 
-  - Tools: [`bedtools
-    intersect`](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+<!-- * Tools: [`Samtools view`](http://www.htslib.org/doc/samtools-view.html) -->
 
-### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2tsv.smk)
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
 
-  - Script:
-    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
-  - Singularity: to be added, currently uses local install
+<!-- ### [samtools_index_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index_md.smk) -->
 
-# Results
+<!-- * Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html) -->
 
-``` r
-# tips
-tips <- list.files("data/tips", pattern = ".tsv", full.names = T)
-names(tips) <- gsub(".tsv", "", unlist(lapply(tips, basename)))
-tips <- lapply(tips, read_tsv) %>% 
-  bind_rows(.id = "sample") %>% 
-  separate(sample, c("branch", "tip"), remove = F) %>% 
-  mutate(origin = "tip")
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
 
-# branches
-branches <- list.files("data/branch", pattern = ".tsv", full.names = T)
-names(branches) <- gsub(".tsv", "", unlist(lapply(branches, basename)))
-branches <- lapply(branches, read_tsv) %>% 
-  bind_rows(.id = "branch") %>% 
-  rowwise %>% 
-  mutate(tip = list(unique(tips$tip))) %>% 
-  unnest() %>% 
-  mutate(sample = paste0(branch, "_", tip)) %>% 
-  mutate(origin = "branch")
+<!-- ## Mutations -->
 
-# all
-generated <- bind_rows(tips, branches) %>% 
-  arrange(sample, origin) %>% 
-  mutate(CHROM = gsub("_mutated", "", CHROM)) %>% 
-  mutate(generated = 1)
-rm(tips, branches)
+<!-- ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk) -->
 
-# mutations
-mutations <- list.files("results/mutations", pattern = ".tsv", full.names = T)
-names(mutations) <- gsub("_on_Qrob_Chr01.tip.tsv", "", unlist(lapply(mutations, basename)))
-mutations <- lapply(mutations, read_tsv) %>% 
-  bind_rows(.id = "sample") %>% 
-  unique() %>% 
-  mutate(detected = 1)
+<!-- * Tools: [`Strelka2`](https://github.com/Illumina/strelka) -->
 
-# result
-results <- generated %>% 
-  full_join(mutations) %>% 
-  mutate(generated = ifelse(is.na(generated), 0, generated)) %>% 
-  mutate(detected = ifelse(is.na(detected), 0, detected)) %>% 
-  mutate(status = recode(paste0(generated, detected), "11" = "TP", "10" = "FN", "01" = "FP"))
-write_tsv(results, file = "experiment1.tsv")
+<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
 
-# summary
-results %>% 
-  group_by(sample, status) %>% 
-  summarise(N = n()) %>% 
-  reshape2::dcast(sample ~ status) %>% 
-  mutate(FN = 0, FP = 0) %>% 
-  mutate(Precision = round(TP/(TP+FP), 2), 
-         Recall = round(TP/(TP+FN), 2))
-```
+<!-- ### [bedtools_subtract](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_subtract.smk) -->
+
+<!-- * Tools: [`bedtools subtract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html) -->
+
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest -->
+
+<!-- ### [bedtools_intersect](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_intersect.smk) -->
+
+<!-- * Tools: [`bedtools intersect`](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) -->
+
+<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest -->
+
+<!-- ### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2tsv.smk) -->
+
+<!-- * Script: [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R) -->
+
+<!-- * Singularity: to be added, currently uses local install -->

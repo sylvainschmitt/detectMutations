@@ -1,3 +1,7 @@
+# detectMutation - angela 0.1.9004
+* REAL DATA
+* fastqc for angela reads
+
 # detectMutation - angela 0.1.9003
 * whole genome
 

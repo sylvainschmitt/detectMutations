@@ -1,16 +1,10 @@
 ## Sylvain SCHMITT
 ## 21/07/2021
 
-# Ressources
 ressources: "ressources.genologin.yaml"
 
-# Data
-refdir: "data/trunk"
-reference: "trunk"
-hz: "trunk_snps.vcf"
-reads: "data/reads"
-
-# Sampling
-branches: [1]
-tips: ["L", "O"]
-repetitions: [1, 2, 3]
+# data
+refdir: ""
+reference: ""
+hz: ""
+libdir: "../data/angela/reads/"
