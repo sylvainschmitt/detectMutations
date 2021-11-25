@@ -1,6 +1,6 @@
 rule multiqc:
     input:
-        expand("results/{library}/{library}_{strand}.fastqc.{ext}", library=libraries,
+        expand("results/{library}/{library}_{strand}_fastqc.{ext}", library=libraries,
                 strand=["1", "2"], ext=["html", "zip"], allow_missing=True)
     output:
         "results/multiqc_report.html"

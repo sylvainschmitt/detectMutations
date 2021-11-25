@@ -8,11 +8,14 @@ libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fq.gz")
 
 rule all:
     input:
-        ## reads ##
-        "results/multiqc_report.html"
+        ## reference ##
         # expand("results/reference/{reference}.fa", reference=config["reference"]), # ref
-        # expand("results/reads/{library}_R{strand}.trimmed.paired.fq", library=libraries, strand=["1", "2"]), # reads
+        ## reads ##
+        "results/multiqc_report.html",
+        expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", library=libraries, strand=["1", "2"])
+        ## alignments ##
         # expand("results/alns/{library}.md.cram", library=libraries), # alns
+        ## mutations ##
         # expand("results/mutations/B{branch}_T{tip}.tip.{ext}", branch=config["branches"], tip=config["tips"], ext=["vcf", "tsv"]) # muts
 
 # Rules #
