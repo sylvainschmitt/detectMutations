@@ -9,8 +9,7 @@ libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fq.gz")
 rule all:
     input:
         ## reads ##
-        expand("results/{library}/{library}_{strand}.fastqc.{ext}", library=libraries,
-                strand=["1", "2"], ext=["html", "zip"], allow_missing=True)
+        "results/multiqc_report.html"
         # expand("results/reference/{reference}.fa", reference=config["reference"]), # ref
         # expand("results/reads/{library}_R{strand}.trimmed.paired.fq", library=libraries, strand=["1", "2"]), # reads
         # expand("results/alns/{library}.md.cram", library=libraries), # alns
