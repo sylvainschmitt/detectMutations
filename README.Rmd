@@ -97,7 +97,7 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 # Workflow
 
-## Reads ##
+## Reads
 
 *Trim and quality checkreads.*
 

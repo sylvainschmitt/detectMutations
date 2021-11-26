@@ -1,3 +1,6 @@
+# detectMutation - angela 0.1.9007
+* multiqc trim angela
+
 # detectMutation - angela 0.1.9006
 * trimmomatic angela
 

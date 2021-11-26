@@ -1,7 +1,8 @@
 rule multiqc:
     input:
         expand("results/{library}/{library}_{strand}_fastqc.{ext}", library=libraries,
-                strand=["1", "2"], ext=["html", "zip"], allow_missing=True)
+                strand=["1", "2"], ext=["html", "zip"]),
+        expand("results/{library}/trim_out.log", library=libraries)
     output:
         "results/multiqc_report.html"
     log:
@@ -11,4 +12,4 @@ rule multiqc:
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest"
     shell:
-        "multiqc results/*/*_fastqc.zip -o results/"
+        "multiqc results/*/*_fastqc.zip results/*/trim_out.log -o results/"
