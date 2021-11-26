@@ -99,7 +99,7 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 ## Reads
 
-*Trim and quality checkreads.*
+*Trim and quality check reads.*
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/trimmomatic.smk)
 
