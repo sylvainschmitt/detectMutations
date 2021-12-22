@@ -1,7 +1,7 @@
 rule bwa_mem:
     input:
         expand("results/reference/{reference}.fa", reference=config["reference"]),
-        expand("results/reads/{library}_R{strand}.trimmed.paired.fq", strand=["1", "2"], allow_missing=True),
+        expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", strand=["1", "2"], allow_missing=True),
         expand("results/reference/{reference}.{ext}", 
                 reference=config["reference"], ext=["fa.amb", "fa.ann", "fa.bwt", "fa.pac", "fa.sa"])
     output:

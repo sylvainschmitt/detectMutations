@@ -5,11 +5,12 @@ Jully 21, 2021
 
   - [Installation](#installation)
   - [Usage](#usage)
-      - [Get data](#get-data)
       - [Locally](#locally)
       - [HPC](#hpc)
   - [Workflow](#workflow)
+      - [Reference](#reference)
       - [Reads](#reads)
+      - [Alignments](#alignments)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -57,19 +58,6 @@ cd detectMutations
 
 # Usage
 
-## Get data
-
-Generate data using the [Angela branch of the generate
-Mutations](https://github.com/sylvainschmitt/detectMutations/tree/angela)
-workflow.
-
-``` bash
-git clone git@github.com:sylvainschmitt/generateMutations.git
-git checkout -b angela
-cd generateMutations
-snakemake --use-singularity --cores 4
-```
-
 ## Locally
 
 ``` bash
@@ -89,9 +77,23 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 # Workflow
 
+## Reference
+
+*Copy and index reference.*
+
+### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/cp_reference.smk)
+
+  - Tools: `cp`
+
+### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_index.smk)
+
+  - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+
 ## Reads
 
-*Trim and quality checkreads.*
+*Trim and quality check reads.*
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/trimmomatic.smk)
 
@@ -100,63 +102,69 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/trimmomatic/trimmomatic:latest
 
-### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
+### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/fastqc.smk)
 
   - Tools:
     [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
   - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
 
-### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
+### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/multiqc.smk)
 
   - Tools: [`MultiQC`](https://multiqc.info/)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
-<!-- ## Alignments -->
+## Alignments
 
-<!-- *Align reads against reference, mark duplicated, and report alignment quality.* -->
+*Align reads against reference, mark duplicated, and report alignment
+quality.*
 
-<!-- ### [bwa_mem](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_mem.smk) -->
+### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_mem.smk)
 
-<!-- * Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml) -->
+  - Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest -->
+### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view.smk)
 
-<!-- ### [samtools_view](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view.smk) -->
+  - Tools: [`Samtools
+    view`](http://www.htslib.org/doc/samtools-view.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-<!-- * Tools: [`Samtools view`](http://www.htslib.org/doc/samtools-view.html) -->
+### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_sort.smk)
 
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
+  - Tools: [`Samtools
+    sort`](http://www.htslib.org/doc/samtools-sort.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-<!-- ### [samtools_sort](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_sort.smk) -->
+### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index.smk)
 
-<!-- * Tools: [`Samtools sort`](http://www.htslib.org/doc/samtools-sort.html) -->
+  - Tools: [`Samtools
+    index`](http://www.htslib.org/doc/samtools-index.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
+### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_markduplicates.smk)
 
-<!-- ### [samtools_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index.smk) -->
+  - Tools: [`gatk
+    MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
+  - Singularity: docker://broadinstitute/gatk
 
-<!-- * Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html) -->
+### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view_md.smk)
 
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
+  - Tools: [`Samtools
+    view`](http://www.htslib.org/doc/samtools-view.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-<!-- ### [gatk_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_markduplicates.smk) -->
+### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index_md.smk)
 
-<!-- * Tools: [`gatk MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-) -->
-
-<!-- * Singularity: docker://broadinstitute/gatk -->
-
-<!-- ### [samtools_view_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view_md.smk) -->
-
-<!-- * Tools: [`Samtools view`](http://www.htslib.org/doc/samtools-view.html) -->
-
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
-
-<!-- ### [samtools_index_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index_md.smk) -->
-
-<!-- * Tools: [`Samtools index`](http://www.htslib.org/doc/samtools-index.html) -->
-
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest -->
+  - Tools: [`Samtools
+    index`](http://www.htslib.org/doc/samtools-index.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
 <!-- ## Mutations -->
 
