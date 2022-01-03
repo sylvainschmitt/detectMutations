@@ -15,4 +15,4 @@ rule mosdepth:
     singularity: 
         "docker://quay.io/biocontainers/mosdepth:0.2.4--he527e40_0"
     shell:
-        "mosdepth -n --fast-mode -t {threads} -f {input[0]} {wildcards.library} {input[1]}"
+        "mosdepth -n --fast-mode -t {threads} -f {input[0]} results/alns/{wildcards.library} {input[1]}"
