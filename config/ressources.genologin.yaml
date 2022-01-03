@@ -69,6 +69,18 @@ samtools_index_md:
   cpus: 4
   time: "10:00:00"
   
+samtools_stats:
+  jobname: "samtools_stats"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+
+mosdepth:
+  jobname: "mosdepth"
+  mem: "16G"
+  cpus: 4
+  time: "10:00:00"
+  
 ## Mutations ##
 
 strelka2:

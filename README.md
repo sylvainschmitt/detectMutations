@@ -166,6 +166,19 @@ quality.*
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
+### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_stats.smk)
+
+  - Tools: [`Samtools
+    stats`](http://www.htslib.org/doc/samtools-stats.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [mosdepth](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/mosdepth.smk)
+
+  - Tools: [`mosdepth`](https://github.com/brentp/mosdepth)
+  - Singularity:
+    docker://quay.io/biocontainers/mosdepth:0.2.4–he527e40\_0
+
 <!-- ## Mutations -->
 
 <!-- ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk) -->

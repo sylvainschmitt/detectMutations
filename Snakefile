@@ -1,7 +1,6 @@
 ## Sylvain SCHMITT
 ## 21/07/2021
 
-import pandas as pd
 configfile: "config/config.dag.yml"
 
 libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fq.gz")
@@ -14,7 +13,7 @@ rule all:
         "results/multiqc_report.html",
         # expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", library=libraries, strand=["1", "2"]),
         ## alignments ##
-        expand("results/alns/{library}.md.cram", library=libraries), # alns
+        expand("results/alns/{library}.md.cram", library=libraries) # alns
         ## mutations ##
         # expand("results/mutations/B{branch}_T{tip}.tip.{ext}", branch=config["branches"], tip=config["tips"], ext=["vcf", "tsv"]) # muts
 
@@ -37,6 +36,8 @@ include: "rules/samtools_index.smk"
 include: "rules/gatk_markduplicates.smk"
 include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
+include: "rules/samtools_stats.smk"
+include: "rules/mosdepth.smk"
 
 ## Mutations ##
 # include: "rules/strelka2.smk"
