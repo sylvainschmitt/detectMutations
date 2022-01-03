@@ -3,7 +3,8 @@ rule mosdepth:
         expand("results/reference/{reference}.fa", reference=config["reference"]),
         "results/alns/{library}.md.cram",
         expand("results/reference/{reference}.{ext}", 
-                reference=config["reference"], ext=["fa.amb", "fa.ann", "fa.bwt", "fa.pac", "fa.sa"])
+                reference=config["reference"], ext=["fa.amb", "fa.ann", "fa.bwt", "fa.pac", "fa.sa"]),
+        "results/alns/{library}.md.cram.crai"
     output:
         "results/alns/{library}.mosdepth.global.dist.txt",
         "results/alns/{library}.mosdepth.summary.txt"
