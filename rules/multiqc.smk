@@ -4,8 +4,7 @@ rule multiqc:
                 strand=["1", "2"], ext=["html", "zip"]),
         expand("results/{library}/trim_out.log", library=libraries),
         expand("results/alns/{library}.md.cram.stats", library=libraries),
-        expand("results/alns/{library}.mosdepth.global.dist.txt", library=libraries),
-        expand("results/alns/{library}.mosdepth.summary.txt", library=libraries)
+        expand("results/alns/{library}.mosdepth.global.dist.txt", library=libraries)
     output:
         "results/multiqc_report.html"
     log:

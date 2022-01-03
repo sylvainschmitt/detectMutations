@@ -6,8 +6,7 @@ rule mosdepth:
                 reference=config["reference"], ext=["fa.amb", "fa.ann", "fa.bwt", "fa.pac", "fa.sa"]),
         "results/alns/{library}.md.cram.crai"
     output:
-        "results/alns/{library}.mosdepth.global.dist.txt",
-        "results/alns/{library}.mosdepth.summary.txt"
+        "results/alns/{library}.mosdepth.global.dist.txt"
     log:
         "results/logs/mosdepth_{library}.log"
     benchmark:
