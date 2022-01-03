@@ -19,5 +19,4 @@ rule multiqc:
         "results/*/trim_out.log "
         "results/alns/*.md.cram.stats "
         "results/alns/*.mosdepth.global.dist.txt "
-        "results/alns/*.mosdepth.summary.txt "
         "-o results/"
