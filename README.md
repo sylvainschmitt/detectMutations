@@ -11,6 +11,7 @@ Jully 21, 2021
       - [Reference](#reference)
       - [Reads](#reads)
       - [Alignments](#alignments)
+      - [Mutations](#mutations)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -179,13 +180,14 @@ quality.*
   - Singularity:
     docker://quay.io/biocontainers/mosdepth:0.2.4–he527e40\_0
 
-<!-- ## Mutations -->
+## Mutations
 
-<!-- ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk) -->
+*Detect mutations.*
 
-<!-- * Tools: [`Strelka2`](https://github.com/Illumina/strelka) -->
+### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk)
 
-<!-- * Singularity: docker://quay.io/wtsicgp/strelka2-manta -->
+  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
+  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
 <!-- ### [bedtools_subtract](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_subtract.smk) -->
 

@@ -1,3 +1,6 @@
+# detectMutation - angela 0.1.9010
+* Strelka2 all vs T1
+
 # detectMutation - angela 0.1.9009
 * alns qc
 

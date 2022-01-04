@@ -10,12 +10,13 @@ rule all:
         ## reference ##
         # expand("results/reference/{reference}.fa", reference=config["reference"]), # ref
         ## reads ##
-        "results/multiqc_report.html",
         # expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", library=libraries, strand=["1", "2"]),
         ## alignments ##
-        expand("results/alns/{library}.md.cram", library=libraries) # alns
+        # expand("results/alns/{library}.md.cram", library=libraries), # alns
         ## mutations ##
-        # expand("results/mutations/B{branch}_T{tip}.tip.{ext}", branch=config["branches"], tip=config["tips"], ext=["vcf", "tsv"]) # muts
+        expand("results/mutations/{tumor}_vs_{base}.raw.vcf", tumor=config["tumor"], base=config["base"]), # muts
+        ## qc ##
+        "results/multiqc_report.html"
 
 # Rules #
 
@@ -24,8 +25,8 @@ include: "rules/cp_reference.smk"
 include: "rules/bwa_index.smk"
 
 ## Reads ##
-# include: "rules/trimmomatic.smk"
-# include: "rules/fastqc.smk"
+include: "rules/trimmomatic.smk"
+include: "rules/fastqc.smk"
 include: "rules/multiqc.smk"
 
 ## Alignments ##
@@ -40,7 +41,7 @@ include: "rules/samtools_stats.smk"
 include: "rules/mosdepth.smk"
 
 ## Mutations ##
-# include: "rules/strelka2.smk"
+include: "rules/strelka2.smk"
 # include: "rules/bedtools_subtract.smk"
 # include: "rules/bedtools_intersect.smk"
 # include: "rules/strelka2tsv.smk"
