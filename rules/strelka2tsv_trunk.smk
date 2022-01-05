@@ -7,6 +7,8 @@ rule strelka2tsv_trunk:
         "results/logs/strelka2tsv_{trunk}.log"
     benchmark:
         "results/benchmarks/strelka2tsv_{trunk}.benchmark.txt"
+    singularity: 
+        "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     params:
         tumor="{trunk}",
         normal=config["base"]
