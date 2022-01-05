@@ -88,4 +88,24 @@ strelka2:
   mem: "200G"
   cpus: 20
   time: "96:00:00"
+  
+bedtools_merge:
+  jobname: "bedtools_merge"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  
+bedtools_substract:
+  jobname: "bedtools_substract"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
 
+## QC ##
+
+multiqc:
+  jobname: "multiqc"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
+  

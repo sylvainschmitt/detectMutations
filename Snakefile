@@ -14,7 +14,7 @@ rule all:
         ## alignments ##
         # expand("results/alns/{library}.md.cram", library=libraries), # alns
         ## mutations ##
-        expand("results/mutations/{tumor}_vs_{base}.raw.vcf", tumor=config["tumor"], base=config["base"]), # muts
+        expand("results/mutations/{leaf}_vs_{base}.nontrunk.vcf", leaf=config["leaf"], base=config["base"]),
         ## qc ##
         "results/multiqc_report.html"
 
@@ -25,8 +25,8 @@ include: "rules/cp_reference.smk"
 include: "rules/bwa_index.smk"
 
 ## Reads ##
-include: "rules/trimmomatic.smk"
-include: "rules/fastqc.smk"
+# include: "rules/trimmomatic.smk"
+# include: "rules/fastqc.smk"
 include: "rules/multiqc.smk"
 
 ## Alignments ##
@@ -42,6 +42,6 @@ include: "rules/mosdepth.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
-# include: "rules/bedtools_subtract.smk"
-# include: "rules/bedtools_intersect.smk"
+include: "rules/bedtools_merge.smk"
+include: "rules/bedtools_subtract.smk"
 # include: "rules/strelka2tsv.smk"

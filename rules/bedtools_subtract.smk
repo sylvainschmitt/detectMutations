@@ -1,13 +1,13 @@
 rule bedtools_subtract:
     input:
-        "results/mutations/B{branch}_T{tip}_L{repetition}.raw.vcf",
-        expand("{refdir}/{hz}", refdir=config["refdir"], hz=config["hz"])
+        expand("results/mutations/{leaf}_vs_{base}.raw.vcf", base=config["base"], allow_missing=True),
+        expand("results/mutations/Tall_vs_{base}.raw.vcf", base=config["base"])
     output:
-        temp("results/mutations/B{branch}_T{tip}_L{repetition}.nonhz.vcf")
+        expand("results/mutations/{leaf}_vs_{base}.nontrunk.vcf", base=config["base"], allow_missing=True)
     log:
-        "results/logs/bedtools_subtract_B{branch}_T{tip}_L{repetition}.log"
+        "results/logs/bedtools_subtract_{leaf}.log"
     benchmark:
-        "results/benchmarks/bedtools_subtract_B{branch}_T{tip}_L{repetition}.benchmark.txt"
+        "results/benchmarks/bedtools_subtract_{leaf}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest"
     shell:
