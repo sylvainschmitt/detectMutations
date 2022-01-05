@@ -42,6 +42,5 @@ include: "rules/mosdepth.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
-include: "rules/bedtools_merge.smk"
 include: "rules/bedtools_subtract.smk"
 # include: "rules/strelka2tsv.smk"
