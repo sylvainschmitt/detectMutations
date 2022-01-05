@@ -39,8 +39,8 @@ names(norm) <- gsub("gt", "normal", names(norm))
 mutations <- raw$fix %>% 
   left_join(mut) %>% 
   left_join(norm) %>% 
-  mutate(tumor = snakemake@wildcards$tumor) %>% 
-  mutate(normal = snakemake@wildcards$normal) %>% 
+  mutate(tumor = snakemake@params$tumor) %>% 
+  mutate(normal = snakemake@params$normal) %>% 
   mutate(caller = "strelka2")
 rm(mut, norm, gt)
 

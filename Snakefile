@@ -14,7 +14,7 @@ rule all:
         ## alignments ##
         # expand("results/alns/{library}.md.cram", library=libraries), # alns
         ## mutations ##
-        expand("results/mutations/{leaf}_vs_{base}.nontrunk.vcf", leaf=config["leaf"], base=config["base"]),
+        "results/leaf_nontrunk_mutations.sql",
         ## qc ##
         "results/multiqc_report.html"
 
@@ -43,4 +43,5 @@ include: "rules/mosdepth.smk"
 ## Mutations ##
 include: "rules/strelka2.smk"
 include: "rules/bedtools_subtract.smk"
-# include: "rules/strelka2tsv.smk"
+include: "rules/strelka2tsv_leaf.smk"
+include: "rules/strelka2sql_leaf.smk"
