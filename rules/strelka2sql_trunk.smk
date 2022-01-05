@@ -1,6 +1,6 @@
 rule strelka2sql_trunk:
     input:
-        expand("results/mutations/{trunk}_vs_{base}.raw.vcf", trunk=config["trunk"], base=config["base"])
+        expand("results/mutations/{trunk}_vs_{base}.raw.tsv", trunk=config["trunk"], base=config["base"])
     output:
         temp("results/trunk_raw_mutations.csv"),
         "results/trunk_raw_mutations.sql"
