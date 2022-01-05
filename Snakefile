@@ -15,6 +15,7 @@ rule all:
         # expand("results/alns/{library}.md.cram", library=libraries), # alns
         ## mutations ##
         "results/leaf_nontrunk_mutations.sql",
+        "results/trunk_raw_mutations.sql",
         ## qc ##
         "results/multiqc_report.html"
 
@@ -45,3 +46,5 @@ include: "rules/strelka2.smk"
 include: "rules/bedtools_subtract.smk"
 include: "rules/strelka2tsv_leaf.smk"
 include: "rules/strelka2sql_leaf.smk"
+include: "rules/strelka2tsv_trunk.smk"
+include: "rules/strelka2sql_trunk.smk"
