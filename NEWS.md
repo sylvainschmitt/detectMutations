@@ -1,3 +1,6 @@
+# detectMutation - angela 0.1.9014
+* alns DS2 on HS2 for comparison
+
 # detectMutation - angela 0.1.9013
 * strelka to tsv & sql for trunk
 

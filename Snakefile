@@ -3,7 +3,7 @@
 
 configfile: "config/config.dag.yml"
 
-libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fq.gz")
+# libraries, = glob_wildcards(config["libdir"] + "/{library}_1.fq.gz")
 
 rule all:
     input:
@@ -12,10 +12,10 @@ rule all:
         ## reads ##
         # expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", library=libraries, strand=["1", "2"]),
         ## alignments ##
-        # expand("results/alns/{library}.md.cram", library=libraries), # alns
+        expand("results/alns/{library}.md.cram", library=config["leaf"]), # alns
         ## mutations ##
-        "results/leaf_nontrunk_mutations.sql",
-        "results/trunk_raw_mutations.sql",
+        # "results/leaf_nontrunk_mutations.sql",
+        # "results/trunk_raw_mutations.sql",
         ## qc ##
         "results/multiqc_report.html"
 
@@ -42,9 +42,9 @@ include: "rules/samtools_stats.smk"
 include: "rules/mosdepth.smk"
 
 ## Mutations ##
-include: "rules/strelka2.smk"
-include: "rules/bedtools_subtract.smk"
-include: "rules/strelka2tsv_leaf.smk"
-include: "rules/strelka2sql_leaf.smk"
-include: "rules/strelka2tsv_trunk.smk"
-include: "rules/strelka2sql_trunk.smk"
+# include: "rules/strelka2.smk"
+# include: "rules/bedtools_subtract.smk"
+# include: "rules/strelka2tsv_leaf.smk"
+# include: "rules/strelka2sql_leaf.smk"
+# include: "rules/strelka2tsv_trunk.smk"
+# include: "rules/strelka2sql_trunk.smk"
