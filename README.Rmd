@@ -17,6 +17,7 @@ if(knitr:::is_latex_output()) options(knitr.table.format = "latex")
 library(tidyverse)
 library(vcfR)
 library(Biostrings)
+library(circlize)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
                cache = F, cache.lazy = F)
@@ -198,52 +199,42 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 ```{r}
 gc <- vroom::vroom("results/reference/Dgu_HS2_HYBRID_SCAFFOLD.gc", skip = 1,
              col_names = c("chrom", "start", "stop", "AT", "GC", "A", "C", "G", "T", "N", "other", "length")) %>% 
-  mutate(pos = start + 500)
-ggplot(filter(gc, chrom %in% unique(gc$chrom)[1:4]),
-       aes(pos/10^6, GC)) +
-  geom_point(col = "grey") + 
-  geom_smooth() +
-  facet_grid(.~chrom, scales = "free_x", space = "free")
-t <- filter(gc, chrom %in% unique(gc$chrom)[1:4])
+  mutate(pos = start + 500) %>% 
+  mutate(chrom = gsub("Super-Scaffold_", "", chrom))
+genome <- read_tsv("results/reference/Dgu_HS2_HYBRID_SCAFFOLD.fa.fai", 
+         col_names = c("name", "length", "bytesindex", "basesperline", "bytesperline")) %>% 
+  dplyr::select(name, length) %>% 
+  mutate(name = gsub("Super-Scaffold_", "", name)) %>% 
+  mutate(start = 0, end = length) %>% 
+  select(-length) %>%  
+  mutate(trsc = letters[1:nrow(.)], exon = LETTERS[1:nrow(.)])
 ```
 
 ```{r}
-ggplot(data,aes(x, P, fill = study)) +
-  geom_bar(stat="identity", position = "dodge") +
-  ylim(-20,NA) +
-  theme_minimal() +
-  coord_polar(start = 0) +
-  theme(
-    axis.text = element_blank(),
-    axis.title = element_blank(),
-    panel.grid = element_blank(),
-    plot.margin = unit(c(-5, -2, -2, -3), "cm"),
-    plot.title = element_text(debug = F, vjust = -40, hjust = 0.25),
-    panel.background = element_rect(fill = NA, color = NA)
-  ) +
-  ggtitle("C.") +
+ggplot(genome, aes(reorder(name, end), end/10^6, fill = end > 2*10^6)) +
+  geom_col() +
+  coord_flip() +
+  ylab("Length (mb)") + 
+  xlab("Anchored super-scaffold") + 
+  scale_fill_discrete(">2Mb")
 ```
 
-
 ```{r}
-df = data.frame(sectors = as.character(t$chrom),
-                x = t$pos/10^6,
-                y = t$GC)
-circos.par("track.height" = 0.1)
-circos.initialize(df$sectors, x = df$x)
-circos.track(df$sectors, y = df$y,
-    panel.fun = function(x, y) {
-        circos.text(CELL_META$xcenter, 
-            CELL_META$cell.ylim[2] + mm_y(5), 
-            CELL_META$sector.index)
-        circos.axis(labels.cex = 0.6)
+genome <- filter(genome, end > 2*10^6)
+gc <- filter(gc, chrom %in% genome$name)
+```
+
+```{r, fig.height=10, fig.width=10}
+circos.initializeWithIdeogram(as.data.frame(genome))
+circos.genomicTrack(select(gc, chrom, start, stop, N), 
+    panel.fun = function(region, value, ...) {
+        circos.genomicLines(region, value, col = "blue", ...)
 })
-col = rep(c("#FF0000", "#00FF00"), 4)
-circos.trackPoints(df$sectors, df$x, df$y, col = col, pch = 16, cex = 0.5)
-# circos.text(-1, 0.5, "text", sector.index = "a", track.index = 1)
-bgcol = rep(c("#EFEFEF", "#CCCCCC"), 4)
-circos.trackHist(df$sectors, df$x, bin.size = 0.2, bg.col = bgcol, col = NA)
+
+circos.genomicTrack(select(gc, chrom, start, stop, GC), 
+    panel.fun = function(region, value, ...) {
+        circos.genomicLines(region, value, col = "red", ...)
+})
+text(0, 0, "HS2", cex = 1.5)
+legend("bottomleft", pch = 16, col = c("blue", "red"), legend = c("N", "GC"), bty = "n")
 ```
-
-
-

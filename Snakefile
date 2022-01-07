@@ -8,11 +8,11 @@ configfile: "config/config.dag.yml"
 rule all:
     input:
         ## reference ##
-        # expand("results/reference/{reference}.fa", reference=config["reference"]), # ref
+        expand("results/reference/{reference}.fa", reference=config["reference"]), # ref
         ## reads ##
-        # expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", library=libraries, strand=["1", "2"]),
+        expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", library=config["leaf"], strand=["1", "2"]),
         ## alignments ##
-        # expand("results/alns/{library}.md.cram", library=config["leaf"]), # alns
+        expand("results/alns/{library}.md.cram", library=config["leaf"]), # alns
         ## mutations ##
         # "results/leaf_nontrunk_mutations.sql",
         # "results/trunk_raw_mutations.sql",
@@ -32,8 +32,8 @@ include: "rules/bedtools_nuc.smk"
 include: "rules/busco.smk"
 
 ## Reads ##
-# include: "rules/trimmomatic.smk"
-# include: "rules/fastqc.smk"
+include: "rules/trimmomatic.smk"
+include: "rules/fastqc.smk"
 include: "rules/multiqc.smk"
 
 ## Alignments ##

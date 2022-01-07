@@ -10,5 +10,5 @@ rule bedtools_makewindows:
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest"
     shell:
-        "cut -f 1,2 {input} | bedtools makewindows -g stdin -w 1000 > {output}"
+        "cut -f 1,2 {input} | bedtools makewindows -g stdin -w 10000 > {output}"
         
