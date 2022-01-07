@@ -4,7 +4,7 @@ __default__:
   cpus: 4
   time: "48:00:00"
 
-## Reference & Reads ## 
+## Reference ## 
 
 cp_reference:
   jobname: "cp_reference"
@@ -18,11 +18,43 @@ bwa_index:
   cpus: 1
   time: "01:00:00"
 
+samtools_faidx:
+  jobname: "samtools_faidx"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+bedtools_makewindows:
+  jobname: "bedtools_makewindows"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+bedtools_nuc:
+  jobname: "bedtools_nuc"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
+busco:
+  jobname: "busco"
+  mem: "100G"
+  cpus: 10
+  time: "96:00:00"
+  
+## Reads ## 
+
 trimmomatic:
   jobname: "trimmomatic"
   mem: "16G"
   cpus: 4
   time: "10:00:00"
+  
+fastqc:
+  jobname: "fastqc"
+  mem: "16G"
+  cpus: 4
+  time: "48:00:00"
 
 ## Alignments ##
 

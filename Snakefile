@@ -12,18 +12,24 @@ rule all:
         ## reads ##
         # expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", library=libraries, strand=["1", "2"]),
         ## alignments ##
-        expand("results/alns/{library}.md.cram", library=config["leaf"]), # alns
+        # expand("results/alns/{library}.md.cram", library=config["leaf"]), # alns
         ## mutations ##
         # "results/leaf_nontrunk_mutations.sql",
         # "results/trunk_raw_mutations.sql",
         ## qc ##
-        "results/multiqc_report.html"
+        # "results/multiqc_report.html"
+        expand("results/reference/{reference}.gc", reference=config["reference"]),
+        directory(expand("results/reference/{reference}_busco", reference=config["reference"]))
 
 # Rules #
 
 ## Reference ##
 include: "rules/cp_reference.smk"
 include: "rules/bwa_index.smk"
+include: "rules/samtools_faidx.smk"
+include: "rules/bedtools_makewindows.smk"
+include: "rules/bedtools_nuc.smk"
+include: "rules/busco.smk"
 
 ## Reads ##
 # include: "rules/trimmomatic.smk"

@@ -5,7 +5,8 @@ ressources: "ressources.genologin.yaml"
 
 # data
 refdir: "../data/angela/genome"
-reference: "Dgu_HS2_HYBRID_SCAFFOLD"
+# reference: "Dgu_HS2_HYBRID_SCAFFOLD"
+reference: "Dgu_HS1_HYBRID_SCAFFOLD"
 # libdir: "../data/angela/reads/"
 libdir: "../data/angela/dummyreads/"
 # base: "T1"

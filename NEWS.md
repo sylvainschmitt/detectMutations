@@ -1,3 +1,6 @@
+# detectMutation - angela 0.1.9015
+* gc content & busco for HS1
+
 # detectMutation - angela 0.1.9014
 * alns DS2 on HS2 for comparison
 
