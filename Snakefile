@@ -19,11 +19,11 @@ include: "rules/bedtools_nuc.smk"
 include: "rules/busco.smk"
 
 ## Reads ##
-include: "rules/trimmomatic.smk"
-include: "rules/fastqc.smk"
+# include: "rules/trimmomatic.smk"
+# include: "rules/fastqc.smk"
 
 ## Alignments ##
-include: "rules/bwa_mem.smk"
+# include: "rules/bwa_mem.smk"
 include: "rules/samtools_view.smk"
 include: "rules/samtools_sort.smk"
 include: "rules/samtools_index.smk"
