@@ -7,6 +7,7 @@ ressources: "ressources.genologin.yaml"
 refdir: "../data/angela/genome"
 reference: "Dgu_HS1_HYBRID_SCAFFOLD"
 libdir: "../data/angela/reads/"
+intervals: "../data/angela/genome/intervals_dag"
 
 # libraries
 hz: ["T2", "T3", "DS2"]

@@ -1,3 +1,6 @@
+# detectMutation - angela 0.1.9018
+* heterosigosity
+
 # detectMutation - angela 0.1.9017
 * up-to alns & QC with HS1
 
