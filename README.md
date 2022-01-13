@@ -11,6 +11,7 @@ Jully 21, 2021
       - [Reference](#reference)
       - [Reads](#reads)
       - [Alignments](#alignments)
+      - [Heterozygosity](#heterozygosity)
       - [Mutations](#mutations)
 
 [`singularity` &
@@ -55,6 +56,7 @@ cd ${GOPATH}/src/github.com/sylabs/singularity && \
 # detect Mutations
 git clone git@github.com:sylvainschmitt/detectMutations.git
 cd detectMutations
+git checkout angela
 ```
 
 # Usage
@@ -180,9 +182,37 @@ quality.*
   - Singularity:
     docker://quay.io/biocontainers/mosdepth:0.2.4–he527e40\_0
 
+## Heterozygosity
+
+*Detect heterozygosity.*
+
+### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_haplotypecaller.smk)
+
+  - Tools: [`gatk
+    HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+  - Singularity: docker://broadinstitute/gatk
+
+### [gatk\_gathervcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_gathervcfs.smk)
+
+  - Tools: [`gatk
+    GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
+  - Singularity: docker://broadinstitute/gatk
+
+### [gatk\_genomicsdbimport](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_genomicsdbimport.smk)
+
+  - Tools: [`gatk
+    GenomicsDBImport`](https://gatk.broadinstitute.org/hc/en-us/articles/360036883491-GenomicsDBImport)
+  - Singularity: docker://broadinstitute/gatk
+
+### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_genotypegvcfs.smk)
+
+  - Tools: [`gatk
+    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
+  - Singularity: docker://broadinstitute/gatk
+
 ## Mutations
 
-*Detect mutations.*
+*Detect mutations in both cambiums and leaves.*
 
 ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk)
 

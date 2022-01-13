@@ -15,7 +15,7 @@ hz: ["T2", "T3", "T4", "AS1", "AS2", "AS3", "AL1", "AL2", "AL3",
      "CL1", "CL2", "CL3", "DS1", "DS2", "DS3", "DL1", "DL2", "DL3", 
      "ES1", "ES2", "ES3", "EL1", "EL2", "EL3"]
 cambium: ["T2", "T3", "T4"]
-cambium_comp: ["T2", "T3", "T4"]
+cambium_comp: ["T2_vs_T3", "T2_vs_T4", "T3_vs_T2", "T3_vs_T4", "T4_vs_T2", "T4_vs_T3"]
 cambium_ref: "T2"
 leaf: ["AS1", "AS2", "AS3", "AL1", "AL2", "AL3", "BS1", "BS2", "BS3",
        "BL1", "BL2", "BL3", "CS1", "CS2", "CS3", "CL1", "CL2", "CL3", 

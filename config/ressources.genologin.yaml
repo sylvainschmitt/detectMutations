@@ -159,25 +159,13 @@ bedtools_substract:
   cpus: 4
   time: "48:00:00"
 
-strelka2tsv_leaf:
+strelka2tsv:
   jobname: "strelka2tsv"
   mem: "20G"
   cpus: 1
   time: "10:00:00"
   
-strelka2sql_leaf:
-  jobname: "strelka2sql"
-  mem: "20G"
-  cpus: 1
-  time: "10:00:00"
-  
-strelka2tsv_trunk:
-  jobname: "strelka2tsv"
-  mem: "20G"
-  cpus: 1
-  time: "10:00:00"
-  
-strelka2sql_trunk:
+strelka2sql:
   jobname: "strelka2sql"
   mem: "20G"
   cpus: 1

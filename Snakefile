@@ -5,10 +5,9 @@ intervals, = glob_wildcards(config["intervals"] + "/{interval}")
 
 rule all:
     input:
-        expand("results/alns/{library}.md.cram", library=config["leaf"]), # alns
         "results/hz/raw_hz.vcf", # hz
-        # expand("results/mutations_cambium/{comps}.raw.vcf", comps=config["cambium_comp"]), # mut cambium
-        # "results/trunk_raw_mutations.sql", # mut
+        expand("results/mutations_cambium/{comps}.raw.vcf", comps=config["cambium_comp"]), # mut cambium
+        expand("results/mutations_leaf/{tumor}_vs_{base}.raw.vcf", tumor=config["leaf"], base=config["cambium_ref"]), # mut leaf
         "results/multiqc_report.html" #qc
 
 # Rules #
@@ -44,12 +43,10 @@ include: "rules/gatk_gathervcfs.smk"
 include: "rules/gatk_genomicsdbimport.smk"
 include: "rules/gatk_genotypegvcfs.smk"
 
-## Mutations cambium ##
+## Mutations ##
 include: "rules/strelka2.smk"
-# include: "rules/strelka2tsv_trunk.smk"
-# include: "rules/strelka2sql_trunk.smk"
-
-## Mutations leaf ##
+# include: "rules/strelka2tsv.smk"
+# include: "rules/strelka2sql.smk"
 
 ## QC ##
 include: "rules/multiqc.smk"
