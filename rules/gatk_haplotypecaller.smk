@@ -2,7 +2,8 @@ rule gatk_haplotypecaller:
     input:
         expand("results/reference/{reference}.fa", reference=config["reference"]),
         "results/alns/{library}.md.cram",
-        expand("{intervals}/{interval}", intervals=config["intervals"], allow_missing=True)
+        expand("{intervals}/{interval}", intervals=config["intervals"], allow_missing=True),
+        expand("results/reference/{reference}.dict", reference=config["reference"])
     output:
         temp("results/hz/{library}/{interval}.g.vcf")
     log:

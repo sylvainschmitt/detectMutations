@@ -24,6 +24,12 @@ samtools_faidx:
   cpus: 1
   time: "01:00:00"
   
+gatk_dict:
+  jobname: "gatk_dict"
+  mem: "4G"
+  cpus: 1
+  time: "01:00:00"
+  
 bedtools_makewindows:
   jobname: "bedtools_makewindows"
   mem: "4G"
@@ -112,6 +118,32 @@ mosdepth:
   mem: "16G"
   cpus: 4
   time: "10:00:00"
+  
+## Heterozygosity ##
+
+gatk_haplotypecaller:
+  jobname: "gatk_haplotypecaller"
+  mem: "100G"
+  cpus: 1
+  time: "48:00:00"
+
+gatk_gathervcfs:
+  jobname: "gatk_gathervcfs"
+  mem: "100G"
+  cpus: 1
+  time: "48:00:00"
+  
+gatk_genomicsdbimport:
+  jobname: "gatk_genomicsdbimport"
+  mem: "100G"
+  cpus: 1
+  time: "48:00:00"
+
+gatk_genotypegvcfs:
+  jobname: "gatk_genotypegvcfs"
+  mem: "100G"
+  cpus: 1
+  time: "48:00:00"
   
 ## Mutations ##
 

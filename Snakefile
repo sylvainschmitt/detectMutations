@@ -7,7 +7,7 @@ rule all:
     input:
         expand("results/alns/{library}.md.cram", library=config["leaf"]), # alns
         "results/hz/raw_hz.vcf", # hz
-        # "results/leaf_nontrunk_mutations.sql", # mut
+        # expand("results/mutations_cambium/{comps}.raw.vcf", comps=config["cambium_comp"]), # mut cambium
         # "results/trunk_raw_mutations.sql", # mut
         "results/multiqc_report.html" #qc
 
@@ -40,15 +40,12 @@ include: "rules/mosdepth_regions.smk"
 
 ## Heterozygosity ##
 include: "rules/gatk_haplotypecaller.smk"
+include: "rules/gatk_gathervcfs.smk"
 include: "rules/gatk_genomicsdbimport.smk"
 include: "rules/gatk_genotypegvcfs.smk"
-include: "rules/gatk_gathervcfs.smk"
 
 ## Mutations cambium ##
-# include: "rules/strelka2.smk"
-# include: "rules/bedtools_subtract.smk"
-# include: "rules/strelka2tsv_leaf.smk"
-# include: "rules/strelka2sql_leaf.smk"
+include: "rules/strelka2.smk"
 # include: "rules/strelka2tsv_trunk.smk"
 # include: "rules/strelka2sql_trunk.smk"
 
