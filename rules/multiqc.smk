@@ -1,13 +1,11 @@
 rule multiqc:
     input:
-        directory(expand("results/reference/{reference}_busco", reference=config["reference"])),
-        expand("results/reference/{reference}.gc", reference=config["reference"]),
-        expand("results/{library}/{library}_{strand}_fastqc.{ext}", library=config["hz"],
+        expand("results/{library}/{library}_{strand}_fastqc.{ext}", library=config["samples"],
                 strand=["1", "2"], ext=["html", "zip"]),
-        expand("results/{library}/trim_out.log", library=config["hz"]),
-        expand("results/alns/{library}.md.cram.stats", library=config["hz"]),
-        expand("results/alns/{library}.mosdepth.global.dist.txt", library=config["hz"]),
-        expand("results/alns/{library}.mosdepth.region.dist.txt", library=config["leaf_cov"])
+        expand("results/{library}/trim_out.log", library=config["samples"]),
+        expand("results/alns/{library}.md.cram.stats", library=config["samples"]),
+        expand("results/alns/{library}.mosdepth.global.dist.txt", library=config["samples"]),
+        expand("results/alns/{library}.mosdepth.region.dist.txt", library=config["samples"])
     output:
         "results/multiqc_report.html"
     log:
