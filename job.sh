@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --time=96:00:00
-#SBATCH -J angela
-#SBATCH -o angela.%N.%j.out
-#SBATCH -e angela.%N.%j.err
+#SBATCH -J hetre
+#SBATCH -o hetre.%N.%j.out
+#SBATCH -e hetre.%N.%j.err
 #SBATCH --mem=5G
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
