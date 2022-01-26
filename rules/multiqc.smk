@@ -16,7 +16,6 @@ rule multiqc:
         "oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest"
     shell:
         "multiqc "
-        "results/reference/*/short_summary.*.txt "
         "results/*/*_fastqc.zip "
         "results/*/trim_out.log "
         "results/alns/*.md.cram.stats "

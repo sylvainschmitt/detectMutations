@@ -183,9 +183,23 @@ quality.*
 
 ## Mutations
 
-*Detect mutations in both cambiums and leaves.*
+*Detect mutations in leaves.*
 
 ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/strelka2.smk)
 
   - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
   - Singularity: docker://quay.io/wtsicgp/strelka2-manta
+
+### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/strelka2tsv.smk)
+
+  - Script:
+    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/strelka2tsv.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [strelka2sql](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/strelka2sql.smk)
+
+  - Script:
+    [`strelka2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/strelka2sql.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>

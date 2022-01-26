@@ -2,7 +2,7 @@ configfile: "config/config.yml"
 
 rule all:
     input:
-        expand("results/mutations/{comp}.raw.vcf", comp=config["comps"]), # mut leaf
+        expand("results/mutations/{comp}.raw.sql", comp=config["comps"]), # mut leaf
         "results/multiqc_report.html" #qc
 
 # Rules #
@@ -29,8 +29,8 @@ include: "rules/mosdepth_regions.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
-# include: "rules/strelka2tsv.smk"
-# include: "rules/strelka2sql.smk"
+include: "rules/strelka2tsv.smk"
+include: "rules/strelka2sql.smk"
 
 ## QC ##
 include: "rules/multiqc.smk"
