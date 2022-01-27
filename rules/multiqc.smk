@@ -3,9 +3,8 @@ rule multiqc:
         expand("results/{library}/{library}_{strand}_fastqc.{ext}", library=config["samples"],
                 strand=["1", "2"], ext=["html", "zip"]),
         expand("results/{library}/trim_out.log", library=config["samples"]),
-        expand("results/alns/{library}.md.cram.stats", library=config["samples"]),
-        expand("results/alns/{library}.mosdepth.global.dist.txt", library=config["samples"]),
-        expand("results/alns/{library}.mosdepth.region.dist.txt", library=config["samples"])
+        expand("results/alns/{library}_on_{reference}.md.cram.stats", library=config["samples"], reference=config["references"]),
+        expand("results/alns/{library}_on_{reference}.mosdepth.global.dist.txt", library=config["samples"], reference=config["references"])
     output:
         "results/multiqc_report.html"
     log:
@@ -20,6 +19,5 @@ rule multiqc:
         "results/*/trim_out.log "
         "results/alns/*.md.cram.stats "
         "results/alns/*.mosdepth.global.dist.txt "
-        "results/alns/*.mosdepth.region.dist.txt "
         "-o results/"
         

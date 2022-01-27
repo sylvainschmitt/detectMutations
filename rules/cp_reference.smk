@@ -1,11 +1,11 @@
 rule cp_reference:
     input:
-        expand("{refdir}/{reference}.fa", refdir=config["refdir"], reference=config["reference"])
+        expand("{refdir}{reference}.fa", refdir=config["refdir"], allow_missing=True)
     output:
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        "results/reference/{reference}.fa"
     log:
-        "results/logs/cp_reference.log"
+        "results/logs/cp_{reference}.log"
     benchmark:
-        "results/benchmarks/cp_reference.benchmark.txt"
+        "results/benchmarks/cp_{reference}.benchmark.txt"
     shell:
         "cp {input} {output}"

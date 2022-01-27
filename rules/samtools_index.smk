@@ -1,12 +1,12 @@
 rule samtools_index:
     input:
-        "results/alns/{library}.sorted.cram"
+        "results/alns/{library}_on_{reference}.sorted.cram"
     output:
-        temp("results/alns/{library}.sorted.cram.crai")
+        temp("results/alns/{library}_on_{reference}.sorted.cram.crai")
     log:
-        "results/logs/samtools_index_{library}.log"
+        "results/logs/samtools_index_{library}_{reference}.log"
     benchmark:
-        "results/benchmarks/samtools_index_{library}.benchmark.txt"
+        "results/benchmarks/samtools_index_{library}_{reference}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:

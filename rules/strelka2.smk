@@ -1,16 +1,16 @@
 rule strelka2:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"]),
-        "results/alns/{tumor}.md.cram",
-        "results/alns/{base}.md.cram",
-        "results/alns/{tumor}.md.cram.crai",
-        "results/alns/{base}.md.cram.crai"
+        "results/reference/{reference}.fa",
+        "results/alns/{tumor}_on_{reference}.md.cram",
+        "results/alns/{base}_on_{reference}.md.cram",
+        "results/alns/{tumor}_on_{reference}.md.cram.crai",
+        "results/alns/{base}_on_{reference}.md.cram.crai"
     output:
-        "results/mutations/{tumor}_vs_{base}.raw.vcf"
+        "results/mutations/{tumor}_vs_{base}_on_{reference}.raw.vcf"
     log:
-        "results/logs/strelka2_{tumor}_vs_{base}.log"
+        "results/logs/strelka2_{tumor}_vs_{base}_{reference}.log"
     benchmark:
-        "results/benchmarks/strelka2_{tumor}_vs_{base}.benchmark.txt"
+        "results/benchmarks/strelka2_{tumor}_vs_{base}_{reference}.benchmark.txt"
     singularity: 
         "docker://quay.io/wtsicgp/strelka2-manta"
     threads: 20

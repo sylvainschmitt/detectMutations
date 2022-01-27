@@ -1,13 +1,14 @@
 rule bwa_index:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        "results/reference/{reference}.fa"
     output:
         expand("results/reference/{reference}.fa{ext}", 
-                reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
+                ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], 
+                allow_missing=True)
     log:
-        "results/logs/bwa_index.log"
+        "results/logs/bwa_index_{reference}.log"
     benchmark:
-        "results/benchmarks/bwa_index.benchmark.txt"
+        "results/benchmarks/bwa_index_{reference}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest"
     shell:

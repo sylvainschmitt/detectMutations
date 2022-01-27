@@ -2,7 +2,8 @@ configfile: "config/config.yml"
 
 rule all:
     input:
-        expand("results/mutations/{comp}.raw.sql", comp=config["comps"]), # mut leaf
+        expand("results/mutations/{comp}_on_{reference}.raw.vcf", comp=config["comps"], reference=config["references"]), # mut
+        "results/mutations/mutations.raw.sql",
         "results/multiqc_report.html" #qc
 
 # Rules #

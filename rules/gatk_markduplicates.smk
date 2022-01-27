@@ -1,15 +1,15 @@
 rule gatk_markduplicates:
     input:
-        "results/alns/{library}.sorted.cram",
-         expand("results/reference/{reference}.fa", reference=config["reference"]),
-        "results/alns/{library}.sorted.cram.crai"
+        "results/alns/{library}_on_{reference}.sorted.cram",
+         "results/reference/{reference}.fa",
+        "results/alns/{library}_on_{reference}.sorted.cram.crai"
     output:
-        temp("results/alns/{library}.md.bam"),
-        temp("results/alns/{library}.md.bam.metrics")
+        temp("results/alns/{library}_on_{reference}.md.bam"),
+        temp("results/alns/{library}_on_{reference}.md.bam.metrics")
     log:
-        "results/logs/gatk_markduplicates_{library}.log"
+        "results/logs/gatk_markduplicates_{library}_{reference}.log"
     benchmark:
-        "results/benchmarks/gatk_markduplicates_{library}.benchmark.txt"
+        "results/benchmarks/gatk_markduplicates_{library}_{reference}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     threads: 1

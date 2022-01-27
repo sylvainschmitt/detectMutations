@@ -17,6 +17,8 @@ Jully 21, 2021
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
 workflow to detect mutations corresponding to the “Faux de Verzy”.
 
+Add a simplified dag later maybe using tikz.
+
 ![](dag/dag.svg)<!-- -->
 
 # Installation

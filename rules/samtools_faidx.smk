@@ -1,12 +1,12 @@
 rule samtools_faidx:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        "results/reference/{reference}.fa"
     output:
-        expand("results/reference/{reference}.fa.fai", reference=config["reference"])
+        "results/reference/{reference}.fa.fai"
     log:
-        "results/logs/samtools_faidx.log"
+        "results/logs/samtools_faidx_{reference}.log"
     benchmark:
-        "results/benchmarks/samtools_faidx.benchmark.txt"
+        "results/benchmarks/samtools_faidx_{reference}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:

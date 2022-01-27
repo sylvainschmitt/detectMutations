@@ -1,13 +1,13 @@
 rule strelka2sql:
     input:
-        "results/mutations/{tumor}_vs_{base}.raw.tsv"
+        expand("results/mutations/{comp}_on_{reference}.raw.tsv", comp=config["comps"], reference=config["references"])
     output:
-        temp("results/mutations/{tumor}_vs_{base}.raw.csv"),
-        "results/mutations/{tumor}_vs_{base}.raw.sql"
+        temp("results/mutations/{mutations.raw.csv"),
+        "results/mutations/mutations.raw.sql"
     log:
-        "results/logs/strelka2sql_{tumor}_vs_{base}.log"
+        "results/logs/strelka2sql.log"
     benchmark:
-        "results/benchmarks/strelka2sql_{tumor}_vs_{base}.benchmark.txt"
+        "results/benchmarks/strelka2sql.benchmark.txt"
     singularity: 
         "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     script:

@@ -25,6 +25,8 @@ opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8
 
 [`singularity` & `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity) workflow to detect mutations corresponding to the "Faux de Verzy".
 
+Add a simplified dag later maybe using tikz.
+
 ```{r dag}
 knitr::include_graphics("dag/dag.svg")
 ```

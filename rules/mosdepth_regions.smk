@@ -1,17 +1,17 @@
 rule mosdepth_regions:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"]),
-        "results/alns/{library}.md.cram",
+        "results/reference/{reference}.fa",
+        "results/alns/{library}_on_{reference}.md.cram",
         expand("results/reference/{reference}.{ext}", 
-                reference=config["reference"], ext=["fa.amb", "fa.ann", "fa.bwt", "fa.pac", "fa.sa"]),
-        "results/alns/{library}.md.cram.crai"
+                ext=["fa.amb", "fa.ann", "fa.bwt", "fa.pac", "fa.sa"], allow_missing=True),
+        "results/alns/{library}_on_{reference}.md.cram.crai"
     output:
-        "results/alns/{library}.mosdepth.global.dist.txt",
-        "results/alns/{library}.mosdepth.region.dist.txt"
+        "results/alns/{library}_on_{reference}.mosdepth.global.dist.txt",
+        "results/alns/{library}_on_{reference}.mosdepth.region.dist.txt"
     log:
-        "results/logs/mosdepth_regions_{library}.log"
+        "results/logs/mosdepth_regions_{library}_{reference}.log"
     benchmark:
-        "results/benchmarks/mosdepth_regions_{library}.benchmark.txt"
+        "results/benchmarks/mosdepth_regions_{library}_{reference}.benchmark.txt"
     singularity: 
         "docker://quay.io/biocontainers/mosdepth:0.2.4--he527e40_0"
     shell:

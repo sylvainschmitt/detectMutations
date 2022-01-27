@@ -1,13 +1,13 @@
 rule samtools_view:
     input:
-        "results/alns/{library}.sam",
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        "results/alns/{library}_on_{reference}.sam",
+        "results/reference/{reference}.fa"
     output:
-        temp("results/alns/{library}.raw.cram")
+        temp("results/alns/{library}_on_{reference}.raw.cram")
     log:
-        "results/logs/samtools_view_{library}.log"
+        "results/logs/samtools_view_{library}_{reference}.log"
     benchmark:
-        "results/benchmarks/samtools_view_{library}.benchmark.txt"
+        "results/benchmarks/samtools_view_{library}_{reference}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:
