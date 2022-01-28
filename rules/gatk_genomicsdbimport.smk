@@ -16,5 +16,5 @@ rule gatk_genomicsdbimport:
         gvcfs=lambda wildcards, input: "-V " + " -V ".join(sorted(input)),
         max_mem = lambda wildcards, resources: resources.mem_mb
     shell:
-        "gatk GenomicsDBImport --java-options \"-Xmx{params.max_mem}M -Xms1G -Djava.io.tmpdir=tmp\ "
+        "gatk GenomicsDBImport --java-options \"-Xmx{params.max_mem}M -Xms1G -Djava.io.tmpdir=tmp\"
         "{params.gvcfs} --genomicsdb-workspace-path {output}"
