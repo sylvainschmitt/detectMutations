@@ -25,6 +25,8 @@ mutations <- lapply(tsv, vroom,
                       PNOISE2 = col_logical(),
                       tumor = col_character(),
                       normal = col_character(),
+                      reference = col_character(),
+                      vcf = col_character(),
                       caller = col_character()
                     )) %>% bind_rows()
 vroom_write(mutations, path = csv, delim = ",")

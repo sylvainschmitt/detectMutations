@@ -42,6 +42,8 @@ mutations <- raw$fix %>%
   mutate(tumor = snakemake@params$tumor) %>% 
   mutate(normal = snakemake@params$normal) %>% 
   mutate(reference = snakemake@params$reference) %>% 
+  mutate(reference = snakemake@params$reference) %>% 
+  mutate(vcf = vcf) %>% 
   mutate(caller = "strelka2")
 rm(mut, norm, gt)
 
