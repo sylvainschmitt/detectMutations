@@ -4,6 +4,7 @@ rule gatk_genotypegvcfs:
         directory("results/hz/db")
     output:
         "results/hz/raw_hz.vcf"
+         temp("results/hz/raw_hz.vcf.idx")
     log:
         "results/logs/gatk_genotypegvcfs.log"
     benchmark:
