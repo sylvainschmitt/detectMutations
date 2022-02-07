@@ -40,7 +40,7 @@ include: "rules/mosdepth_regions.smk"
 
 ## Heterozygosity ##
 # include: "rules/gatk_haplotypecaller.smk"
- include: "rules/gatk_gathervcfs.smk"
+# include: "rules/gatk_gathervcfs.smk"
 include: "rules/gatk_genomicsdbimport.smk"
 include: "rules/gatk_genotypegvcfs.smk"
 

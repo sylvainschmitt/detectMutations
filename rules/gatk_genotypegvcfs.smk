@@ -2,7 +2,7 @@ rule gatk_genotypegvcfs:
     input:
         expand("results/reference/{reference}.fa", reference=config["reference"]),
         directory("results/hz/db"),
-        expand("results/reference/{reference}.dict", reference=config["reference"])
+        expand("{intervals}/{interval}", intervals=config["intervals"], allow_missing=True)
     output:
         "results/hz/raw_hz/{interval}.vcf",
          temp("results/hz/raw_hz/{interval}.vcf.idx")
