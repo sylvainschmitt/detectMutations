@@ -1,14 +1,15 @@
 rule gatk_genotypegvcfs:
     input:
         expand("results/reference/{reference}.fa", reference=config["reference"]),
-        directory("results/hz/db")
+        directory("results/hz/db"),
+        expand("results/reference/{reference}.dict", reference=config["reference"])
     output:
-        "results/hz/raw_hz.vcf"
-         temp("results/hz/raw_hz.vcf.idx")
+        "results/hz/raw_hz/{interval}.vcf",
+         temp("results/hz/raw_hz/{interval}.vcf.idx")
     log:
-        "results/logs/gatk_genotypegvcfs.log"
+        "results/logs/gatk_genotypegvcfs_{interval}.log"
     benchmark:
-        "results/benchmarks/gatk_genotypegvcfs.benchmark.txt"
+        "results/benchmarks/gatk_genotypegvcfs_{interval}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     threads: 1
@@ -18,5 +19,5 @@ rule gatk_genotypegvcfs:
         max_mem = lambda wildcards, resources: resources.mem_mb
     shell:
         "gatk GenotypeGVCFs --java-options \"-Xmx{params.max_mem}M -Xms1G -Djava.io.tmpdir=tmp\" "
-        "-R {input[0]} -V gendb://{input[1]} -O {output}"
+        "-R {input[0]} -V gendb://{input[1]} -L {input[2]} -O {output[0]} --max-alternate-alleles 200"
         

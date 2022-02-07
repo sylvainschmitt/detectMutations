@@ -1,3 +1,6 @@
+# detectMutation - angela 0.1.9020
+* genotype GVCFs per intervals
+
 # detectMutation - angela 0.1.9019
 * raw mutations for cambiums and leaves
 
