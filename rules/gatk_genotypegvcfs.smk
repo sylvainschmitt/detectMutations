@@ -19,5 +19,5 @@ rule gatk_genotypegvcfs:
         max_mem = lambda wildcards, resources: resources.mem_mb
     shell:
         "gatk GenotypeGVCFs --java-options \"-Xmx{params.max_mem}M -Xms1G -Djava.io.tmpdir=tmp\" "
-        "-R {input[0]} -V gendb://{input[1]} -L {input[2]} -O {output[0]} --max-alternate-alleles 200"
+        "-R {input[0]} -V gendb://{input[1]} -L {input[2]} -O {output[0]} --max-alternate-alleles 200 --max-genotype-count 2048"
         

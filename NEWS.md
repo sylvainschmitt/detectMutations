@@ -1,3 +1,6 @@
+# detectMutation - angela 0.1.9021
+* gather hz vcfs
+
 # detectMutation - angela 0.1.9020
 * genotype GVCFs per intervals
 

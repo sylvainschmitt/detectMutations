@@ -5,8 +5,7 @@ intervals, = glob_wildcards(config["intervals"] + "/{interval}")
 
 rule all:
     input:
-        # "results/hz/raw_hz.vcf", # hz
-        expand("results/hz/raw_hz/{interval}.vcf", interval=intervals),
+        "results/hz/raw_hz.vcf", # hz
         # expand("results/mutations_cambium/{comps}.raw.vcf", comps=config["cambium_comp"]), # mut cambium
         # expand("results/mutations_leaf/{tumor}_vs_{base}.raw.vcf", tumor=config["leaf"], base=config["cambium_ref"]), # mut leaf
         "results/multiqc_report.html" #qc
@@ -40,9 +39,10 @@ include: "rules/mosdepth_regions.smk"
 
 ## Heterozygosity ##
 # include: "rules/gatk_haplotypecaller.smk"
-# include: "rules/gatk_gathervcfs.smk"
+# include: "rules/gatk_gathergvcfs.smk"
 include: "rules/gatk_genomicsdbimport.smk"
 include: "rules/gatk_genotypegvcfs.smk"
+include: "rules/gatk_gathervcfs.smk"
 
 ## Mutations ##
 # include: "rules/strelka2.smk"

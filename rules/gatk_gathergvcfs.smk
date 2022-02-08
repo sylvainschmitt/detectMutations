@@ -1,12 +1,12 @@
-rule gatk_gathervcfs:
+rule gatk_gathergvcfs:
     input:
-        expand("results/hz/raw_hz/{interval}.vcf", interval=intervals, allow_missing=True)
+        expand("results/hz/{library}/{interval}.g.vcf", interval=intervals, allow_missing=True)
     output:
-        "results/hz/raw_hz.vcf"
+        "results/hz/{library}.g.vcf"
     log:
-        "results/logs/gatk_gathervcfs.log"
+        "results/logs/gatk_gathergvcfs_{library}.log"
     benchmark:
-        "results/benchmarks/gatk_gathervcfs.benchmark.txt"
+        "results/benchmarks/gatk_gathergvcfs_{library}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     threads: 1
