@@ -2,9 +2,10 @@ configfile: "config/config.yml"
 
 rule all:
     input:
-        expand("results/mutations/{comp}_on_{reference}.raw.vcf", comp=config["comps"], reference=config["references"]), # mut
-        "results/mutations/mutations.raw.sql",
-        "results/multiqc_report.html" #qc
+        # expand("results/mutations/{comp}_on_{reference}.raw.vcf", comp=config["comps"], reference=config["references"]), # mut
+        "results/mutations/mutations.robust.tsv",
+        # "results/multiqc_report.html" #qc,
+         "results/report.html"
 
 # Rules #
 
@@ -27,11 +28,14 @@ include: "rules/samtools_view_md.smk"
 include: "rules/samtools_index_md.smk"
 include: "rules/samtools_stats.smk"
 include: "rules/mosdepth_regions.smk"
+include: "rules/circos_cov.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
 include: "rules/strelka2tsv.smk"
-include: "rules/strelka2sql.smk"
+# include: "rules/strelka2sql.smk"
+include: "rules/filter_mutations.smk"
 
-## QC ##
+## Report ##
 include: "rules/multiqc.smk"
+include: "rules/report.smk"
