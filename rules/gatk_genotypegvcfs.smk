@@ -4,8 +4,8 @@ rule gatk_genotypegvcfs:
         directory("results/hz/db"),
         expand("{intervals}/{interval}", intervals=config["intervals"], allow_missing=True)
     output:
-        "results/hz/raw_hz/{interval}.vcf",
-         temp("results/hz/raw_hz/{interval}.vcf.idx")
+        temp("results/hz/raw_hz/{interval}.vcf"),
+        temp("results/hz/raw_hz/{interval}.vcf.idx")
     log:
         "results/logs/gatk_genotypegvcfs_{interval}.log"
     benchmark:

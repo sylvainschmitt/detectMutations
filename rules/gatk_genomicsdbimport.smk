@@ -2,7 +2,7 @@ rule gatk_genomicsdbimport:
     input:
         expand("results/hz/{library}.g.vcf", library=config["hz"])
     output:
-        directory("results/hz/db")
+       temp(directory("results/hz/db"))
     log:
         "results/logs/gatk_genomicsdbimport.log"
     benchmark:

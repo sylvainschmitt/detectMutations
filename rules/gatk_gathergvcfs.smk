@@ -2,7 +2,8 @@ rule gatk_gathergvcfs:
     input:
         expand("results/hz/{library}/{interval}.g.vcf", interval=intervals, allow_missing=True)
     output:
-        "results/hz/{library}.g.vcf"
+        temp("results/hz/{library}.g.vcf"),
+        temp("results/hz/{library}.g.vcf.idx")
     log:
         "results/logs/gatk_gathergvcfs_{library}.log"
     benchmark:
