@@ -17,4 +17,5 @@ rule gatk_gathervcfs:
         gvcfs=lambda wildcards, input: "-I " + " -I ".join(sorted(input)),
         max_mem = lambda wildcards, resources: resources.mem_mb
     shell:
-        "gatk GatherVcfs --java-options \"-Xmx{params.max_mem}M -Xms1G -Djava.io.tmpdir=tmp\" {params.gvcfs} -O {output}"
+        "gatk GatherVcfs --java-options \"-Xmx{params.max_mem}M -Xms1G -Djava.io.tmpdir=tmp\" {params.gvcfs} -O {output[0]} "
+
