@@ -181,7 +181,7 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 * Tools: [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
 * Singularity: docker://broadinstitute/gatk
 
-### [gatk_gathervcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_gathervcfs.smk)
+### [gatk_gathergvcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_gathergvcfs.smk)
 
 * Tools: [`gatk GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
 * Singularity: docker://broadinstitute/gatk
@@ -196,6 +196,31 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 * Tools: [`gatk GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
 * Singularity: docker://broadinstitute/gatk
 
+### [gatk_gathervcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_gathervcfs.smk)
+
+* Tools: [`gatk GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
+* Singularity: docker://broadinstitute/gatk
+
+### [bcftools_biallelic](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bcftools_biallelic.smk)
+
+* Tools: [`bcftools`](https://samtools.github.io/bcftools/bcftools.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bcftools/bcftools:latest
+
+### [gatk_snps](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_snps.smk)
+
+* Tools: [`gatk VariantFiltration`](https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration)
+* Singularity: docker://broadinstitute/gatk
+
+### [plink_nonmissing](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/plink_nonmissing.smk)
+
+* Tools: [`plink`](https://www.cog-genomics.org/plink/)
+* Singularity: docker://quay.io/biocontainers/plink:1.90b6.21--h779adbc_1
+
+### [bcftools_shared](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bcftools_shared.smk)
+
+* Tools: [`bcftools`](https://samtools.github.io/bcftools/bcftools.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bcftools/bcftools:latest
+
 ## Mutations
 
 *Detect mutations in both cambiums and leaves.*
@@ -205,17 +230,27 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 * Tools: [`Strelka2`](https://github.com/Illumina/strelka)
 * Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-<!-- ### [bedtools_subtract](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_subtract.smk) -->
+### [bedtools_subtract_hz](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_subtract_hz.smk)
 
-<!-- * Tools: [`bedtools subtract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html) -->
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest -->
+* Tools: [`bedtools subtract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
 
-<!-- ### [bedtools_intersect](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_intersect.smk) -->
+### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2tsv.smk)
 
-<!-- * Tools: [`bedtools intersect`](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) -->
-<!-- * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest -->
+* Script: [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
+* Singularity: https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif
 
-<!-- ### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2tsv.smk) -->
+### [strelka2tsv_cambium](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2sql_cambium.smk)
 
-<!-- * Script: [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R) -->
-<!-- * Singularity: to be added, currently uses local install -->
+* Script: [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
+* Singularity: https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif
+
+### [strelka2sql_leaf](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2sql_leaf.smk)
+
+* Script: [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
+* Singularity: https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif
+
+### [filter_mutations](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/filter_mutations.smk)
+
+* Script: [`filter_mutations.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/filter_mutations.R)
+* Singularity: https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif

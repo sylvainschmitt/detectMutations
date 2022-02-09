@@ -16,6 +16,6 @@ rule filter_mutations:
         lowDP=50,
         highDP=360,
         minAC=10,
-        maxAF=0.5
+        maxAF=0.8
     script:
         "../scripts/filter_mutations.R"
