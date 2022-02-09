@@ -5,10 +5,11 @@ intervals, = glob_wildcards(config["intervals"] + "/{interval}")
 
 rule all:
     input:
-        "results/hz/shared_hz.vcf.gz", # hz
+        # "results/hz/shared_hz.vcf.gz", # hz
         "results/mutations_cambium/cambium_nonhz_mutations.sql", # mut cambium
-        expand("results/mutations_leaf/{tumor}_vs_{base}.nonhz.vcf", tumor=config["leaf"], base=config["cambium_ref"]), # mut leaf
-        "results/multiqc_report.html" #qc
+        "results/mutations_cambium/cambium_nonhz_mutations_filtered.tsv", # mut cambium
+        # expand("results/mutations_leaf/{tumor}_vs_{base}.nonhz.vcf", tumor=config["leaf"], base=config["cambium_ref"]), # mut leaf
+        # "results/multiqc_report.html" #qc
 
 # Rules #
 
@@ -52,7 +53,8 @@ include: "rules/bcftools_shared.smk"
 include: "rules/strelka2.smk"
 include: "rules/bedtools_subtract_hz.smk"
 include: "rules/strelka2tsv.smk"
-include: "rules/strelka2sql_cambium.smk"
+# include: "rules/strelka2sql_cambium.smk"
+include: "rules/filter_mutations.smk"
 
 ## QC ##
 include: "rules/multiqc.smk"
