@@ -25,7 +25,7 @@ DBI::dbConnect(RSQLite::SQLite(), infile) %>%
     mutation_altCountT1 >= minAC,
     mutation_AF <= maxAF 
   ) %>% 
-  group_by(CHROM, POS) %>% 
+  group_by(tumor, CHROM, POS) %>% 
   filter(n() == 1) %>%
   ungroup() %>%
   mutate(Filter = ifelse(FILTER == "PASS", "robust", "base")) %>%
