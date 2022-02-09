@@ -15,8 +15,8 @@ rule gatk_snps:
     resources:
         mem_mb=1000
     shell:
-        "gatk IndexFeatureFile -F {input} ;"
-        "gatk VariantFiltration -F {input} -filter-expression \"QUAL < 30.0 || QD < 2.0 || FS > 60.0 || SOR > 3.0\" --filter-name \"FAIL\" "
+        "gatk IndexFeatureFile -I {input} ;"
+        "gatk VariantFiltration -V {input} -filter-expression \"QUAL < 30.0 || QD < 2.0 || FS > 60.0 || SOR > 3.0\" --filter-name \"FAIL\" "
         "-O {output[1]} ;"
         "gatk SelectVariants -V {output[1]} -select-type SNP --exclude-filtered -O {output[2]}"
         
