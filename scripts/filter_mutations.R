@@ -1,13 +1,7 @@
-# snakemake
 infile <- snakemake@input[[1]]
 outfile <- snakemake@output[[1]] 
 
-# libraries
 library(tidyverse)
-library(dbplyr)
-library(dtplyr)
-# DBI
-# RSQLite
 
 DBI::dbConnect(RSQLite::SQLite(), infile) %>% 
   tbl("mutations") %>% 
