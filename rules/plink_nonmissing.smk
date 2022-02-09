@@ -10,7 +10,7 @@ rule plink_nonmissing:
     benchmark:
         "results/benchmarks/plink_nonmissing.benchmark.txt"
     singularity: 
-        "docker://biocontainers/plink1.9"
+        "docker://quay.io/biocontainers/plink:1.90b6.21--h779adbc_1"
     threads: 1
     resources:
         mem_mb=1000
