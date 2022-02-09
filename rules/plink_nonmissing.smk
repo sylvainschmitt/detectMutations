@@ -10,7 +10,7 @@ rule plink_nonmissing:
     benchmark:
         "results/benchmarks/plink_nonmissing.benchmark.txt"
     singularity: 
-        "docker://gelog/plink"
+        "docker://biocontainers/plink1.9"
     threads: 1
     resources:
         mem_mb=1000
