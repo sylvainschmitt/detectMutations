@@ -9,5 +9,6 @@ libdir: "../data/hetre/reads/"
 
 # samples
 references: ["Fagus_sylvatica_v3", "Fagus_sylvatica_mutant_v0", "Fagus_sylvatica_revertant_v0"]
+reference: "Fagus_sylvatica_mutant_v0"
 samples: ["mutant", "revertant"]
 comps: ["mutant_vs_revertant", "revertant_vs_mutant"]

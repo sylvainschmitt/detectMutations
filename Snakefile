@@ -2,10 +2,10 @@ configfile: "config/config.yml"
 
 rule all:
     input:
-        # expand("results/mutations/{comp}_on_{reference}.raw.vcf", comp=config["comps"], reference=config["references"]), # mut
-        "results/mutations/mutations.robust.tsv",
+        "results/mutations/mutations.tsv",
+        expand("results/mutations/{reference}_mutations_on_{references}.psl", reference=config["reference"], references=config["references"]),
         # "results/multiqc_report.html" #qc,
-         "results/report.html"
+        # "results/report.html"
 
 # Rules #
 
@@ -33,8 +33,11 @@ include: "rules/circos_cov.smk"
 ## Mutations ##
 include: "rules/strelka2.smk"
 include: "rules/strelka2tsv.smk"
-# include: "rules/strelka2sql.smk"
+include: "rules/strelka2sql.smk"
 include: "rules/filter_mutations.smk"
+include: "rules/mutations2bed.smk"
+include: "rules/bedtools_getfasta.smk"
+include: "rules/blat.smk"
 
 ## Report ##
 include: "rules/multiqc.smk"

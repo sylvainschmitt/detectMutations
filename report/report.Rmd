@@ -29,8 +29,7 @@ opts_chunk$set(
 genomes_indexes <- snakemake@input[["index"]]
 coverages_files <- snakemake@input[["coverage"]]
 circos_cov <- snakemake@input[["circos_cov"]]
-base_file <- snakemake@input[["base"]]
-robust_file <- snakemake@input[["robust"]]
+mutations <- read_tsv(snakemake@input[["mutations"]])
 ```
 
 The analyses of mutations from the ["Faux de Verzy"](https://en.wikipedia.org/wiki/Faux_de_Verzy) are
@@ -93,56 +92,51 @@ ggplot(coverages, aes(coverage)) +
 We used the following filters:
 
 * **Base**
-   * The mutation is detected in both directions of the comparison mutant versus revertant
+   * The mutation is detected in the revertant
    * A null number of alternate allele count in the normal sample (`normal_altCountT1 == 0`)
-   * All filters from raw
    * A read depth for the two sample between half and two times the mean coverage (`normal_DP <= 150, normal_DP >= 25.5, mutation_DP <= 150, mutation_DP >= 25.5`)
    * A minimum of 5 alternate allele count in the mutated sample (`mutation_altCountT1 >= 5`), corresponding to a minimum allele frequency of 0.1 for a mean coverage of 50X
+   * A maximum allelic frequency of 0.5 (`mutation_AF <= 0.5`)
 * **Robust**
    * All filters from base
    * `Strelka 2` automatic filtering (`Filter == "PASS"`)
 
 ```{r muttab}
-list(base = base_file, robust = robust_file) %>% 
-  lapply(read_tsv) %>% 
-  bind_rows(.id = "filter") %>% 
-  group_by(filter, reference) %>% 
+mutations %>% 
+  group_by(reference, Filter) %>% 
   summarise(N = n()) %>% 
-  reshape2::dcast(reference ~ filter) %>% 
+  reshape2::dcast(reference ~ Filter) %>% 
   kable(cpation = "Number of mutations per filter and reference", 
         format.args = list(big.mark = " "))
 ```
 
 ```{r mutfig, fig.cap="Alleles-frequencies of filtered mutations in hetre."}
-list(base = base_file, robust = robust_file) %>% 
-  lapply(read_tsv) %>% 
-  bind_rows(.id = "filter") %>% 
-  ggplot(aes(mutation_AF, col = filter), fill = NA) +
+ggplot(mutations, aes(mutation_AF, col = Filter), fill = NA) +
   geom_density(size = 1.3) +
-  scale_color_discrete("Filter") +
   xlab("Allelic frequency")  +
-  xlim(0.05, 0.5) +
   facet_wrap(~ reference, nrow = 2) +
   theme(legend.position = c(0.9, 0.1))
 ```
 
-```{r mutmutantfig, fig.cap="Mutation position on the Mutant's genome (scaffolds > 5-Mb) for base (blue) and robust (red) candidates."}
+```{r mutmutantfig, fig.cap="Mutation position on the Mutant's genome (scaffolds > 5-Mb) for robust candidates."}
 genome <- filter(genomes, genome == "Fagus_sylvatica_mutant_v0", end > 5*10^6)
-base <- read_tsv(base_file) %>% 
-  filter(reference == "Mutant") %>% 
-  mutate(name = CHROM) %>% 
-  filter(name %in% genome$name)
-robust <- read_tsv(robust_file) %>% 
-  filter(reference == "Mutant") %>% 
-  mutate(name = CHROM) %>% 
-  filter(name %in% genome$name)
 ggplot(genome, aes(x = name, xend = name)) +
   geom_segment(aes(y = start, yend = end/10^6), size = 3, col = "lightgrey") +
-  geom_point(aes(y = POS/10^6), col = "blue", base) +
-  geom_point(aes(y = POS/10^6), col = "red", robust) +
+  geom_point(aes(y = POS/10^6, col = mutation_AF),
+             data = filter(mutations, reference == "Fagus_sylvatica_mutant_v0", Filter == "robust") %>%
+               mutate(name = CHROM) %>%
+               filter(name %in% genome$name)) +
   coord_flip() +
   ylab("Position (Mb)") +
-  theme(axis.line.y = element_blank(), axis.title.y = element_blank(), axis.ticks.y = element_blank())
+  theme(axis.line.y = element_blank(), axis.title.y = element_blank(), axis.ticks.y = element_blank()) +
+  viridis::scale_color_viridis("AF")
+```
+
+```{r}
+filter(mutations, reference == "Fagus_sylvatica_mutant_v0", Filter == "robust") %>% 
+  dplyr::select(CHROM, POS, REF, ALT, mutation_altCountT1, mutation_refCountT1, normal_altCountT1, normal_refCountT1, mutation_AF) %>% 
+  DT::datatable(colnames = c("scf", "pos", "ref", "alt", "rev alt", "rev ref", "mut alt", "mut ref", "AF"),
+                caption = "Mutation position on the Mutant's genome for robust candidates.")
 ```
 
 # Cross-validation

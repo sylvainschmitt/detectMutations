@@ -2,8 +2,7 @@ rule filter_mutations:
     input:
         "results/mutations/mutations.raw.sql"
     output:
-        "results/mutations/mutations.base.tsv",
-        "results/mutations/mutations.robust.tsv"
+        "results/mutations/mutations.tsv",
     log:
         "results/logs/filter_mutations.log"
     benchmark:
