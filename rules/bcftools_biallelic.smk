@@ -2,7 +2,7 @@ rule bcftools_biallelic:
     input:
         "results/hz/raw_hz.vcf"
     output:
-        "results/hz/biallelic_hz.vcf.gz"
+        temp("results/hz/biallelic_hz.vcf.gz")
     log:
         "results/logs/bcftools_biallelic.log"
     benchmark:

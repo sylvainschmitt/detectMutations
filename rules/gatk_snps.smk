@@ -4,7 +4,7 @@ rule gatk_snps:
     output:
         temp("results/hz/biallelic_hz.vcf.gz.tbi"),
         temp("results/hz/intermediate_hz.vcf.gz"),
-        "results/hz/filtered_hz.vcf.gz"
+        temp("results/hz/filtered_hz.vcf.gz")
     log:
         "results/logs/gatk_snps.log"
     benchmark:

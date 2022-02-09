@@ -2,7 +2,7 @@ rule plink_nonmissing:
     input:
         "results/hz/intermediate_hz.vcf.gz"
     output:
-        "results/hz/nonmissing_hz.vcf.gz",
+        temp("results/hz/nonmissing_hz.vcf.gz"),
         temp("results/hz/nonmissing_hz.log"),
         temp("results/hz/nonmissing_hz.nosex")
     log:

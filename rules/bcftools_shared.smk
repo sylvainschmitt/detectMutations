@@ -15,5 +15,5 @@ rule bcftools_shared:
     params:
         N=32
     shell:
-        "bcftools view i \'N_PASS(GT!=\"mis\" && GT!=\"RR\")>={params.N}\' --threads {threads} {input} | "
+        "bcftools view -i \'N_PASS(GT!=\"mis\" && GT!=\"RR\")>={params.N}\' --threads {threads} {input} | "
         "bgzip -c --threads {threads} > {output}"
