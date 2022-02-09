@@ -82,7 +82,7 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 ## Reference
 
-*Copy and index reference.*
+*Copy, index, and assess reference.*
 
 ### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/cp_reference.smk)
 
@@ -93,6 +93,38 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
   - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+
+### [samtools\_faidx](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_faidx.smk)
+
+  - Tools: [`samtools
+    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [gatk\_dict](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_dict.smk)
+
+  - Tools: [`gatk
+    CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422891-CreateSequenceDictionary-Picard-)
+  - Singularity: docker://broadinstitute/gatk
+
+### [bedtools\_makewindows](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_makewindows.smk)
+
+  - Tools: [`bedtools
+    makewindows]`](https://bedtools.readthedocs.io/en/latest/content/tools/makewindows%5D.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+
+### [bedtools\_nuc](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_nuc.smk)
+
+  - Tools: [`bedtools
+    nuc`](https://bedtools.readthedocs.io/en/latest/content/tools/nuc.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+
+### [busco](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/busco.smk)
+
+  - Tools: [`busco`](https://busco.ezlab.org/busco_userguide.html)
+  - Singularity: docker://ezlabgva/busco:v5.2.2\_cv2
 
 ## Reads
 
