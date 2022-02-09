@@ -10,7 +10,7 @@ rule strelka2tsv:
     singularity: 
         "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     params:
-        tumor = "{leaf}"",
+        tumor = "{tumor}",
         normal = "{base}"
     script:
         "../scripts/strelka2tsv.R"
