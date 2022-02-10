@@ -3,7 +3,7 @@ rule blat:
         "results/reference/{references}.fa",
         expand("results/mutations/{reference}_mutations.fa", reference=config["reference"])
     output:
-        expand("results/mutations/{reference}_mutations_on_{references}.psl", reference=config["reference"], allow_missing=True)
+        temp(expand("results/mutations/{reference}_mutations_on_{references}.psl", reference=config["reference"], allow_missing=True))
     log:
         "results/logs/blat_{references}.log"
     benchmark:

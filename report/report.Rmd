@@ -143,5 +143,12 @@ filter(mutations, reference == "Fagus_sylvatica_mutant_v0", Filter == "robust") 
 
 We further filtered mutations when the position on the Ciron's and the Revertant's genomes corresponded to the Mutant's genome.
 
+```{r}
+# read_tsv("../results/mutations/cross_validation.tsv") %>% 
+#   reshape2::dcast(SNV ~ reference) %>% 
+#   mutate_all(funs(ifelse(is.na(.), 0, .))) %>% 
+#   filter(Fagus_sylvatica_mutant_v0 == 0 | Fagus_sylvatica_revertant_v0 == 0 | Fagus_sylvatica_v3 == 0) %>% 
+#   View()
+```
 
 

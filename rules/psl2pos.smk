@@ -1,6 +1,6 @@
 rule psl2pos:
     input:
-        "results/mutations/mutations.tsv",
+        expand("results/mutations/{reference}_mutations.tsv", reference=config["reference"]),
         expand("results/mutations/{reference}_mutations_on_{references}.psl", reference=config["reference"], allow_missing=True)
     output:
         expand("results/mutations/{reference}_mutations_on_{references}.tsv", reference=config["reference"], allow_missing=True)

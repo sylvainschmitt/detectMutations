@@ -2,9 +2,9 @@ configfile: "config/config.yml"
 
 rule all:
     input:
-        "results/mutations/mutations.tsv",
-        expand("results/mutations/{reference}_mutations_on_{references}.psl", reference=config["reference"], references=config["references"]),
-        # "results/multiqc_report.html" #qc,
+        # "results/mutations/mutations.tsv",
+        "results/mutations/cross_validation.tsv",
+        # "results/multiqc_report.html", #qc
         # "results/report.html"
 
 # Rules #
@@ -19,7 +19,7 @@ include: "rules/trimmomatic.smk"
 include: "rules/fastqc.smk"
 
 ## Alignments ##
-include: "rules/bwa_mem.smk"
+# include: "rules/bwa_mem.smk"
 include: "rules/samtools_view.smk"
 include: "rules/samtools_sort.smk"
 include: "rules/samtools_index.smk"
@@ -38,6 +38,8 @@ include: "rules/filter_mutations.smk"
 include: "rules/mutations2bed.smk"
 include: "rules/bedtools_getfasta.smk"
 include: "rules/blat.smk"
+include: "rules/psl2pos.smk"
+include: "rules/cross_validate.smk"
 
 ## Report ##
 include: "rules/multiqc.smk"
