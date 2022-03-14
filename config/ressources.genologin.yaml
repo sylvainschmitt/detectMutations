@@ -145,6 +145,12 @@ gatk_genotypegvcfs:
   cpus: 1
   time: "48:00:00"
   
+jellyfish:
+  jobname: "jellyfish"
+  mem: "40G"
+  cpus: 10
+  time: "96:00:00"
+  
 ## Mutations ##
 
 strelka2:
