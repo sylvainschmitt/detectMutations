@@ -5,7 +5,7 @@ intervals, = glob_wildcards(config["intervals"] + "/{interval}")
 
 rule all:
     input:
-        "results/hz/angela_100mer.histo",
+        "results/hz/angela_21mer.histo",
         # "results/hz/shared_hz.vcf.gz", # hz
         # "results/mutations_cambium/cambium_nonhz_mutations.sql", # mut cambium
         "results/mutations_cambium/cambium_nonhz_mutations_filtered.tsv", # mut cambium
