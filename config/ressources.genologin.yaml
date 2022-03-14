@@ -147,7 +147,7 @@ gatk_genotypegvcfs:
   
 jellyfish:
   jobname: "jellyfish"
-  mem: "40G"
+  mem: "120G"
   cpus: 4
   time: "96:00:00"
   
