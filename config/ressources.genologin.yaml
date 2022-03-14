@@ -148,7 +148,7 @@ gatk_genotypegvcfs:
 jellyfish:
   jobname: "jellyfish"
   mem: "40G"
-  cpus: 10
+  cpus: 4
   time: "96:00:00"
   
 ## Mutations ##

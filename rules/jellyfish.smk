@@ -1,6 +1,6 @@
 rule jellyfish:
     input:
-        expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", strand=["1", "2"], library=config["hz"])
+        expand("results/{library}/{library}_{strand}.trimmed.paired.fq.gz", strand=["1", "2"], library=config["leaf_cov"])
     output:
         "results/hz/angela_21mer.jf",
         "results/hz/angela_21mer.histo"
@@ -10,7 +10,7 @@ rule jellyfish:
         "results/benchmarks/jellyfish.benchmark.txt"
     singularity: 
         "docker://quay.io/biocontainers/jellyfish:1.1.12--h6bb024c_1"
-    threads: 10
+    threads: 4
     resources:
         mem_mb=40000
     params:
