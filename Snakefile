@@ -5,6 +5,7 @@ intervals, = glob_wildcards(config["intervals"] + "/{interval}")
 
 rule all:
     input:
+        "results/hz/angela_100mer.histo",
         # "results/hz/shared_hz.vcf.gz", # hz
         # "results/mutations_cambium/cambium_nonhz_mutations.sql", # mut cambium
         "results/mutations_cambium/cambium_nonhz_mutations_filtered.tsv", # mut cambium
@@ -49,6 +50,7 @@ include: "rules/bcftools_biallelic.smk"
 include: "rules/gatk_snps.smk"
 include: "rules/plink_nonmissing.smk"
 include: "rules/bcftools_shared.smk"
+include: "rules/jellyfish.smk"
 
 ## Mutations ##
 include: "rules/strelka2.smk"
