@@ -9,14 +9,14 @@ rule jellyfish:
     benchmark:
         "results/benchmarks/jellyfish.benchmark.txt"
     singularity: 
-        "docker://quay.io/biocontainers/jellyfish"
+        "docker://quay.io/biocontainers/jellyfish:1.1.12--h6bb024c_1"
     threads: 10
     resources:
         mem_mb=40000
     params:
-        gvcfs=lambda wildcards, input: "-V " + " -V ".join(sorted(input)),
+        libraries=lambda wildcards, input: " < (zcat " + ") < (zcat ".join(sorted(input)),
         mem = lambda wildcards, resources: resources.mem_mb
     shell:
-        "jellyfish count -t {threads} -C -m 100 -s {params.mem}M -o {output[0]} results/*/*.trimmed.paired.fq.gz ;"
+        "jellyfish count -t {threads} -C -m 21 -s {params.mem}M -o {output[0]} {params.libraries}) ; "
         "jellyfish histo -t {threads} -o {output[1]} {output[0]}"
         
