@@ -214,6 +214,12 @@ quality.*
   - Singularity:
     docker://quay.io/biocontainers/mosdepth:0.2.4–he527e40\_0
 
+### [jellyfish](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/jellyfish.smk)
+
+  - Tools: [`jellyfish`](https://github.com/gmarcais/Jellyfish)
+  - Singularity:
+    docker:/quay.io/biocontainers/jellyfish:1.1.12–h6bb024c\_1
+
 ## Heterozygosity
 
 *Detect heterozygosity.*
@@ -308,12 +314,5 @@ quality.*
 
   - Script:
     [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
-  - Singularity:
-    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
-
-### [filter\_mutations](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/filter_mutations.smk)
-
-  - Script:
-    [`filter_mutations.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/filter_mutations.R)
   - Singularity:
     <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
