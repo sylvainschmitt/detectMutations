@@ -12,8 +12,7 @@ DBI::dbConnect(RSQLite::SQLite(), infile) %>%
     normal_DP >= 25.5, 
     mutation_DP <= 150, 
     mutation_DP >= 25.5, 
-    mutation_altCountT1 >= 5,
-    mutation_AF <= 0.5 
+    mutation_altCountT1 >= 5
   ) %>% 
   collect() %>% 
   group_by(reference, CHROM, POS) %>% 

@@ -11,4 +11,4 @@ rule blat:
     singularity: 
         "docker://quay.io/biocontainers/ucsc-blat:377--ha8a8165_4"
     shell:
-        "~/Tools/blatSrc/bin/blat {input[0]} {input[1]} {output}"
+        "blat {input[0]} {input[1]} {output}"

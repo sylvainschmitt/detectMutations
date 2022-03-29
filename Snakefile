@@ -2,10 +2,10 @@ configfile: "config/config.yml"
 
 rule all:
     input:
-        # "results/mutations/mutations.tsv",
+        "results/mutations/mutations.tsv",
         "results/mutations/cross_validation.tsv",
         # "results/multiqc_report.html", #qc
-        # "results/report.html"
+        "results/report.html"
 
 # Rules #
 
@@ -40,6 +40,7 @@ include: "rules/bedtools_getfasta.smk"
 include: "rules/blat.smk"
 include: "rules/psl2pos.smk"
 include: "rules/cross_validate.smk"
+include: "rules/spectra.smk"
 
 ## Report ##
 include: "rules/multiqc.smk"

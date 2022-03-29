@@ -3,7 +3,9 @@ rule report:
         index=expand("results/reference/{reference}.fa.fai", reference=config["references"]),
         coverage=expand("results/alns/{library}_on_{reference}.regions.bed", library=config["samples"], reference=config["references"]),
         circos_cov=expand("results/alns/circos_cov_{reference}.png", reference=config["references"]),
-        mutations="results/mutations/mutations.tsv"
+        mutations="results/mutations/mutations.tsv",
+        cv="results/mutations/cross_validation.tsv",
+        spectra="results/mutations/spectra.tsv"
     output:
         "results/report.html"
     log:
