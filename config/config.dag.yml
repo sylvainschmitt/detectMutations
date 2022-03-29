@@ -4,15 +4,15 @@
 ressources: "ressources.genologin.yaml"
 
 # data
-refdir: "../data/angela/genome"
-reference: "Dgu_HS1_HYBRID_SCAFFOLD"
-libdir: "../data/angela/reads/"
-intervals: "../data/angela/genome/intervals_dag"
+refdir: "../data/sixto/genome"
+reference: "Sru_HiFiasm.haplotype1"
+libdir: "../data/sixto/reads/"
+intervals: "../data/sixto/genome/intervals_dag"
 
 # libraries
-hz: ["T2", "T3", "DS2"]
-cambium: ["T2", "T3"]
-cambium_comp: ["T2_vs_T3"]
-cambium_ref: "T2"
-leaf: ["DS2"]
-leaf_cov: "DS2"
+hz: ["T1", "T2", "B1L1"]
+cambium: ["T1", "T2"]
+cambium_comp: ["T1_vs_T2"]
+cambium_ref: "T1"
+leaf: ["B1L1"]
+leaf_cov: "B1L1"

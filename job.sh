@@ -1,12 +1,11 @@
 #!/bin/bash
-#SBATCH --time=96:00:00
-#SBATCH -J angela
-#SBATCH -o angela.%N.%j.out
-#SBATCH -e angela.%N.%j.err
+#SBATCH -J sixto
+#SBATCH -o sixto.%N.%j.out
+#SBATCH -e sixto.%N.%j.err
 #SBATCH --mem=5G
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
-####SBATCH -p unlimitq
+#SBATCH -p unlimitq
 
 # Environment
 module purge

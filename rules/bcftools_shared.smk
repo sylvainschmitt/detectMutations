@@ -13,7 +13,7 @@ rule bcftools_shared:
     resources:
         mem_mb=8000
     params:
-        N=32
+        N=26
     shell:
         "bcftools view -i \'N_PASS(GT!=\"mis\" && GT!=\"RR\")>={params.N}\' --threads {threads} {input} | "
         "bgzip -c --threads {threads} > {output}"
