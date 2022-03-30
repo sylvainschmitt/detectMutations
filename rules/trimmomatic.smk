@@ -1,6 +1,6 @@
 rule trimmomatic:
     input:
-        expand("results/{library}/{library}_{type}_{strand}.raw.fastq", type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True)
+        expand("{libdir}{library}_{type}_{strand}.fastq", libdir=config["libdir"], type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True)
     output:
         temp(expand("results/{library}/{library}_{type}_{strand}.trimmed.paired.fastq", type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True)),
         temp(expand("results/{library}/{library}_{type}_{strand}.trimmed.unpaired.fastq", type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True)),

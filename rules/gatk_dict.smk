@@ -1,12 +1,12 @@
 rule gatk_dict:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        expand("{refdir}{reference}_REP{REP}.fa", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     output:
-        expand("results/reference/{reference}.dict", reference=config["reference"])
+        expand("{refdir}{reference}_REP{REP,\d+}.dict", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     log:
-        "results/logs/gatk_dict.log"
+        "results/logs/gatk_dict_REP{REP}.log"
     benchmark:
-        "results/benchmarks/gatk_dict.benchmark.txt"
+        "results/benchmarks/gatk_dict_REP{REP}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     shell:

@@ -1,15 +1,16 @@
 rule samtools_mpileup:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"]),
-        expand("results/{library}/{library}_{type}.md.bam", type=["mutated", "base"], allow_missing=True),
-        expand("results/{library}/{library}_{type}.md.bam.bai", type=["mutated", "base"], allow_missing=True),
-        expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
+        expand("{refdir}{reference}_REP{REP}.fa", refdir=config["refdir"], reference=config["reference"], allow_missing=True),
+        expand("results/{lib}_REP{REP}/{lib}_REP{REP}_{type}.md.bam", type=["mutated", "base"], allow_missing=True),
+        expand("results/{lib}_REP{REP}/{lib}_REP{REP}_{type}.md.bam.bai", type=["mutated", "base"], allow_missing=True),
+        expand("{refdir}{reference}_REP{REP}.fa{ext}", refdir=config["refdir"], 
+                reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], allow_missing=True)
     output:
-        expand("results/{library}/{library}_{type}.mpileup", type=["mutated", "base"], allow_missing=True)
+        expand("results/{lib}_REP{REP,\d+}/{lib}_REP{REP}_{type}.mpileup", type=["mutated", "base"], allow_missing=True)
     log:
-        "results/logs/samtools_index_{library}.log"
+        "results/logs/samtools_index_{lib}_REP{REP}.log"
     benchmark:
-        "results/benchmarks/samtools_index_{library}.benchmark.txt"
+        "results/benchmarks/samtools_index_{lib}_REP{REP}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:

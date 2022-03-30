@@ -1,12 +1,12 @@
 rule samtools_faidx:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        expand("{refdir}{reference}_REP{REP}.fa", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     output:
-        expand("results/reference/{reference}.fa.fai", reference=config["reference"])
+        expand("{refdir}{reference}_REP{REP,\d+}.fa.fai", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     log:
-        "results/logs/samtools_faidx.log"
+        "results/logs/samtools_faidx_REP{REP}.log"
     benchmark:
-        "results/benchmarks/samtools_faidx.benchmark.txt"
+        "results/benchmarks/samtools_faidx_REP{REP}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest"
     shell:

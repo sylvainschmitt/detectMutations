@@ -1,12 +1,12 @@
 rule gatk_idx:
     input:
-        expand("results/reference/{snps}", snps=config["snps"])
+        expand("{refdir}{reference}_REP{REP}_snps.vcf", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     output:
-         expand("results/reference/{snps}.idx", snps=config["snps"])
+        expand("{refdir}{reference}_REP{REP,\d+}_snps.vcf.idx", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     log:
-        "results/logs/gatk_idx.log"
+        "results/logs/gatk_idx_REP{REP}.log"
     benchmark:
-        "results/benchmarks/gatk_idx.benchmark.txt"
+        "results/benchmarks/gatk_idx_REP{REP}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     shell:

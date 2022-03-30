@@ -1,14 +1,15 @@
 rule gatk_genotypegvcfs:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"]),
-        "results/{library}/gatk/{library}.g.vcf",
-        expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"])
+        expand("{refdir}{reference}_REP{REP}.fa", refdir=config["refdir"], reference=config["reference"], allow_missing=True),
+        "results/{lib}_REP{REP}/gatk/{lib}_REP{REP,\d+}.g.vcf",
+        expand("{refdir}{reference}_REP{REP}.fa{ext}", 
+               refdir=config["refdir"], reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], allow_missing=True)
     output:
-        "results/{library}/gatk/{library}.unfiltered.vcf"
+        "results/{lib}_REP{REP,\d+}/gatk/{lib}_REP{REP}.unfiltered.vcf"
     log:
-        "results/logs/gatk_genotypegvcfs_{library}.log"
+        "results/logs/gatk_genotypegvcfs_{lib}_REP{REP}.log"
     benchmark:
-        "results/benchmarks/gatk_genotypegvcfs_{library}.benchmark.txt"
+        "results/benchmarks/gatk_genotypegvcfs_{lib}_REP{REP}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     shell:

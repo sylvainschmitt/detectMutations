@@ -1,9 +1,0 @@
-study_accession	sample_accession	experiment_accession	run_accession	tax_id	scientific_name	fastq_ftp	submitted_ftp	sra_ftp
-PRJNA327502	SAMN05361915	SRX1932135	SRR3860149	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/009/SRR3860149/SRR3860149_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/009/SRR3860149/SRR3860149_2.fastq.gz		
-PRJNA327502	SAMN05361915	SRX1932140	SRR3860174	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/004/SRR3860174/SRR3860174_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/004/SRR3860174/SRR3860174_2.fastq.gz		
-PRJNA327502	SAMN05361915	SRX1932174	SRR3860329	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/009/SRR3860329/SRR3860329_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/009/SRR3860329/SRR3860329_2.fastq.gz		
-PRJNA327502	SAMN05361915	SRX1932196	SRR3860429	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/009/SRR3860429/SRR3860429_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR386/009/SRR3860429/SRR3860429_2.fastq.gz				
-PRJNA327502	SAMN05361916	SRX1940249	SRR3884561	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/001/SRR3884561/SRR3884561_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/001/SRR3884561/SRR3884561_2.fastq.gz		
-PRJNA327502	SAMN05361916	SRX1940250	SRR3884562	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/002/SRR3884562/SRR3884562_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/002/SRR3884562/SRR3884562_2.fastq.gz		
-PRJNA327502	SAMN05361916	SRX1940251	SRR3884563	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/003/SRR3884563/SRR3884563_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/003/SRR3884563/SRR3884563_2.fastq.gz		
-PRJNA327502	SAMN05361916	SRX1940253	SRR3884564	38942	Quercus robur	ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/004/SRR3884564/SRR3884564_1.fastq.gz;ftp.sra.ebi.ac.uk/vol1/fastq/SRR388/004/SRR3884564/SRR3884564_2.fastq.gz		

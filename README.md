@@ -15,9 +15,6 @@ April 20, 2021
       - [Detection](#detection)
       - [Mutations](#mutations)
       - [Quality check](#quality-check)
-  - [Results](#results)
-  - [Miscellaneous](#miscellaneous)
-      - [Unused callers](#unused-callers)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -108,11 +105,7 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 ## Reference
 
-*Copy and index reference and SNPs for software to work with.*
-
-### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
-
-  - Tools: `cp`
+*Index reference and SNPs for software to work with.*
 
 ### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
@@ -133,10 +126,6 @@ module purge ; module load system/R-3.6.2 ; R # to build results
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
   - Singularity: docker://broadinstitute/gatk
 
-### [cp\_snps](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_snps.smk)
-
-  - Tools: `cp`
-
 ### [gatk\_idx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_idx.smk)
 
   - Tools: [`gatk
@@ -145,11 +134,13 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 ## Reads
 
-*Copy reads, report quality and trim.*
+*CReport quality and trim.*
 
-### [cp\_reads](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reads.smk)
+### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
 
-  - Tools: `cp`
+  - Tools:
+    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
+  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
@@ -202,6 +193,19 @@ quality.*
     mpileup`](http://www.htslib.org/doc/samtools-mpileup.html)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
+
+  - Tools: [`Samtools
+    stats`](http://www.htslib.org/doc/samtools-stats.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
+
+  - Tools:
+    [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
+  - Singularity: docker://pegi3s/qualimap
 
 ## Detection
 
@@ -279,121 +283,10 @@ quality.*
 *Combined quality information from `QualiMap`, `Picard`, `Samtools`,
 `Trimmomatic`, and `FastQC` (see previous steps).*
 
-### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
-
-  - Tools:
-    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
-  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
-
-### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
-
-  - Tools: [`Samtools
-    stats`](http://www.htslib.org/doc/samtools-stats.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
-
-  - Tools:
-    [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
-  - Singularity: docker://pegi3s/qualimap
-
 ### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
 
   - Tools: [`MultiQC`](https://multiqc.info/)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
-# Results
-
-``` r
-options(dplyr.summarise.inform = FALSE)
-get_stats <- function(callfile, mutationsfile){
-  mutations <- read_tsv(mutationsfile, col_types = cols(
-    CHROM = col_character(),
-    POS = col_double(),
-    REF = col_character(),
-    TYPE = col_character(),
-    ALT = col_character()
-  )) %>% 
-    mutate(True = 1) %>%
-    filter(REF != "N")
-  call <- try(vcfR::read.vcfR(callfile, verbose = F)@fix, silent = T)
-  if(!inherits(call, "try-error")){
-    call <- as.data.frame(call) %>% 
-      mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
-      mutate(POS = as.numeric(as.character(POS))) %>% 
-      mutate(Called = 1) %>% 
-      mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1))
-  } else {
-    call <- data.frame(CHROM = character(), POS = double(), REF = character(), ALT = character(), Called = integer())
-  }
-  stats <- full_join(mutations, call, by = c("CHROM", "POS", "REF", "ALT")) %>% 
-    mutate_at(c("True", "Called"), funs(ifelse(is.na(.), 0, .))) %>% 
-    mutate(Confusion = recode(paste0(True, Called), "01" = "FP", "10" = "FN", "11" = "TP")) %>% 
-    group_by(Confusion) %>% 
-    summarise(N = n()) %>% 
-    reshape2::dcast(. ~ Confusion, value.var = "N")
-  if(!("FP" %in% names(stats)))
-     stats$FP <- 0
-  if(!("FN" %in% names(stats)))
-     stats$FN <- 0
-  if(!("TP" %in% names(stats)))
-     stats$TP <- 0
-  stats <- mutate(stats, Precision = round(TP/(TP+FP), 2), Recall = round(TP/(TP+FN), 2))
-  return(stats)
-}
-```
-
-``` r
-refL <- width(readDNAStringSet("../genologin/experiment4/mutations_tsv/Qrob_PM1N_1M_Qrob_Chr01_mutated_N1000_R2.fa"))
-for(i in 1:10)
-  data.frame(vcf = list.files("../genologin/experiment4/mutations_vcf", full.names = T)) %>% 
-  mutate(vcf = as.character(vcf)) %>% 
-  mutate(libraries = gsub("../genologin/experiment4/mutations_vcf/", "", vcf)) %>% 
-  mutate(libraries = gsub(".vcf", "", libraries)) %>% 
-  separate(libraries, c("N", "R", "AF", "NR", "REP", "caller"), sep = "_") %>% 
-  mutate_at(c("N", "R", "AF", "NR", "REP"), funs(as.numeric(gsub("[[:alpha:]]", "", .)))) %>% 
-  mutate(mutations = file.path("..", "genologin", "experiment4", "mutations_tsv", 
-                               paste0("Qrob_PM1N_1M_Qrob_Chr01", "_mutated_N", N, "_R", R, ".tsv"))) %>% 
-  group_by(N, R, AF, NR, REP, caller) %>% 
-  filter(REP %in% i) %>% 
-  do(stats = get_stats(.$vcf, .$mutations)) %>% 
-  unnest(stats) %>% 
-  select(-`.`) %>% 
-  mutate(C = round((NR*150)/refL)) %>% 
-  select(caller, N, R, AF, C, REP, FN, FP, TP, Precision, Recall) %>% 
-  write_tsv(paste0("stats.experiment4.rep", i, ".tsv"))
-stats <- list.files(pattern = "stats.experiment4")
-lapply(stats, vroom::vroom) %>% 
-  bind_rows() %>% 
-  write_tsv(paste0("stats.experiment4.tsv"))
-unlink(stats)
-```
-
-# Miscellaneous
-
-*Due to bug, poor performance, or slow speed.*
-
-## Unused callers
-
-#### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
-
-  - Tools: [`Manta`](https://github.com/Illumina/manta)
-  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-#### [caveman](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/caveman.smk)
-
-  - Tools: [`CaVEMan`](https://github.com/cancerit/CaVEMan)
-  - Singularity: docker://leukgen/docker-caveman:v1.0.0
-
-#### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
-
-  - Tools: [`RADIA`](https://github.com/aradenbaugh/radia/)
-  - Singularity: docker://opengenomics/radia
-
-#### [octopus](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/octopussmk)
-
-  - Tools: [`octopus`](https://github.com/luntergroup/octopus)
-  - Singularity:
-    <https://github.com/sylvainschmitt/singularity-octopus/releases/download/0.0.1/sylvainschmitt-singularity-octopus.latest.sif>
+<!-- # Results -->

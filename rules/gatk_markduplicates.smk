@@ -1,14 +1,14 @@
 rule gatk_markduplicates:
     input:
-        expand("results/{library}/{library}_{type}.bam", type=["mutated", "base"], allow_missing=True),
-        expand("results/{library}/{library}_{type}.bam.bai", type=["mutated", "base"], allow_missing=True)
+        expand("results/{lib}_REP{REP}/{lib}_REP{REP}_{type}.bam", type=["mutated", "base"], allow_missing=True),
+        expand("results/{lib}_REP{REP}/{lib}_REP{REP}_{type}.bam.bai", type=["mutated", "base"], allow_missing=True)
     output:
-        expand("results/{library}/{library}_{type}.md.bam", type=["mutated", "base"], allow_missing=True),
-        temp(expand("results/{library}/{library}_{type}.bam.metrics", type=["mutated", "base"], allow_missing=True))
+        expand("results/{lib}_REP{REP,\d+}/{lib}_REP{REP}_{type}.md.bam", type=["mutated", "base"], allow_missing=True),
+        temp(expand("results/{lib}_REP{REP,\d+}/{lib}_REP{REP}_{type}.bam.metrics", type=["mutated", "base"], allow_missing=True))
     log:
-        "results/logs/gatk_markduplicates_{library}.log"
+        "results/logs/gatk_markduplicates_{lib}_REP{REP}.log"
     benchmark:
-        "results/benchmarks/gatk_markduplicates_{library}.benchmark.txt"
+        "results/benchmarks/gatk_markduplicates_{lib}_REP{REP}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     resources:

@@ -1,22 +1,23 @@
 rule muse:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"]),
-        expand("results/{library}/{library}_{type}.md.bam", type=["mutated", "base"], allow_missing=True),
-        expand("results/reference/{snps}", snps=config["snps"]),
-        expand("results/{library}/{library}_{type}.md.bam.bai", type=["mutated", "base"], allow_missing=True),
-        expand("results/reference/{reference}.fa{ext}", reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"]),
-        expand("results/reference/{snps}.idx", snps=config["snps"])
+        expand("{refdir}{reference}_REP{REP}.fa", refdir=config["refdir"], reference=config["reference"], allow_missing=True),
+        expand("results/{lib}_REP{REP}/{lib}_REP{REP}_{type}.md.bam", type=["mutated", "base"], allow_missing=True),
+        expand("{refdir}{reference}_REP{REP}_snps.vcf", refdir=config["refdir"], reference=config["reference"], allow_missing=True),
+        expand("results/{lib}_REP{REP}/{lib}_REP{REP}_{type}.md.bam.bai", type=["mutated", "base"], allow_missing=True),
+        expand("{refdir}{reference}_REP{REP}.fa{ext}", 
+               refdir=config["refdir"], reference=config["reference"], ext=[".amb", ".ann", ".bwt", ".pac", ".sa"], allow_missing=True),
+        expand("{refdir}{reference}_REP{REP}_snps.vcf.idx", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     output:
-        "results/{library}/muse/{library}.vcf"
+        "results/{lib}_REP{REP,\d+}/muse/{lib}_REP{REP}.vcf"
     log:
-        "results/logs/muse_{library}.log"
+        "results/logs/muse_{lib}_REP{REP}.log"
     benchmark:
-        "results/benchmarks/muse_{library}.benchmark.txt"
+        "results/benchmarks/muse_{lib}_REP{REP}.benchmark.txt"
     singularity: 
         "docker://opengenomics/muse"
     threads: 4
     resources:
         mem_mb=16000
     shell:
-        "muse.py -f {input[0]} --tumor-bam {input[1]} --normal-bam {input[2]} -O {output} -n {threads} -w results/{wildcards.library}/muse/"
+        "muse.py -f {input[0]} --tumor-bam {input[1]} --normal-bam {input[2]} -O {output} -n {threads} -w results/{wildcards.lib}_{wildcards.REP}/muse/"
         

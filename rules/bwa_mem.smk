@@ -1,17 +1,18 @@
 rule bwa_mem:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"]),
-        expand("results/{library}/{library}_{type}_{strand}.trimmed.paired.fastq", type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True),
-        expand("results/reference/{reference}{ext}", reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"])
+        expand("{refdir}{reference}_REP{REP}.fa", refdir=config["refdir"], reference=config["reference"], allow_missing=True),
+        expand("results/{lib}_REP{REP}/{lib}_REP{REP}_{type}_{strand}.trimmed.paired.fastq", type=["mutated", "base"], strand=["R1", "R2"], allow_missing=True),
+        expand("{refdir}{reference}_REP{REP}.fa", refdir=config["refdir"], 
+                reference=config["reference"], ext=[".fa", ".fa.amb", ".fa.ann", ".fa.bwt", ".fa.fai", ".fa.pac", ".fa.sa", ".dict"], allow_missing=True)
     output:
-        temp(expand("results/{library}/{library}_{type}.sam", type=["mutated", "base"], allow_missing=True))
+        temp(expand("results/{lib}_REP{REP,\d+}/{lib}_REP{REP}_{type}.sam", type=["mutated", "base"], allow_missing=True))
     params:
-        rg_mutated=r"@RG\tID:{library}_mutated\tSM:{library}_mutated",
-        rg_base=r"@RG\tID:{library}_base\tSM:{library}_base"
+        rg_mutated=r"@RG\tID:{lib}_REP{REP}_mutated\tSM:{lib}_REP{REP}_mutated",
+        rg_base=r"@RG\tID:{lib}_REP{REP}_base\tSM:{lib}_REP{REP}_base"
     log:
-        "results/logs/bwa_mem_{library}.log"
+        "results/logs/bwa_mem_{lib}_REP{REP,\d+}.log"
     benchmark:
-        "results/benchmarks/bwa_mem_{library}.benchmark.txt"
+        "results/benchmarks/bwa_mem_{lib}_REP{REP,\d+}.benchmark.txt"
     singularity: 
         "oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest"
     threads: 8

@@ -10,16 +10,8 @@ output:
 
 ```{r setup, include=FALSE}
 rm(list = ls()) ; invisible(gc()) ; set.seed(42)
-library(knitr)
-library(kableExtra)
-if(knitr:::is_html_output()) options(knitr.table.format = "html") 
-if(knitr:::is_latex_output()) options(knitr.table.format = "latex") 
-library(tidyverse)
-library(vcfR)
-library(Biostrings)
-theme_set(bayesplot::theme_default())
-opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
-               cache = F, cache.lazy = F)
+knitr::opts_chunk$set(echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
+                      cache = F, cache.lazy = F)
 ```
 
 [`singularity` & `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity) workflow to detect mutations with several alignment and mutation detection tools.
@@ -106,11 +98,7 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 ## Reference
 
-*Copy and index reference and SNPs for software to work with.*
-
-### [cp_reference](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reference.smk)
-
-* Tools: `cp`
+*Index reference and SNPs for software to work with.*
 
 ### [bwa_index](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/bwa_index.smk)
 
@@ -127,10 +115,6 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 * Tools: [`gatk CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
 * Singularity: docker://broadinstitute/gatk
 
-### [cp_snps](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_snps.smk)
-
-* Tools: `cp`
-
 ### [gatk_idx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_idx.smk)
 
 * Tools: [`gatk IndexFeatureFile`](https://gatk.broadinstitute.org/hc/en-us/articles/360037428111-IndexFeatureFile)
@@ -138,11 +122,12 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 ## Reads
 
-*Copy reads, report quality and trim.*
+*CReport quality and trim.*
 
-### [cp_reads](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/cp_reads.smk)
+### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
 
-* Tools: `cp`
+* Tools: [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
+* Singularity: docker://biocontainers/fastqc:v0.11.9_cv8
 
 ### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/trimmomatic.smk)
 
@@ -182,6 +167,16 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 * Tools: [`Samtools mpileup`](http://www.htslib.org/doc/samtools-mpileup.html)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [samtools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
+
+* Tools: [`Samtools stats`](http://www.htslib.org/doc/samtools-stats.html)
+* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+
+### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
+
+* Tools: [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
+* Singularity: docker://pegi3s/qualimap
 
 ## Detection
 
@@ -247,29 +242,14 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
 *Combined quality information from `QualiMap`, `Picard`, `Samtools`, `Trimmomatic`, and `FastQC` (see previous steps).*
 
-### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/fastqc.smk)
-
-* Tools: [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
-* Singularity: docker://biocontainers/fastqc:v0.11.9_cv8
-
-### [samtools_stats](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_stats.smk)
-
-* Tools: [`Samtools stats`](http://www.htslib.org/doc/samtools-stats.html)
-* Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
-
-### [qualimap](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/qualimap.smk)
-
-* Tools: [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
-* Singularity: docker://pegi3s/qualimap
-
 ### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
 
 * Tools: [`MultiQC`](https://multiqc.info/)
 * Singularity: oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
 
-# Results
+<!-- # Results -->
 
-```{r get_stats, echo=T}
+```{r get_stats, eval=F}
 options(dplyr.summarise.inform = FALSE)
 get_stats <- function(callfile, mutationsfile){
   mutations <- read_tsv(mutationsfile, col_types = cols(
@@ -308,7 +288,7 @@ get_stats <- function(callfile, mutationsfile){
 }
 ```
 
-```{r stats, eval=F, echo=T}
+```{r stats, eval=F}
 refL <- width(readDNAStringSet("../genologin/experiment4/mutations_tsv/Qrob_PM1N_1M_Qrob_Chr01_mutated_N1000_R2.fa"))
 for(i in 1:10)
   data.frame(vcf = list.files("../genologin/experiment4/mutations_vcf", full.names = T)) %>% 
@@ -333,29 +313,3 @@ lapply(stats, vroom::vroom) %>%
   write_tsv(paste0("stats.experiment4.tsv"))
 unlink(stats)
 ```
-
-# Miscellaneous
-
-*Due to bug, poor performance, or slow speed.*
-
-## Unused callers
-
-#### [manta](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/manta.smk)
-
-* Tools: [`Manta`](https://github.com/Illumina/manta)
-* Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-#### [caveman](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/caveman.smk)
-
-* Tools: [`CaVEMan`](https://github.com/cancerit/CaVEMan)
-* Singularity: docker://leukgen/docker-caveman:v1.0.0
-
-#### [radia](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/radia.smk)
-
-* Tools: [`RADIA`](https://github.com/aradenbaugh/radia/)
-* Singularity: docker://opengenomics/radia
-
-#### [octopus](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/octopussmk)
-
-* Tools: [`octopus`](https://github.com/luntergroup/octopus)
-* Singularity: https://github.com/sylvainschmitt/singularity-octopus/releases/download/0.0.1/sylvainschmitt-singularity-octopus.latest.sif

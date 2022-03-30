@@ -1,3 +1,6 @@
+# detectMutation 0.2.0.9017
+* repetitions with random genome sections
+
 # detectMutation 0.2.0.9016
 * rm results from README
 * SI: high/low C fig
