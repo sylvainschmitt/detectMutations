@@ -15,7 +15,7 @@ rule strelka2:
         "docker://quay.io/wtsicgp/strelka2-manta"
     threads: 20
     resources:
-        mem_mb=200000
+        mem_mb=100000
     shell:
         "configureStrelkaSomaticWorkflow.py "
         "--normalBam {input[2]} "

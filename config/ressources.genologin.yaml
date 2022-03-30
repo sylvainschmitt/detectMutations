@@ -66,8 +66,8 @@ fastqc:
 
 bwa_mem:
   jobname: "bwa_mem"
-  mem: "400G"
-  cpus: 40
+  mem: "100G"
+  cpus: 20
   time: "96:00:00"
   disk: "1T"
   
@@ -155,7 +155,7 @@ jellyfish:
 
 strelka2:
   jobname: "strelka2"
-  mem: "200G"
+  mem: "100G"
   cpus: 20
   time: "96:00:00"
   
