@@ -15,6 +15,7 @@ April 20, 2021
       - [Detection](#detection)
       - [Mutations](#mutations)
       - [Quality check](#quality-check)
+  - [Results](#results)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
@@ -297,4 +298,16 @@ performance.*
   - Singularity:
     <https://github.com/sylvainschmitt/singularity-template/releases/download/0.0.1/sylvainschmitt-singularity-tidyverse-Biostrings.latest.sif>
 
-<!-- # Results -->
+# Results
+
+``` bash
+module load system/singularity-3.7.3
+singularity pull https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif
+singularity shell sylvainschmitt-singularity-r-bioinfo.latest.sif
+library(tidyverse)
+lapply(list.files("results/stats", full=T), read_tsv) %>% 
+  bind_rows() %>% 
+  write_tsv("stats.tsv")
+quit()
+exit
+```

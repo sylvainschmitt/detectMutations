@@ -252,77 +252,16 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 * Script: [`evaluate_call.R`](https://github.com/sylvainschmitt/detectMutations/blob/main/scripts/evaluate_call.R)
 * Singularity: https://github.com/sylvainschmitt/singularity-template/releases/download/0.0.1/sylvainschmitt-singularity-tidyverse-Biostrings.latest.sif
 
-<!-- # Results -->
+# Results
 
-```{r get_stats, eval=F}
-options(dplyr.summarise.inform = FALSE)
-get_stats <- function(callfile, mutationsfile){
-  mutations <- read_tsv(mutationsfile, col_types = cols(
-    CHROM = col_character(),
-    POS = col_double(),
-    REF = col_character(),
-    TYPE = col_character(),
-    ALT = col_character()
-  )) %>% 
-    mutate(True = 1) %>%
-    filter(REF != "N")
-  call <- try(vcfR::read.vcfR(callfile, verbose = F)@fix, silent = T)
-  if(!inherits(call, "try-error")){
-    call <- as.data.frame(call) %>% 
-      mutate_at(c("CHROM", "REF", "ALT"), as.character) %>% 
-      mutate(POS = as.numeric(as.character(POS))) %>% 
-      mutate(Called = 1) %>% 
-      mutate(REF = substr(REF, 1, 1), ALT = substr(ALT, 1, 1))
-  } else {
-    call <- data.frame(CHROM = character(), POS = double(), REF = character(), ALT = character(), Called = integer())
-  }
-  stats <- full_join(mutations, call, by = c("CHROM", "POS", "REF", "ALT")) %>% 
-    mutate_at(c("True", "Called"), funs(ifelse(is.na(.), 0, .))) %>% 
-    mutate(Confusion = recode(paste0(True, Called), "01" = "FP", "10" = "FN", "11" = "TP")) %>% 
-    group_by(Confusion) %>% 
-    summarise(N = n()) %>% 
-    reshape2::dcast(. ~ Confusion, value.var = "N")
-  if(!("FP" %in% names(stats)))
-     stats$FP <- 0
-  if(!("FN" %in% names(stats)))
-     stats$FN <- 0
-  if(!("TP" %in% names(stats)))
-     stats$TP <- 0
-  stats <- mutate(stats, Precision = round(TP/(TP+FP), 2), Recall = round(TP/(TP+FN), 2))
-  return(stats)
-}
-```
-
-```{r stats, eval=F}
-refL <- width(readDNAStringSet("../genologin/experiment4/mutations_tsv/Qrob_PM1N_1M_Qrob_Chr01_mutated_N1000_R2.fa"))
-for(i in 1:10)
-  data.frame(vcf = list.files("../genologin/experiment4/mutations_vcf", full.names = T)) %>% 
-  mutate(vcf = as.character(vcf)) %>% 
-  mutate(libraries = gsub("../genologin/experiment4/mutations_vcf/", "", vcf)) %>% 
-  mutate(libraries = gsub(".vcf", "", libraries)) %>% 
-  separate(libraries, c("N", "R", "AF", "NR", "REP", "caller"), sep = "_") %>% 
-  mutate_at(c("N", "R", "AF", "NR", "REP"), funs(as.numeric(gsub("[[:alpha:]]", "", .)))) %>% 
-  mutate(mutations = file.path("..", "genologin", "experiment4", "mutations_tsv", 
-                               paste0("Qrob_PM1N_1M_Qrob_Chr01", "_mutated_N", N, "_R", R, ".tsv"))) %>% 
-  group_by(N, R, AF, NR, REP, caller) %>% 
-  filter(REP %in% i) %>% 
-  do(stats = get_stats(.$vcf, .$mutations)) %>% 
-  unnest(stats) %>% 
-  select(-`.`) %>% 
-  mutate(C = round((NR*150)/refL)) %>% 
-  select(caller, N, R, AF, C, REP, FN, FP, TP, Precision, Recall) %>% 
-  write_tsv(paste0("stats.experiment4.rep", i, ".tsv"))
-stats <- list.files(pattern = "stats.experiment4")
-lapply(stats, vroom::vroom) %>% 
-  bind_rows() %>% 
-  write_tsv(paste0("stats.experiment4.tsv"))
-unlink(stats)
-```
-
-```{r, eval=F}
+```{bash, eval=F, echo=T}
+module load system/singularity-3.7.3
+singularity pull https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif
+singularity shell sylvainschmitt-singularity-r-bioinfo.latest.sif
 library(tidyverse)
-lapply(list.files("results/stats"), read_tsv) %>% 
+lapply(list.files("results/stats", full=T), read_tsv) %>% 
   bind_rows() %>% 
-  write_tsv("results/stats.tsv")
+  write_tsv("stats.tsv")
+quit()
+exit
 ```
-
