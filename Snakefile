@@ -6,10 +6,8 @@ libraries, = glob_wildcards(config["libdir"] + "/{library}_mutated_R1.fastq")
 
 rule all:
     input:
-        ## mutations ##
-        expand("results/mutations/{library}_{caller}.vcf", library=libraries, 
-                caller=["mutect2", "freebayes", "gatk", "strelka2", "varscan", "somaticsniper", "muse"])
-        ## qc ##
+        expand("results/mutations/{library}_{caller}.vcf", library=libraries, caller=config["callers"]), # mutations
+        expand("results/stats/{library}_{caller}.tsv", library=libraries, caller=config["callers"]) # stats
         # expand("results/{library}/multiqc_report.html", library=libraries)
 
 # Rules #
@@ -52,3 +50,4 @@ include: "rules/cp_vcfs.smk"
 
 ## QC ##
 include: "rules/multiqc.smk"
+include: "rules/evaluate_call.smk"

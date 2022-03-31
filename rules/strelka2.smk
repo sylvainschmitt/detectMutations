@@ -17,12 +17,12 @@ rule strelka2:
     resources:
         mem_mb=16000
     shell:
-        "rm -r results/{wildcards.lib}_{wildcards.REP}/strelka2 ; "
         "configureStrelkaSomaticWorkflow.py "
         "--normalBam {input[2]} "
         "--tumorBam {input[1]} "
         "--referenceFasta {input[0]} "
         "--runDir results/{wildcards.lib}_{wildcards.REP}/strelka2/ ; "
         "results/{wildcards.lib}_{wildcards.REP}/strelka2/runWorkflow.py -m local -j {threads} ; "
-        "zcat results/{wildcards.lib}_{wildcards.REP}/strelka2/results/variants/somatic.snvs.vcf.gz > {output}"
+        "zcat results/{wildcards.lib}_{wildcards.REP}/strelka2/results/variants/somatic.snvs.vcf.gz > {output} ; "
+        "rm -r results/{wildcards.lib}_{wildcards.REP}/strelka2"
         

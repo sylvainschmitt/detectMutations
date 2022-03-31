@@ -281,12 +281,20 @@ quality.*
 ## Quality check
 
 *Combined quality information from `QualiMap`, `Picard`, `Samtools`,
-`Trimmomatic`, and `FastQC` (see previous steps).*
+`Trimmomatic`, and `FastQC` (see previous steps) and assess calls
+performance.*
 
 ### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
 
   - Tools: [`MultiQC`](https://multiqc.info/)
   - Singularity:
     oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
+
+#### [evaluate\_call](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/evaluate_call.smk)
+
+  - Script:
+    [`evaluate_call.R`](https://github.com/sylvainschmitt/detectMutations/blob/main/scripts/evaluate_call.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-template/releases/download/0.0.1/sylvainschmitt-singularity-tidyverse-Biostrings.latest.sif>
 
 <!-- # Results -->

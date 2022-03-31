@@ -1,9 +1,11 @@
+ruleorder: varscan2vcf > bedtools_substract
+
 rule varscan2vcf:
     input:
         "results/{lib}_REP{REP}/varscan/{lib}_REP{REP}.snp",
         expand("{refdir}{reference}_REP{REP}_snps.vcf", refdir=config["refdir"], reference=config["reference"], allow_missing=True)
     output:
-        temp("results/{lib}_REP{REP,\d+}/varscan/{lib}_REP{REP}.unfiltered.vcf")
+        "results/{lib}_REP{REP,\d+}/varscan/{lib}_REP{REP}.unfiltered.vcf"
     log:
         "results/logs/varscan2vcf_{lib}_REP{REP}.log"
     benchmark:

@@ -19,5 +19,5 @@ rule muse:
     resources:
         mem_mb=16000
     shell:
-        "muse.py -f {input[0]} --tumor-bam {input[1]} --normal-bam {input[2]} -O {output} -n {threads} -w results/{wildcards.lib}_{wildcards.REP}/muse/"
+        "muse.py -f {input[0]} --tumor-bam {input[1]} --normal-bam {input[2]} -O {output} -n {threads} -w results/{wildcards.lib}_REP{wildcards.REP}/muse/"
         

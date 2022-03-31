@@ -8,3 +8,5 @@ ressources: "ressources.genologin.yaml"
 refdir: "../generateMutations/results/reference/"
 reference: "Qrob_PM1N"
 libdir: "../generateMutations/results/reads/"
+mutdir: "../generateMutations/results/mutations/"
+callers: ["mutect2", "freebayes", "gatk", "strelka2", "varscan", "somaticsniper", "muse"]
