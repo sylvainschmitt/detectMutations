@@ -5,7 +5,7 @@ ressources: "ressources.genologin.yaml"
 
 # data
 refdir: "../data/sixto/genome"
-reference: "Sru_HiFiasm.haplotype1"
+reference: "HS1_Sru_omap1_hap1_HYBRID_SCAFFOLD"
 libdir: "../data/sixto/reads/"
 intervals: "../data/sixto/genome/intervals"
 
