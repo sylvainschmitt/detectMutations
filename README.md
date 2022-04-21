@@ -1,7 +1,7 @@
-detect Mutations - Hetre
+detect Mutations - Faux de Verzy
 ================
 Sylvain Schmitt
-Jully 21, 2021
+April 4, 2022
 
   - [Installation](#installation)
   - [Usage](#usage)
@@ -12,14 +12,27 @@ Jully 21, 2021
       - [Reads](#reads)
       - [Alignments](#alignments)
       - [Mutations](#mutations)
+      - [Cross validation](#cross-validation)
+      - [Annotation](#annotation)
+      - [Reports](#reports)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
-workflow to detect mutations corresponding to the “Faux de Verzy”.
+workflow to detect mutations corresponding in two illumina libraries
+from two sectors (mutant and revertant) of accession \#354 sampled on
+March 31st 2021 in the Verzy forest.
 
-Add a simplified dag later maybe using tikz.
+<div class="figure">
 
-![](dag/dag.svg)<!-- -->
+<img src="dag/scheme.png" alt="Workflow." width="960" />
+
+<p class="caption">
+
+Workflow.
+
+</p>
+
+</div>
 
 # Installation
 
@@ -185,7 +198,7 @@ quality.*
 
 ## Mutations
 
-*Detect mutations in leaves.*
+*Detect and filter mutations in leaves.*
 
 ### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/strelka2.smk)
 
@@ -203,5 +216,102 @@ quality.*
 
   - Script:
     [`strelka2sql.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/strelka2sql.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [filter\_mutations](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/filter_mutations.smk)
+
+  - Script:
+    [`filter_mutations.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/filter_mutations.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+## Cross validation
+
+*Cross-validate mutations on one reference.*
+
+### [mutations2bed](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/mutations2bed.smk)
+
+  - Script:
+    [`mutations2bed.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/mutations2bed.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [bedtools\_getfasta](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/bedtools_getfasta.smk)
+
+  - Tools: [`bedtools
+    getfasta`](https://bedtools.readthedocs.io/en/latest/content/tools/getfasta.html)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
+
+### [blat](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/blat.smk)
+
+  - Tools:
+    [`blat`](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC187518/)
+  - Singularity:
+    docker://quay.io/biocontainers/ucsc-blat:377–ha8a8165\_4
+
+### [psl2pos](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/psl2pos.smk)
+
+  - Script:
+    [`psl2pos.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/psl2pos.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [cross\_validate](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/cross_validate.smk)
+
+  - Script:
+    [`cross_validate.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/cross_validate.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+## Annotation
+
+*Annotate mutations with genes, transposable elements, type and
+spectra.*
+
+### [genes](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/genes.smk)
+
+  - Script:
+    [`genes.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/genes.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [te](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/te.smk)
+
+  - Script:
+    [`te.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/te.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [spectra](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/spectra.smk)
+
+  - Script:
+    [`spectra.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/spectra.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+### [join all](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/join_all.smk)
+
+  - Script:
+    [`join_all.R`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/join_all.R)
+  - Singularity:
+    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+
+## Reports
+
+*Combined quality information in one documents and reprort the whole
+pipeline.*
+
+### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/multiqc.smk)
+
+  - Tools: [`MultiQC`](https://multiqc.info/)
+  - Singularity:
+    oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
+
+### [report](https://github.com/sylvainschmitt/detectMutations/blob/hetre/rules/report.smk)
+
+  - Script:
+    [`report.Rmd`](https://github.com/sylvainschmitt/detectMutations/blob/hetre/scripts/report.Rmd)
   - Singularity:
     <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>

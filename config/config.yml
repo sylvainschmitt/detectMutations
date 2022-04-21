@@ -4,11 +4,14 @@
 ressources: "ressources.genologin.yaml"
 
 # paths
-refdir: "../data/hetre/genomes/"
-libdir: "../data/hetre/reads/"
+refdir: "data/genomes/"
+libdir: "data/reads/"
 
 # samples
 references: ["Fagus_sylvatica_v3", "Fagus_sylvatica_mutant_v0", "Fagus_sylvatica_revertant_v0"]
-reference: "Fagus_sylvatica_mutant_v0"
+reference: "Fagus_sylvatica_v3"
+genes: "Fagus_sylvatica_v3.1.annot.gff"
+annotation: "Fagus_sylvatica_V3_genes_annotations_V3.csv"
+te: "FsylCur4_refTEs_wclassif_wreliable.gff"
 samples: ["mutant", "revertant"]
 comps: ["mutant_vs_revertant", "revertant_vs_mutant"]

@@ -6,10 +6,7 @@ output:
   bookdown::html_document2:
     number_sections: false  
     toc: true
-    toc_float: yes
-  bookdown::markdown_document2:
-    number_sections: false  
-    toc: true
+    toc_float: true
 linestretch: 1.5
 ---
 
@@ -21,7 +18,6 @@ library(tidyverse)
 library(vroom)
 # bayesplot
 library(dtplyr)
-library(circlize)
 theme_set(bayesplot::theme_default())
 opts_chunk$set(
   echo = F, message = F, warning = F, fig.height = 6, fig.width = 8,
@@ -29,15 +25,46 @@ opts_chunk$set(
 ```
 
 ```{r snakemake, include=FALSE}
+scheme <- normalizePath(snakemake@input[["scheme"]])
 genomes_indexes <- snakemake@input[["index"]]
 coverages_files <- snakemake@input[["coverage"]]
-circos_cov <- snakemake@input[["circos_cov"]]
-mutations <- vroom(snakemake@input[["mutations"]]) %>% 
+mutations_filtered <- vroom(snakemake@input[["mutations_filterd"]]) %>% 
   mutate(Filter = recode(Filter, "base" = "Base", "robust" = "EVS")) %>% 
   mutate(reference = recode(reference, "Fagus_sylvatica_mutant_v0" = "Mutant", 
                          "Fagus_sylvatica_revertant_v0" = "Revertant", "Fagus_sylvatica_v3" = "Ciron")) 
-cv <- vroom(snakemake@input[["cv"]])
-spectra <- vroom(snakemake@input[["spectra"]])
+mutations <- vroom(snakemake@input[["mutations"]])
+genomes <- lapply(genomes_indexes, function(i)
+       read_tsv(i, col_names = c("name", "length", "bytesindex", "basesperline", "bytesperline")) %>% 
+         mutate(file = i)) %>% 
+  bind_rows() %>% 
+  mutate(genome = gsub("results/reference/", "", file)) %>% 
+  mutate(genome = gsub(".fa.fai", "", genome)) %>% 
+  dplyr::select(genome, name, length) %>% 
+  mutate(start = 0, end = length) %>% 
+  dplyr::select(-length) %>%  
+  mutate(trsc = letters[1:nrow(.)], exon = LETTERS[1:nrow(.)]) %>% 
+  mutate(genome = recode(genome, "Fagus_sylvatica_mutant_v0" = "Mutant", 
+                         "Fagus_sylvatica_revertant_v0" = "Revertant", "Fagus_sylvatica_v3" = "Ciron"))
+coverages <- lapply(coverages_files, function(i)
+  vroom::vroom(i, col_names = c("chrom", "start", "stop", "coverage")) %>% 
+         mutate(file = i)) %>% 
+  bind_rows() %>% 
+   mutate(library = gsub("results/alns/", "", file)) %>% 
+  mutate(library = gsub(".regions.bed", "", library)) %>% 
+  separate(library, c("library", "genome"), "_on_") %>% 
+  mutate(genome = recode(genome, "Fagus_sylvatica_mutant_v0" = "Mutant", 
+                         "Fagus_sylvatica_revertant_v0" = "Revertant", "Fagus_sylvatica_v3" = "Ciron")) 
+```
+
+```{r manual, include=FALSE, eval=F}
+scheme <- "../dag/scheme.png"
+genomes_indexes <- list.files("../results/reference/", pattern = "fa.fai", full.names = T)
+coverages_files <- list.files("../results/alns/", pattern = ".regions.bed", full.names = T)
+mutations_filtered <- vroom("../results/mutations/mutations_filtered.tsv") %>% 
+  mutate(Filter = recode(Filter, "base" = "Base", "robust" = "EVS")) %>% 
+  mutate(reference = recode(reference, "Fagus_sylvatica_mutant_v0" = "Mutant", 
+                         "Fagus_sylvatica_revertant_v0" = "Revertant", "Fagus_sylvatica_v3" = "Ciron")) 
+mutations <- vroom("../results/mutations.tsv")
 genomes <- lapply(genomes_indexes, function(i)
        read_tsv(i, col_names = c("name", "length", "bytesindex", "basesperline", "bytesperline")) %>% 
          mutate(file = i)) %>% 
@@ -85,7 +112,11 @@ In addition, we took advantage of the Empirical Somatic Score (ESS) calculated b
 Finally, we cross-validated detected mutations across genomes by realigning 1-kb windows containing mutations from one genome to the other using *BLAT* (Kent, 2002) and each genome pairs.
 We assessed for each mutations its class (transition or transversion), type (*e.g.* C->T) and spectra (genomic context, *e.g.* AAT),
 and we assessed the cummulated number of mutations with increasing allelic frequency to.
-All analyses are currently done in the the [`hetre` branch of the `detectMutations` repository](https://github.com/sylvainschmitt/detectMutations/tree/hetre).
+All analyses are currently done in the the [`hetre` branch of the `detectMutations` repository](https://github.com/sylvainschmitt/detectMutations/tree/hetre) (Fig. \@ref(fig:scheme)).
+
+```{r scheme, fig.cap="Workflow for detecting mutations."}
+include_graphics(scheme)
+```
 
 # Results
 
@@ -126,7 +157,7 @@ against  2.3k to 2.6k when using conservative filtering based on the empirical v
 Most mutations showed low-allelic frequencies (< 0.15) with an higher distribution when using conservative filtering (Fig. \@ref(fig:mutfig)).
 
 ```{r muttab}
-mutations %>% 
+mutations_filtered %>% 
   group_by(reference, Filter) %>% 
   summarise(N = n()) %>% 
   reshape2::dcast(reference ~ Filter) %>% 
@@ -135,18 +166,11 @@ mutations %>%
 ```
 
 ```{r mutfig, fig.cap="Alleles-frequencies of filtered mutations."}
-ggplot(mutations, aes(mutation_AF, col = Filter), fill = NA) +
+ggplot(mutations_filtered, aes(mutation_AF, col = Filter), fill = NA) +
   geom_density(size = 1.3) +
   xlab("Allelic frequency")  +
   facet_wrap(~ reference, nrow = 2) +
   theme(legend.position = c(0.9, 0.1))
-```
-
-```{r muttaball}
-filter(mutations, reference == "Revertant", Filter == "EVS") %>% 
-  dplyr::select(CHROM, POS, REF, ALT, mutation_altCountT1, mutation_refCountT1, normal_altCountT1, normal_refCountT1, mutation_AF) %>% 
-  DT::datatable(colnames = c("scf", "pos", "ref", "alt", "rev alt", "rev ref", "mut alt", "mut ref", "AF"),
-                caption = "Mutation position on the Mutant's genome using conservative filtering based on the empirical variant score (EVS).")
 ```
 
 ## Cross-validation
@@ -154,15 +178,8 @@ filter(mutations, reference == "Revertant", Filter == "EVS") %>%
 98.7% of mutations were detected across all genomes, with only 13 not found on the Ciron's genome and 5 not found on the Mutant's genome (Tab. \@ref(tab:cv)).
 
 ```{r cv}
-cv %>%
-  reshape2::dcast(SNV ~ reference) %>%
-  mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
-  mutate(crossvalidation = "all") %>% 
-  mutate(crossvalidation = ifelse(Fagus_sylvatica_revertant_v0  != 0 & Fagus_sylvatica_v3 == 0,
-                                  "Mutant & Revertant only", crossvalidation)) %>% 
-  mutate(crossvalidation = ifelse(Fagus_sylvatica_revertant_v0  == 0 & Fagus_sylvatica_v3 != 0,
-                                  "Mutant & Ciron only", crossvalidation)) %>% 
-  group_by(crossvalidation) %>% 
+mutations %>% 
+  group_by(cross_validation) %>% 
   summarise(N = n()) %>% 
   kable(caption = "Number of mutations by cross-validation succes.", col.names = c("Cross-validation", "N"),
         format.args = list(big.mark = " "))
@@ -173,17 +190,16 @@ cv %>%
 Mutations show classic spectra with an enrichment in transversion (C->T and T->C, Fig. \@ref(fig:type)) and no specific enrichment in genomic context (Fig. \@ref(fig:spectra)).
 
 ```{r type, fig.cap="Context-dependent mutation depending on mutation types. Mutation types have been summarised into six main classes with blue columns for transversion compared to transition in red."}
-spectra %>%
-  ggplot(aes(type, fill = class)) +
+ggplot(mutations, aes(mutation_type, fill = mutation_class)) +
   geom_bar() +
-  xlab("Mutation type")
+  xlab("Mutation type") +
+  scale_fill_discrete("Mutation class")
 ```
 
 ```{r spectra, fig.cap="Context-dependent mutation spectra. Mutation types have been summarised into six main classes, and then differentiated depending on their 5’ and 3’ genomic contexts."}
-spectra %>%
-  ggplot(aes(spectra)) +
+ggplot(mutations, aes(mutation_spectra)) +
   geom_bar() +
-  facet_wrap(~ type, scales = "free_x") +
+  facet_wrap(~ mutation_type, scales = "free_x") +
   theme(axis.text.x = element_text(angle = 90), axis.title.x = element_blank()) +
   theme(panel.spacing = unit(0, "lines"), panel.border = element_rect(size = 0.25, color = "black", fill = NA))
 ```
@@ -194,17 +210,75 @@ The revertant sector shows an accumulation of $10^1$ to $10^4$ mutation from the
 
 ```{r rate, fig.cap="Cummulated number of mutations with increasing allelic frequency on the Revertant's genome."}
 mutations %>% 
-  filter(reference == "Revertant") %>% 
-  arrange(desc(mutation_AF)) %>% 
+  ungroup() %>% 
   mutate(mutations = 1) %>% 
+  group_by(mutation_af) %>% 
+  summarise(mutations = sum(mutations)) %>% 
+  ungroup() %>% 
+  arrange(desc(mutation_af)) %>% 
   mutate(cummulated_mutations = cumsum(mutations)) %>% 
-  ggplot(aes(mutation_AF, cummulated_mutations)) +
+  ggplot(aes(mutation_af, cummulated_mutations)) +
   geom_line() +
   geom_point() +
   scale_y_log10() +
   xlab("Allelic frequency") + ylab("Cummulated number of mutations")
 ```
 
+## Annotations
+
+15k mutations are within transposable elements and 2.8k within genes (Fig. \@ref(fig:anottype)).
+Among mutations within genes, most are in the mRNA, but 653 are in coding DNA sequence and 94 in untranslated regions (Fig. \@ref(fig:genetype)).
+Among mutations within genes, a vast majority are within genes coding for non-specific serine/threonine protein kinase (Fig. \@ref(fig:go)).
+
+```{r anottype, fig.cap="Type of annotations for all mutations."}
+mutations %>% 
+  mutate(type = "other") %>% 
+  mutate(type = ifelse(!is.na(te_id), "TE", type)) %>% 
+  mutate(type = ifelse(!is.na(gene_id), "gene", type)) %>% 
+  group_by(type) %>% 
+  summarise(N = n()) %>% 
+  ggplot(aes(type, N, fill = type)) +
+  geom_text(aes(label = N), vjust = 0) +
+  geom_bar(stat = "identity") +
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
+```{r genetype, fig.cap="Type of gene sequence containing the mutations."}
+mutations %>% 
+  dplyr::select(gene_type) %>% 
+  na.omit() %>% 
+  mutate(type = "mRNA") %>% 
+  mutate(type = ifelse(grepl("CDS", gene_type), "CDS", type)) %>% 
+  mutate(type = ifelse(grepl("UTR", gene_type), "UTR", type)) %>% 
+  group_by(type) %>% 
+  summarise(N = n()) %>% 
+  ggplot(aes(type, N, fill = type)) +
+  geom_text(aes(label = N), vjust = 0) +
+  geom_bar(stat = "identity") +
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
+
+```{r go, fig.cap="Gene ontology for mutations within genes. Gene ontology is shown only for termes with more than 9 mutations."}
+mutations %>% 
+  dplyr::select(annotation_defline) %>% 
+  na.omit() %>% 
+  separate(annotation_defline, c("go_id", "go"), " - ") %>% 
+  group_by(go) %>% 
+  summarise(N = n()) %>% 
+  arrange(desc(N)) %>% 
+  filter(N >= 10) %>% 
+  ggplot(aes(reorder(go, N), N)) +
+  geom_text(aes(label = N), hjust = 0) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  xlab("Gene ontology") + ylab("Count")
+```
+
 # Conclusion
 
 The dwarf tree show a very high number of low-frequency mutations (Fig. \@ref(fig:rate)) with a non-negligible number of high frequency mutations (399 with AF>0.2) that have been validated with cross-validation across genomes.
+
+# Data
+
+Final mutation dataset is available on [google drive](https://docs.google.com/spreadsheets/d/1gW43QUwcLurM-dAGIqJdjE_LTMOGBrdkvDTGSC5UvFM/edit?usp=sharing).

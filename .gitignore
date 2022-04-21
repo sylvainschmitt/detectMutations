@@ -23,8 +23,3 @@ report.html
 *.bed
 *.sam
 *.tsv
-data/trunk
-data/reads
-data/bordeaux
-data/dag
-data

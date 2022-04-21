@@ -3,16 +3,25 @@ psl <-  snakemake@input[[2]]
 tsvout <-  snakemake@output[[1]]
 
 library(tidyverse)
+library(vroom)
 
-read_tsv(psl, skip = 5, 
-                col_names = c("matches", "misMatches", "repMatches", "nCount", 
-                              "qNumInsert", "qBaseInsert",
-                              "tNumInsert", "tBaseInsert", "strand", 
-                              "qName", "qSize", "qStart", "qEnd", 
-                              "tName", "tSize", "tStart", "tEnd", 
-                              "blockCount", "blockSizes", "qStarts", "tStarts"), 
-                col_types = cols(blockSizes = col_character(), tStarts = col_character())) %>% 
-  separate(qName, c("CHROM", "Start", "Stop"), convert = T) %>% 
+psl <- "results/mutations/Fagus_sylvatica_v3_mutations_on_Fagus_sylvatica_mutant_v0.psl"
+tsvin <- "results/mutations/Fagus_sylvatica_v3_mutations.tsv"
+
+aln <- vroom(psl, skip = 5, 
+                    col_names = c("matches", "misMatches", "repMatches", "nCount", 
+                                  "qNumInsert", "qBaseInsert",
+                                  "tNumInsert", "tBaseInsert", "strand", 
+                                  "qName", "qSize", "qStart", "qEnd", 
+                                  "tName", "tSize", "tStart", "tEnd", 
+                                  "blockCount", "blockSizes", "qStarts", "tStarts"), 
+                    col_types = cols(blockSizes = col_character(), tStarts = col_character()))
+
+aln <- sample_n(aln, 100)
+
+aln <- aln %>% 
+  separate(qName, c("CHROM", "StartStop"), ":") %>% 
+  separate(StartStop, c("Start", "Stop"), "-", convert = T) %>% 
   left_join(read_tsv(tsvin)) %>% 
   mutate(POS = POS) %>% 
   mutate(POS0 = POS-Start) %>%
@@ -27,5 +36,6 @@ read_tsv(psl, skip = 5,
   filter(posSNV <= tEnd) %>% 
   dplyr::select(SNV, tName, posSNV, tumor, REF, ALT) %>% 
   dplyr::rename(POS = posSNV, CHROM = tName) %>% 
-  unique() %>% 
-  write_tsv(tsvout)
+  unique()
+
+vroom_write(aln, tsvout)

@@ -5,15 +5,12 @@ bed <-  snakemake@output[[1]]
 tsvout <-  snakemake@output[[2]]
 N <- snakemake@params[['N']]
 ref <- snakemake@params[['ref']]
-minAF <- snakemake@params[['minAF']]
 
 library(tidyverse)
 
 mutations <- read_tsv(tsv)
 mutations <- mutations %>% 
   filter(reference == ref) %>% 
-  filter(mutation_AF > minAF) %>% 
-  filter(Filter == "robust") %>% 
   mutate(SNV = paste0(CHROM, "#", POS)) %>% 
   select(SNV, CHROM, POS, REF, ALT, tumor) %>% 
   mutate(Start = POS - N-1, Stop = POS + N)

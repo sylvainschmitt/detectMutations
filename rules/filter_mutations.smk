@@ -2,7 +2,7 @@ rule filter_mutations:
     input:
         "results/mutations/mutations.raw.sql"
     output:
-        "results/mutations/mutations.tsv",
+        "results/mutations/mutations_filtered.tsv",
     log:
         "results/logs/filter_mutations.log"
     benchmark:
