@@ -38,9 +38,9 @@ include: "rules/filter_mutations.smk"
 ## Cross validation ##
 include: "rules/mutations2bed.smk"
 include: "rules/bedtools_getfasta.smk"
-# include: "rules/blat.smk"
-# include: "rules/psl2pos.smk"
-# include: "rules/cross_validate.smk"
+include: "rules/blat.smk"
+include: "rules/psl2pos.smk"
+include: "rules/cross_validate.smk"
 
 ## Annotations ##
 include: "rules/te.smk"

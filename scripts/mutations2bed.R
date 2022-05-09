@@ -8,9 +8,14 @@ ref <- snakemake@params[['ref']]
 
 library(tidyverse)
 
+# ref <- "Fagus_sylvatica_revertant_v0"
+# tsv <- "./results/mutations/mutations_filtered.tsv"
+# N <- 500
+
 mutations <- read_tsv(tsv)
 mutations <- mutations %>% 
   filter(reference == ref) %>% 
+  filter(Filter == "robust") %>%
   mutate(SNV = paste0(CHROM, "#", POS)) %>% 
   select(SNV, CHROM, POS, REF, ALT, tumor) %>% 
   mutate(Start = POS - N-1, Stop = POS + N)

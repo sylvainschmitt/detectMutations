@@ -13,6 +13,6 @@ rule mutations2bed:
         "https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif"
     params:
         ref=config["reference"],
-        N=500
+        N=100
     script:
         "../scripts/mutations2bed.R"

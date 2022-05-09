@@ -5,8 +5,8 @@ tsvout <-  snakemake@output[[1]]
 library(tidyverse)
 library(vroom)
 
-psl <- "results/mutations/Fagus_sylvatica_v3_mutations_on_Fagus_sylvatica_mutant_v0.psl"
-tsvin <- "results/mutations/Fagus_sylvatica_v3_mutations.tsv"
+# psl <- "results/mutations/Fagus_sylvatica_v3_mutations_on_Fagus_sylvatica_mutant_v0.psl"
+# tsvin <- "results/mutations/Fagus_sylvatica_v3_mutations.tsv"
 
 aln <- vroom(psl, skip = 5, 
                     col_names = c("matches", "misMatches", "repMatches", "nCount", 

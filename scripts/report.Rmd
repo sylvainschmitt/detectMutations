@@ -152,8 +152,8 @@ ggplot(coverages,  aes(coverage)) +
 
 ## Mutations
 
-We found 33k to 36k mutations with base filtering across genomes, 
-against  2.3k to 2.6k when using conservative filtering based on the empirical variant score (EVS) from *Strelka2* (Tab \@ref(tab:muttab)).
+We found 970 to 1,272 mutations with base filtering across genomes, 
+against  328 to 465 when using conservative filtering based on the empirical variant score (EVS) from *Strelka2* (Tab \@ref(tab:muttab)).
 Most mutations showed low-allelic frequencies (< 0.15) with an higher distribution when using conservative filtering (Fig. \@ref(fig:mutfig)).
 
 ```{r muttab}
@@ -181,6 +181,7 @@ ggplot(mutations_filtered, aes(mutation_AF, col = Filter), fill = NA) +
 mutations %>% 
   group_by(cross_validation) %>% 
   summarise(N = n()) %>% 
+  na.omit() %>% 
   kable(caption = "Number of mutations by cross-validation succes.", col.names = c("Cross-validation", "N"),
         format.args = list(big.mark = " "))
 ```
@@ -206,7 +207,7 @@ ggplot(mutations, aes(mutation_spectra)) +
 
 ## Rate
 
-The revertant sector shows an accumulation of $10^1$ to $10^4$ mutation from the mutant sector (Fig. \@ref(fig:rate)).
+The revertant sector shows an accumulation of $10^1$ to $10^3$ mutation from the mutant sector (Fig. \@ref(fig:rate)).
 
 ```{r rate, fig.cap="Cummulated number of mutations with increasing allelic frequency on the Revertant's genome."}
 mutations %>% 
@@ -267,7 +268,6 @@ mutations %>%
   group_by(go) %>% 
   summarise(N = n()) %>% 
   arrange(desc(N)) %>% 
-  filter(N >= 10) %>% 
   ggplot(aes(reorder(go, N), N)) +
   geom_text(aes(label = N), hjust = 0) +
   geom_bar(stat = "identity") +

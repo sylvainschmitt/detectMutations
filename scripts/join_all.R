@@ -20,15 +20,7 @@ mutations <- mutations %>%
   filter(reference == ref) %>% 
   mutate(SNV = paste0(CHROM, "#", POS))
 
-validation <- validation %>%
-  reshape2::dcast(SNV ~ reference) %>% 
-  dplyr::select(-Fagus_sylvatica_v3) %>% 
-  mutate(validation  = "all") %>% 
-  mutate(validation = ifelse(Fagus_sylvatica_mutant_v0 == 0, "only revertant", validation)) %>% 
-  mutate(validation = ifelse(Fagus_sylvatica_revertant_v0 == 0, "only mutant", validation)) %>% 
-  dplyr::select(SNV, validation)
-
-mutations <- left_join(mutations, validation)
+mutations <- left_join(mutations, select(validation, SNV, validation))
 
 mutations <- left_join(mutations, spectra)
 
