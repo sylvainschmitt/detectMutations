@@ -11,7 +11,7 @@ rule gatk_genotypegvcfs:
     benchmark:
         "results/benchmarks/gatk_genotypegvcfs_{lib}_REP{REP}.benchmark.txt"
     singularity: 
-        "docker://broadinstitute/gatk"
+        "docker://broadinstitute/gatk:4.2.6.1"
     shell:
         "gatk GenotypeGVCFs -R {input[0]} -V {input[1]} -O {output}"
         

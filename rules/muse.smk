@@ -14,7 +14,7 @@ rule muse:
     benchmark:
         "results/benchmarks/muse_{lib}_REP{REP}.benchmark.txt"
     singularity: 
-        "docker://opengenomics/muse"
+        "docker://opengenomics/muse:v0.1.1"
     threads: 4
     resources:
         mem_mb=16000

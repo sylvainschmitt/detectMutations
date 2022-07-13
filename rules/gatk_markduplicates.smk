@@ -10,7 +10,7 @@ rule gatk_markduplicates:
     benchmark:
         "results/benchmarks/gatk_markduplicates_{lib}_REP{REP}.benchmark.txt"
     singularity: 
-        "docker://broadinstitute/gatk"
+        "docker://broadinstitute/gatk:4.2.6.1"
     resources:
         mem_mb=16000
     shell:

@@ -8,6 +8,6 @@ rule gatk_idx:
     benchmark:
         "results/benchmarks/gatk_idx_REP{REP}.benchmark.txt"
     singularity: 
-        "docker://broadinstitute/gatk"
+        "docker://broadinstitute/gatk:4.2.6.1"
     shell:
         "gatk IndexFeatureFile -I {input}"

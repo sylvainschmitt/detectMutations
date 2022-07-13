@@ -1,14 +1,17 @@
-# detectMutation 0.2.0.9018
+# detectMutation 0.1.0.9019
+* versioning images for reproductibility
+
+# detectMutation 0.1.0.9018
 * evaluate_call
 
-# detectMutation 0.2.0.9017
+# detectMutation 0.1.0.9017
 * repetitions with random genome sections
 
-# detectMutation 0.2.0.9016
+# detectMutation 0.1.0.9016
 * rm results from README
 * SI: high/low C fig
 
-# detectMutation 0.2.0.9016
+# detectMutation 0.1.0.9016
 * correct versioning
 * correct threading and memory
 * new ecperiment

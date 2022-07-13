@@ -8,7 +8,7 @@ rule qualimap:
     benchmark:
         "results/benchmarks/qualimap_{library}.benchmark.txt"
     singularity: 
-        "docker://pegi3s/qualimap"
+        "docker://pegi3s/qualimap:2.2.1"
     threads: 4
     resources:
         mem_mb=16000

@@ -8,6 +8,6 @@ rule gatk_dict:
     benchmark:
         "results/benchmarks/gatk_dict_REP{REP}.benchmark.txt"
     singularity: 
-        "docker://broadinstitute/gatk"
+        "docker://broadinstitute/gatk:4.2.6.1"
     shell:
         "gatk CreateSequenceDictionary R={input} O={output}"

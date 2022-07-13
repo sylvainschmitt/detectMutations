@@ -14,7 +14,7 @@ rule gatk_mutect2:
     benchmark:
         "results/benchmarks/gatk_mutect2_{lib}_REP{REP}.benchmark.txt"
     singularity: 
-        "docker://broadinstitute/gatk"
+        "docker://broadinstitute/gatk:4.2.6.1"
     shell:
         "gatk Mutect2 -R {input[0]} -I {input[1]} -tumor {wildcards.lib}_REP{wildcards.REP}_mutated  -I {input[2]} -normal {wildcards.lib}_REP{wildcards.REP}_base "
         " --panel-of-normals {input[3]} -dont-use-soft-clipped-bases true -O {output}"

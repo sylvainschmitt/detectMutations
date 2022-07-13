@@ -125,13 +125,13 @@ module purge ; module load system/R-3.6.2 ; R # to build results
 
   - Tools: [`gatk
     CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360036729911-CreateSequenceDictionary-Picard-)
-  - Singularity: docker://broadinstitute/gatk
+  - Singularity: docker://broadinstitute/gatk:4.2.6.1
 
 ### [gatk\_idx](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_idx.smk)
 
   - Tools: [`gatk
     IndexFeatureFile`](https://gatk.broadinstitute.org/hc/en-us/articles/360037428111-IndexFeatureFile)
-  - Singularity: docker://broadinstitute/gatk
+  - Singularity: docker://broadinstitute/gatk:4.2.6.1
 
 ## Reads
 
@@ -179,7 +179,7 @@ quality.*
 
   - Tools: [`gatk
     MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
-  - Singularity: docker://broadinstitute/gatk
+  - Singularity: docker://broadinstitute/gatk:4.2.6.1
 
 ### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/samtools_index_md.smk)
 
@@ -206,7 +206,7 @@ quality.*
 
   - Tools:
     [`QualiMap`](http://qualimap.conesalab.org/doc_html/command_line.html)
-  - Singularity: docker://pegi3s/qualimap
+  - Singularity: docker://pegi3s/qualimap:2.2.1
 
 ## Detection
 
@@ -216,7 +216,7 @@ quality.*
 
   - Tools: [`gatk
     Mutect2`](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
-  - Singularity: docker://broadinstitute/gatk
+  - Singularity: docker://broadinstitute/gatk:4.2.6.1
 
 #### [freebayes](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/freebayes.smk)
 
@@ -228,13 +228,13 @@ quality.*
 
   - Tools: [`gatk
     HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-  - Singularity: docker://broadinstitute/gatk
+  - Singularity: docker://broadinstitute/gatk:4.2.6.1
 
 #### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/gatk_genotypegvcfs.smk)
 
   - Tools: [`gatk
     GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-  - Singularity: docker://broadinstitute/gatk
+  - Singularity: docker://broadinstitute/gatk:4.2.6.1
 
 #### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/main/rules/strelka2.smk)
 
@@ -264,7 +264,7 @@ quality.*
 
   - Tools:
     [`MuSe`](https://bioinformatics.mdanderson.org/public-software/muse/)
-  - Singularity: docker://opengenomics/muse
+  - Singularity: docker://opengenomics/muse:v0.1.1
 
 ## Mutations
 
