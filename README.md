@@ -3,6 +3,8 @@ detect Mutations
 Sylvain Schmitt
 April 20, 2021
 
+[![DOI](https://zenodo.org/badge/362585294.svg)](https://zenodo.org/badge/latestdoi/362585294)
+
   - [Installation](#installation)
   - [Usage](#usage)
       - [Get data](#get-data)
