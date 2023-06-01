@@ -3,6 +3,8 @@ detect Mutations - Angela
 Sylvain Schmitt
 Jully 21, 2021
 
+[![DOI](https://zenodo.org/badge/362585294.svg)](https://zenodo.org/badge/latestdoi/362585294)
+
   - [Installation](#installation)
   - [Usage](#usage)
       - [Locally](#locally)
