@@ -3,6 +3,8 @@ detect Mutations - Sixto
 Sylvain Schmitt
 March 29, 2022
 
+[![DOI](https://zenodo.org/badge/362585294.svg)](https://zenodo.org/badge/latestdoi/362585294)
+
   - [Installation](#installation)
   - [Usage](#usage)
       - [Locally](#locally)
