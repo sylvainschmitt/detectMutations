@@ -1,12 +1,12 @@
 rule gatk_dict:
     input:
-        expand("results/reference/{reference}.fa", reference=config["reference"])
+        "results/reference/{reference}.fa"
     output:
-        expand("results/reference/{reference}.dict", reference=config["reference"])
+        "results/reference/{reference}.dict"
     log:
-        "results/logs/gatk_dict.log"
+        "results/logs/gatk_dict_{reference}.log"
     benchmark:
-        "results/benchmarks/gatk_dict.benchmark.txt"
+        "results/benchmarks/gatk_dict_{reference}.benchmark.txt"
     singularity: 
         "docker://broadinstitute/gatk"
     threads: 1

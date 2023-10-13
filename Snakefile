@@ -1,60 +1,29 @@
 configfile: "config/config.yml"
-# configfile: "config/config.dag.yml"
-
-intervals, = glob_wildcards(config["intervals"] + "/{interval}")
 
 rule all:
     input:
-        # "results/hz/shared_hz.vcf.gz", # hz
-        # "results/mutations_cambium/cambium_nonhz_mutations.sql", # mut cambium
-        # "results/mutations_leaf/leaf_nonhz_mutations.sql", # mut leaf
-        # "results/multiqc_report.html" #qc
+        # expand("results/count/{library}_on_angela.tsv",
+        #         library=config["angela_libs"]),
+        "results/angela.vcf",
+        "results/sixto.vcf"
 
 # Rules #
 
-## Reference ##
-include: "rules/cp_reference.smk"
-include: "rules/bwa_index.smk"
-include: "rules/samtools_faidx.smk"
-include: "rules/gatk_dict.smk"
-include: "rules/bedtools_makewindows.smk"
-include: "rules/bedtools_nuc.smk"
-include: "rules/busco.smk"
-
-## Reads ##
-include: "rules/trimmomatic.smk"
-include: "rules/fastqc.smk"
+## Reference & Reads ##
+include: "rules/cp_reference.py"
+include: "rules/bwa_index.py"
+include: "rules/samtools_faidx.py"
+include: "rules/gatk_dict.py"
+include: "rules/trimmomatic.py"
 
 ## Alignments ##
-include: "rules/bwa_mem.smk"
-include: "rules/samtools_view.smk"
-include: "rules/samtools_sort.smk"
-include: "rules/samtools_index.smk"
-include: "rules/gatk_markduplicates.smk"
-include: "rules/samtools_view_md.smk"
-include: "rules/samtools_index_md.smk"
-include: "rules/samtools_stats.smk"
-include: "rules/mosdepth.smk"
-include: "rules/mosdepth_regions.smk"
+include: "rules/bwa_mem.py"
+include: "rules/samtools_view.py"
+include: "rules/samtools_sort.py"
+include: "rules/samtools_index.py"
 
-## Heterozygosity ##
-include: "rules/gatk_haplotypecaller.smk"
-include: "rules/gatk_gathergvcfs.smk"
-include: "rules/gatk_genomicsdbimport.smk"
-include: "rules/gatk_genotypegvcfs.smk"
-include: "rules/gatk_gathervcfs.smk"
-include: "rules/bcftools_biallelic.smk"
-include: "rules/gatk_snps.smk"
-include: "rules/plink_nonmissing.smk"
-include: "rules/bcftools_shared.smk"
-include: "rules/jellyfish.smk"
-
-## Mutations ##
-include: "rules/strelka2.smk"
-include: "rules/bedtools_subtract_hz.smk"
-include: "rules/strelka2tsv.smk"
-# include: "rules/strelka2sql_cambium.smk"
-# include: "rules/strelka2sql_leaf.smk"
-
-## QC ##
-include: "rules/multiqc.smk"
+## Variants ##
+include: "rules/gatk_haplotypecaller.py"
+include: "rules/gatk_genomicdbimport_angela.py"
+include: "rules/gatk_genomicdbimport_sixto.py"
+include: "rules/gatk_genotypegvcfs.py"

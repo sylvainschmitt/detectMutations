@@ -1,36 +1,30 @@
-detect Mutations - Angela
+detect Mutations - Fruits
 ================
 Sylvain Schmitt
-Jully 21, 2021
+September 29, 2023
 
-[![DOI](https://zenodo.org/badge/362585294.svg)](https://zenodo.org/badge/latestdoi/362585294)
-
-  - [Installation](#installation)
-  - [Usage](#usage)
-      - [Locally](#locally)
-      - [HPC](#hpc)
-  - [Workflow](#workflow)
-      - [Reference](#reference)
-      - [Reads](#reads)
-      - [Alignments](#alignments)
-      - [Heterozygosity](#heterozygosity)
-      - [Mutations](#mutations)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Locally](#locally)
+  - [HPC](#hpc)
+- [Workflow](#workflow)
+  - [Reference](#reference)
+  - [Reads](#reads)
+  - [Alignments](#alignments)
+  - [Variants](#variants)
+- [Results](#results)
 
 [`singularity` &
 `snakemake`](https://github.com/sylvainschmitt/snakemake_singularity)
-workflow to detect mutations corresponding to Angela sampling scheme.
-
-![](dag/dag.minimal.svg)<!-- -->
+workflow to detect mutations in fruits from Angela and Sixto.
 
 # Installation
 
-  - [x] Python ≥3.5
-  - [x] Snakemake ≥5.24.1
-  - [x] Golang ≥1.15.2
-  - [x] Singularity ≥3.7.3
-  - [x] This workflow
-
-<!-- end list -->
+- [x] Python ≥3.5
+- [x] Snakemake ≥5.24.1
+- [x] Golang ≥1.15.2
+- [x] Singularity ≥3.7.3
+- [x] This workflow
 
 ``` bash
 # Python
@@ -58,7 +52,7 @@ cd ${GOPATH}/src/github.com/sylabs/singularity && \
 # detect Mutations
 git clone git@github.com:sylvainschmitt/detectMutations.git
 cd detectMutations
-git checkout angela
+git checkout fruits
 ```
 
 # Usage
@@ -84,237 +78,179 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 ## Reference
 
-*Copy, index, and assess reference.*
+*Copy and index reference.*
 
-### [cp\_reference](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/cp_reference.smk)
+### [cp_reference](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/cp_reference.py)
 
-  - Tools: `cp`
+- Tools: `cp`
 
-### [bwa\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_index.smk)
+### [bwa_index](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/bwa_index.py)
 
-  - Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+- Tools: [`BWA index`](http://bio-bwa.sourceforge.net/bwa.shtml)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
-### [samtools\_faidx](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_faidx.smk)
+### [samtools_faidx](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_faidx.py)
 
-  - Tools: [`samtools
-    faidx`](http://www.htslib.org/doc/samtools-faidx.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+- Tools:
+  [`samtools faidx`](http://www.htslib.org/doc/samtools-faidx.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [gatk\_dict](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_dict.smk)
+### [gatk_dict](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/gatk_dict.py)
 
-  - Tools: [`gatk
-    CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422891-CreateSequenceDictionary-Picard-)
-  - Singularity: docker://broadinstitute/gatk
-
-### [bedtools\_makewindows](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_makewindows.smk)
-
-  - Tools: [`bedtools
-    makewindows]`](https://bedtools.readthedocs.io/en/latest/content/tools/makewindows%5D.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### [bedtools\_nuc](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_nuc.smk)
-
-  - Tools: [`bedtools
-    nuc`](https://bedtools.readthedocs.io/en/latest/content/tools/nuc.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### [busco](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/busco.smk)
-
-  - Tools: [`busco`](https://busco.ezlab.org/busco_userguide.html)
-  - Singularity: docker://ezlabgva/busco:v5.2.2\_cv2
+- Tools:
+  [`gatk CreateSequenceDictionary`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422891-CreateSequenceDictionary-Picard-)
+- Singularity: docker://broadinstitute/gatk
 
 ## Reads
 
-*Trim and quality check reads.*
+*Trim reads.*
 
-### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/trimmomatic.smk)
+### [trimmomatic](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/trimmomatic.py)
 
-  - Tools:
-    [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/trimmomatic/trimmomatic:latest
-
-### [fastqc](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/fastqc.smk)
-
-  - Tools:
-    [`fastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/)
-  - Singularity: docker://biocontainers/fastqc:v0.11.9\_cv8
-
-### [multiqc](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/multiqc.smk)
-
-  - Tools: [`MultiQC`](https://multiqc.info/)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/multiqc/multiqc:latest
+- Tools:
+  [`Trimmomatic`](http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/TrimmomaticManual_V0.32.pdf)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/trimmomatic/trimmomatic:latest
 
 ## Alignments
 
 *Align reads against reference, mark duplicated, and report alignment
 quality.*
 
-### [bwa\_mem](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bwa_mem.smk)
+### [bwa_mem](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/bwa_mem.py)
 
-  - Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
+- Tools: [`BWA mem`](http://bio-bwa.sourceforge.net/bwa.shtml)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/bwa/bwa:latest
 
-### [samtools\_view](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view.smk)
+### [samtools_view](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_view.py)
 
-  - Tools: [`Samtools
-    view`](http://www.htslib.org/doc/samtools-view.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+- Tools: [`Samtools view`](http://www.htslib.org/doc/samtools-view.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_sort](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_sort.smk)
+### [samtools_sort](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_sort.py)
 
-  - Tools: [`Samtools
-    sort`](http://www.htslib.org/doc/samtools-sort.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+- Tools: [`Samtools sort`](http://www.htslib.org/doc/samtools-sort.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_index](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index.smk)
+### [samtools_index](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_index.py)
 
-  - Tools: [`Samtools
-    index`](http://www.htslib.org/doc/samtools-index.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+- Tools:
+  [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [gatk\_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_markduplicates.smk)
+### [gatk_markduplicates](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/gatk_markduplicates.py)
 
-  - Tools: [`gatk
-    MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
-  - Singularity: docker://broadinstitute/gatk
+- Tools:
+  [`gatk MarkDuplicates`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
+- Singularity: docker://broadinstitute/gatk
 
-### [samtools\_view\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_view_md.smk)
+### [samtools_view_md](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_view_md.py)
 
-  - Tools: [`Samtools
-    view`](http://www.htslib.org/doc/samtools-view.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+- Tools: [`Samtools view`](http://www.htslib.org/doc/samtools-view.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_index\_md](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_index_md.smk)
+### [samtools_index_md](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_index_md.py)
 
-  - Tools: [`Samtools
-    index`](http://www.htslib.org/doc/samtools-index.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+- Tools:
+  [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [samtools\_stats](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/samtools_stats.smk)
+## Variants
 
-  - Tools: [`Samtools
-    stats`](http://www.htslib.org/doc/samtools-stats.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
+*Detect mutations.*
 
-### [mosdepth](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/mosdepth.smk)
+### [samtools_mpileup_angela](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_mpileup_angela.py)
 
-  - Tools: [`mosdepth`](https://github.com/brentp/mosdepth)
-  - Singularity:
-    docker://quay.io/biocontainers/mosdepth:0.2.4–he527e40\_0
+- Tools:
+  [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-### [jellyfish](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/jellyfish.smk)
+### [samtools_mpileup_sixto](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/samtools_mpileup_sixto.py)
 
-  - Tools: [`jellyfish`](https://github.com/gmarcais/Jellyfish)
-  - Singularity:
-    docker:/quay.io/biocontainers/jellyfish:1.1.12–h6bb024c\_1
+- Tools:
+  [`Samtools index`](http://www.htslib.org/doc/samtools-index.html)
+- Singularity:
+  oras://registry.forgemia.inra.fr/gafl/singularity/samtools/samtools:latest
 
-## Heterozygosity
+### [bcftools_vcf](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/bcftools_vcf.py)
 
-*Detect heterozygosity.*
+### [gatk_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/gatk_haplotypecaller.py)
 
-### [gatk\_haplotypecaller](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_haplotypecaller.smk)
+- Tools:
+  [`gatk HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
+- Singularity: docker://broadinstitute/gatk
 
-  - Tools: [`gatk
-    HaplotypeCaller`](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-  - Singularity: docker://broadinstitute/gatk
+### [gatk_genomicdbimport](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/gatk_genomicdbimport.py)
 
-### [gatk\_gathergvcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_gathergvcfs.smk)
+- Tools:
+  [`gatk GenomicsDBImport`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
+- Singularity: docker://broadinstitute/gatk
 
-  - Tools: [`gatk
-    GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
-  - Singularity: docker://broadinstitute/gatk
+### [gatk_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/ggatk_genotypegvcfs.py)
 
-### [gatk\_genomicsdbimport](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_genomicsdbimport.smk)
+- Tools:
+  [`gatk GenomicsDBImport`](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-)
+- Singularity: docker://broadinstitute/gatk
 
-  - Tools: [`gatk
-    GenomicsDBImport`](https://gatk.broadinstitute.org/hc/en-us/articles/360036883491-GenomicsDBImport)
-  - Singularity: docker://broadinstitute/gatk
+### [strelka2_angela](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/strelka2_angela.py)
 
-### [gatk\_genotypegvcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_genotypegvcfs.smk)
+- Tools:
+  [`strelka2`](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/quickStart.md)
+- Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-  - Tools: [`gatk
-    GenotypeGVCFs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037057852-GenotypeGVCFs)
-  - Singularity: docker://broadinstitute/gatk
+### [strelka2_sixto](https://github.com/sylvainschmitt/detectMutations/blob/fruits/rules/strelka2_sixto.py)
 
-### [gatk\_gathervcfs](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_gathervcfs.smk)
+- Tools:
+  [`strelka2`](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/quickStart.md)
+- Singularity: docker://quay.io/wtsicgp/strelka2-manta
 
-  - Tools: [`gatk
-    GatherVcfs`](https://gatk.broadinstitute.org/hc/en-us/articles/360037422071-GatherVcfs-Picard-)
-  - Singularity: docker://broadinstitute/gatk
+# Results
 
-### [bcftools\_biallelic](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bcftools_biallelic.smk)
+    ## Scanning file to determine attributes.
+    ## File attributes:
+    ##   meta lines: 92
+    ##   header_line: 93
+    ##   variant count: 35781
+    ##   column count: 157
+    ## Meta line 92 read in.
+    ## All meta lines processed.
+    ## gt matrix initialized.
+    ## Character matrix gt created.
+    ##   Character matrix gt rows: 35781
+    ##   Character matrix gt cols: 157
+    ##   skip: 0
+    ##   nrows: 35781
+    ##   row_num: 0
+    ## Processed variant 1000Processed variant 2000Processed variant 3000Processed variant 4000Processed variant 5000Processed variant 6000Processed variant 7000Processed variant 8000Processed variant 9000Processed variant 10000Processed variant 11000Processed variant 12000Processed variant 13000Processed variant 14000Processed variant 15000Processed variant 16000Processed variant 17000Processed variant 18000Processed variant 19000Processed variant 20000Processed variant 21000Processed variant 22000Processed variant 23000Processed variant 24000Processed variant 25000Processed variant 26000Processed variant 27000Processed variant 28000Processed variant 29000Processed variant 30000Processed variant 31000Processed variant 32000Processed variant 33000Processed variant 34000Processed variant 35000Processed variant: 35781
+    ## All variants processed
 
-  - Tools:
-    [`bcftools`](https://samtools.github.io/bcftools/bcftools.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bcftools/bcftools:latest
+![](README_files/figure-gfm/angelares-1.png)<!-- -->![](README_files/figure-gfm/angelares-2.png)<!-- -->![](README_files/figure-gfm/angelares-3.png)<!-- -->
 
-### [gatk\_snps](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/gatk_snps.smk)
+    ## Scanning file to determine attributes.
+    ## File attributes:
+    ##   meta lines: 73
+    ##   header_line: 74
+    ##   variant count: 14576
+    ##   column count: 91
+    ## Meta line 73 read in.
+    ## All meta lines processed.
+    ## gt matrix initialized.
+    ## Character matrix gt created.
+    ##   Character matrix gt rows: 14576
+    ##   Character matrix gt cols: 91
+    ##   skip: 0
+    ##   nrows: 14576
+    ##   row_num: 0
+    ## Processed variant 1000Processed variant 2000Processed variant 3000Processed variant 4000Processed variant 5000Processed variant 6000Processed variant 7000Processed variant 8000Processed variant 9000Processed variant 10000Processed variant 11000Processed variant 12000Processed variant 13000Processed variant 14000Processed variant: 14576
+    ## All variants processed
 
-  - Tools: [`gatk
-    VariantFiltration`](https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration)
-  - Singularity: docker://broadinstitute/gatk
-
-### [plink\_nonmissing](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/plink_nonmissing.smk)
-
-  - Tools: [`plink`](https://www.cog-genomics.org/plink/)
-  - Singularity:
-    docker://quay.io/biocontainers/plink:1.90b6.21–h779adbc\_1
-
-### [bcftools\_shared](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bcftools_shared.smk)
-
-  - Tools:
-    [`bcftools`](https://samtools.github.io/bcftools/bcftools.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bcftools/bcftools:latest
-
-## Mutations
-
-*Detect mutations in both cambiums and leaves.*
-
-### [strelka2](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2.smk)
-
-  - Tools: [`Strelka2`](https://github.com/Illumina/strelka)
-  - Singularity: docker://quay.io/wtsicgp/strelka2-manta
-
-### [bedtools\_subtract\_hz](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/bedtools_subtract_hz.smk)
-
-  - Tools: [`bedtools
-    subtract`](https://bedtools.readthedocs.io/en/latest/content/tools/subtract.html)
-  - Singularity:
-    oras://registry.forgemia.inra.fr/gafl/singularity/bedtools/bedtools:latest
-
-### [strelka2tsv](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2tsv.smk)
-
-  - Script:
-    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
-  - Singularity:
-    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
-
-### [strelka2tsv\_cambium](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2sql_cambium.smk)
-
-  - Script:
-    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
-  - Singularity:
-    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
-
-### [strelka2sql\_leaf](https://github.com/sylvainschmitt/detectMutations/blob/angela/rules/strelka2sql_leaf.smk)
-
-  - Script:
-    [`strelka2tsv.R`](https://github.com/sylvainschmitt/detectMutations/blob/angela/scripts/strelka2tsv.R)
-  - Singularity:
-    <https://github.com/sylvainschmitt/singularity-r-bioinfo/releases/download/0.0.3/sylvainschmitt-singularity-r-bioinfo.latest.sif>
+![](README_files/figure-gfm/sixtores-1.png)<!-- -->![](README_files/figure-gfm/sixtores-2.png)<!-- -->![](README_files/figure-gfm/sixtores-3.png)<!-- -->

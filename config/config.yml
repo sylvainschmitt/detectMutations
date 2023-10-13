@@ -4,21 +4,53 @@
 ressources: "ressources.genologin.yaml"
 
 # data
-refdir: "../data/angela/genome"
-reference: "Dgu_HS1_HYBRID_SCAFFOLD"
-libdir: "../data/angela/reads/"
-intervals: "../data/angela/genome/intervals"
+genome_dir: "data/genomes" # replae within code
 
 # libraries
-hz: ["T2", "T3", "T4", "AS1", "AS2", "AS3", "AL1", "AL2", "AL3",
-     "BS1", "BS2", "BS3", "BL1", "BL2", "BL3", "CS1", "CS2", "CS3", 
-     "CL1", "CL2", "CL3", "DS1", "DS2", "DS3", "DL1", "DL2", "DL3", 
-     "ES1", "ES2", "ES3", "EL1", "EL2", "EL3"]
-cambium: ["T2", "T3", "T4"]
-cambium_comp: ["T2_vs_T3", "T2_vs_T4", "T3_vs_T2", "T3_vs_T4", "T4_vs_T2", "T4_vs_T3"]
-cambium_ref: "T2"
-leaf: ["AS1", "AS2", "AS3", "AL1", "AL2", "AL3", "BS1", "BS2", "BS3",
-       "BL1", "BL2", "BL3", "CS1", "CS2", "CS3", "CL1", "CL2", "CL3", 
-       "DS1", "DS2", "DS3", "DL1", "DL2", "DL3", "ES1", "ES2", "ES3", 
-       "EL1", "EL2", "EL3"]
-leaf_cov: "DS2"
+angela_libs: ["DG_A_1_es", "DG_A_4_es", "DG_B_14_es", "DG_B_14_co", "DG_B_14_ec",
+              "DG_B_15_es", "DG_B_15_co", "DG_B_15_ec", "DG_B_16_es", "DG_B_16_co",
+              "DG_B_16_ec", "DG_B_17_es", "DG_A_4_co", "DG_B_17_co", "DG_B_17_ec",
+              "DG_B_18_es", "DG_B_18_co", "DG_B_18_ec", "DG_B_19_es", "DG_B_19_co",
+              "DG_B_19_ec", "DG_B_20_es", "DG_B_20_co", "DG_B_20_ec", "DG_B_21_es", 
+              "DG_B_21_co", "DG_B_21_ec", "DG_B_22_es", "DG_B_22_co", "DG_B_22_ec",
+              "DG_B_23_es", "DG_B_23_co", "DG_B_23_ec", "DG_A_5_es", "DG_B_24_es", 
+              "DG_B_24_co", "DG_B_24_ec", "DG_B_25_es", "DG_B_25_co", "DG_B_25_ec", 
+              "DG_C_1_es", "DG_C_1_co", "DG_C_1_ec", "DG_C_2_es", "DG_A_5_co",
+              "DG_C_2_co", "DG_C_2_ec", "DG_C_3_es", "DG_C_3_co", "DG_C_3_ec",
+              "DG_D_1_es", "DG_D_1_co", "DG_A_5_ec", "DG_D_1_ec", "DG_D_2_es", 
+              "DG_D_2_co", "DG_D_2_ec", "DG_D_3_es", "DG_D_3_co", "DG_D_3_ec", 
+              "DG_A_6_es", "DG_D_5_es", "DG_D_5_ec", "DG_A_6_co", "DG_A_7_es", 
+              "DG_A_1_co", "DG_A_7_co", "DG_A_7_ec", "DG_A_8_es", "DG_A_8_co", 
+              "DG_A_9_es", "DG_A_9_co", "DG_A_10_es", "DG_A_10_co", "DG_A_11_es",
+              "DG_A_11_co", "DG_A_11_ec", "DG_A_12_es", "DG_A_12_co", "DG_A_12_ec", 
+              "DG_A_13_es", "DG_A_13_co", "DG_A_13_ec", "DG_A_2_es", "DG_A_14_es", 
+              "DG_A_14_co", "DG_A_14_ec", "DG_A_15_es", "DG_A_15_co", "DG_A_15_ec", 
+              "DG_A_16_es", "DG_A_16_co", "DG_A_16_ec", "DG_A_17_es", "DG_A_2_co", 
+              "DG_A_17_co", "DG_A_17_ec", "DG_A_18_es", "DG_A_18_co", "DG_A_18_ec", 
+              "DG_A_19_es", "DG_A_19_co", "DG_A_19_ec", "DG_A_20_es", "DG_A_20_co", 
+              "DG_A_2_ec", "DG_A_20_ec", "DG_B_1_es", "DG_B_1_co", "DG_B_1_ec",
+              "DG_B_2_es", "DG_B_2_co", "DG_B_2_ec", "DG_B_3_es", "DG_B_3_co", 
+              "DG_B_3_ec", "DG_A_3_es", "DG_B_4_es", "DG_B_4_co", "DG_B_4_ec", 
+              "DG_B_5_es", "DG_B_5_co", "DG_B_5_ec", "DG_B_6_es", "DG_B_6_co", 
+              "DG_B_6_ec", "DG_B_7_es", "DG_A_3_co", "DG_B_7_co", "DG_B_7_ec", 
+              "DG_B_8_es", "DG_B_8_co", "DG_B_8_ec", "DG_B_9_es", "DG_B_9_co", 
+              "DG_B_9_ec", "DG_B_10_es", "DG_B_10_co", "DG_B_10_ec", "DG_B_11_es",
+              "DG_B_11_co", "DG_B_11_ec", "DG_B_12_es", "DG_B_12_co", "DG_B_12_ec",
+              "DG_B_13_es", "DG_B_13_co", "DG_B_13_ec"]
+sixto_libs: ["SR_E4_1_es", "SR_E4_3_nu", "SR_E4_3_pe", "SR_E4_3_ba", "SR_E4_4_es",
+             "SR_E4_4_nu", "SR_E4_4_pe", "SR_E4_4_ba", "SR_F2_1_es", "SR_F2_1_nu",
+             "SR_F2_1_pe", "SR_E4_1_nu", "SR_F2_1_ba", "SR_F2_2_es", "SR_F2_2_nu", 
+             "SR_F2_2_pe", "SR_F2_2_ba", "SR_F2_3_es", "SR_F2_3_nu", "SR_F2_3_pe", 
+             "SR_F2_3_ba", "SR_F2_4_es", "SR_E4_1_pe", "SR_F2_4_nu", "SR_F2_4_pe", 
+             "SR_F2_4_ba", "SR_C1_1_es", "SR_C1_1_nu", "SR_C1_1_pe", "SR_C1_1_ba", 
+             "SR_C1_3_es", "SR_C1_3_nu", "SR_C1_3_pe", "SR_E4_1_ba", "SR_C1_3_ba",
+             "SR_C1_4_es", "SR_C1_4_nu", "SR_C1_4_pe", "SR_C1_4_ba", "SR_C1_2_es", 
+             "SR_C1_2_nu", "SR_C1_2_pe", "SR_C1_2_ba", "SR_C3_1_es", "SR_E4_2_es", 
+             "SR_C3_1_pe", "SR_C3_1_ba", "SR_C3_2_es", "SR_C3_2_nu", "SR_C3_2_pe", 
+             "SR_C3_2_ba", "SR_C3_3_es", "SR_C3_3_nu", "SR_C3_3_pe", "SR_E4_2_nu",
+             "SR_C3_3_ba", "SR_B_1_es", "SR_B_1_pe", "SR_B_1_ba", "SR_B_2_es",
+             "SR_B_2_pe", "SR_B_2_ba", "SR_E4_2_pe", "SR_B_3_es", "SR_B_3_pe", 
+             "SR_B_3_ba", "SR_A_1_nu", "SR_A_1_pe", "SR_A_1_ba", "SR_A_2_es", 
+             "SR_A_2_nu", "SR_E4_2_ba", "SR_A_2_pe", "SR_A_2_ba", "SR_A_3_es", 
+             "SR_A_3_nu", "SR_A_3_ba", "SR_A_4_es", "SR_A_4_nu", "SR_A_4_pe", 
+             "SR_A_4_ba", "SR_E4_3_es"]
