@@ -203,104 +203,95 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 # Results
 
-```{r angelares, eval=FALSE}
+```{r data, include=FALSE}
 library(vcfR)
-angela <- read.vcfR("results/angela.vcf")
-raw <- angela@fix %>% 
+angela_vcf <- read.vcfR("results/angela.vcf")
+sixto_vcf <- read.vcfR("results/sixto.vcf")
+angela <- angela_vcf@fix %>% 
   as_tibble() %>% 
   separate_rows(INFO, sep = ";") %>% 
   separate(INFO, c("metric", "value"), convert = TRUE, sep = "=") %>% 
   pivot_wider(names_from = metric, values_from = value) %>% 
-  bind_cols(angela@gt %>% 
-              as_tibble())
-candidates <- read_tsv("data/angela_fruits_candidate_mutations.tsv")
-joined <- raw %>% 
+  bind_cols(angela_vcf@gt %>% 
+              as_tibble()) %>% 
   filter(paste(CHROM, POS, REF, ALT) %in% 
-           with(candidates, paste(CHROM, POS, REF, ALT))) %>% 
+           with(read_tsv("data/angela_fruits_candidate_mutations.tsv"),
+                paste(CHROM, POS, REF, ALT))) %>% 
   select(-ID, -FILTER, -AN, -ExcessHet, -FS, -InbreedingCoeff, -MLEAC, -MLEAF,
          -MQ, -QD, -SOR, -BaseQRankSum, -MQRankSum, -ReadPosRankSum, -AC) %>% 
   gather(library, values, -CHROM, -POS, -REF, -ALT, -QUAL, -AF, -DP, -FORMAT) %>% 
   mutate(POS = as.numeric(POS)) %>% 
-  left_join(candidates) %>% 
+  left_join(read_tsv("data/angela_fruits_candidate_mutations.tsv")) %>% 
   separate(values, c("GT", "AD", "DP_lib"),":", convert = TRUE) %>% 
   select(-FORMAT) %>% 
   separate(AD, c("AC_REF", "AC_ALT"), convert = TRUE) %>% 
   mutate(AF_lib = AC_ALT / DP_lib)
-filtered <- joined %>% 
-  filter(AF_lib > 0) %>% 
-  separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
-           remove = FALSE) %>% 
-  separate_rows(branch) %>% 
-  filter(branch_mutation == branch)
-ggplot(filtered, aes(DP_lib, fill = (DP_lib > 9))) +
-  geom_histogram() +
-  theme_bw() +
-  xlab("Sequencing depth") + ylab("# of library") +
-  ggtitle("Angela") +
-  scale_fill_discrete(guide = "none")
-ggplot(filtered, aes(AF_lib, fill = tissue)) +
-  geom_histogram() +
-  theme_bw() +
-  facet_wrap(~ gsub("Super-Scaffold_", "", SNV), scales = "free_y") +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ggtitle("Angela AF in fruits", "All depth") + xlab("")
-ggplot(filter(filtered, DP_lib > 4),
-       aes(AF_lib, fill = tissue)) +
-  geom_histogram() +
-  theme_bw() +
-  facet_wrap(~ gsub("Super-Scaffold_", "", SNV), scales = "free") +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ggtitle("Angela AF in fruits", "Depth above 9 reads") + xlab("") + xlim(0,1)
+sixto <- sixto_vcf@fix %>% 
+  as_tibble() %>% 
+  separate_rows(INFO, sep = ";") %>% 
+  separate(INFO, c("metric", "value"), convert = TRUE, sep = "=") %>% 
+  pivot_wider(names_from = metric, values_from = value) %>% 
+  bind_cols(sixto_vcf@gt %>% 
+              as_tibble()) %>% 
+  filter(paste(CHROM, POS, REF, ALT) %in% 
+           with(read_tsv("data/sixto_fruits_candidate_mutations.tsv"),
+                paste(CHROM, POS, REF, ALT))) %>% 
+  select(-ID, -FILTER, -AN, -ExcessHet, -FS, -InbreedingCoeff, -MLEAC, -MLEAF,
+         -MQ, -QD, -SOR, -BaseQRankSum, -MQRankSum, -ReadPosRankSum, -AC) %>% 
+  gather(library, values, -CHROM, -POS, -REF, -ALT, -QUAL, -AF, -DP, -FORMAT) %>% 
+  mutate(POS = as.numeric(POS)) %>% 
+  left_join(read_tsv("data/sixto_fruits_candidate_mutations.tsv")) %>% 
+  separate(values, c("GT", "AD", "DP_lib"),":", convert = TRUE) %>% 
+  select(-FORMAT) %>% 
+  separate(AD, c("AC_REF", "AC_ALT"), convert = TRUE) %>% 
+  mutate(AF_lib = AC_ALT / DP_lib)
+filtered <- bind_rows(
+  angela %>% 
+    filter(AF_lib > 0) %>% 
+    separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
+             remove = FALSE) %>% 
+    separate_rows(branch) %>% 
+    filter(branch_mutation == branch) %>% 
+    mutate(tree = "angela"),
+  sixto %>% 
+    filter(AF_lib > 0) %>% 
+    separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
+             remove = FALSE) %>% 
+    separate_rows(branch) %>% 
+    filter(branch_mutation == branch) %>% 
+    mutate(tree = "sixto")
+)
 ```
 
-```{r sixtores, eval=FALSE}
-library(vcfR)
-sixto <- read.vcfR("results/sixto.vcf")
-raw <- sixto@fix %>% 
-  as_tibble() %>% 
-  separate_rows(INFO, sep = ";") %>% 
-  separate(INFO, c("metric", "value"), convert = TRUE, sep = "=") %>% 
-  pivot_wider(names_from = metric, values_from = value) %>% 
-  bind_cols(sixto@gt %>% 
-              as_tibble())
-candidates <- read_tsv("data/sixto_fruits_candidate_mutations.tsv")
-joined <- raw %>% 
-  filter(paste(CHROM, POS, REF, ALT) %in% 
-           with(candidates, paste(CHROM, POS, REF, ALT))) %>% 
-  select(-ID, -FILTER, -AN, -ExcessHet, -FS, -InbreedingCoeff, -MLEAC, -MLEAF,
-         -MQ, -QD, -SOR, -BaseQRankSum, -MQRankSum, -ReadPosRankSum, -AC) %>% 
-  gather(library, values, -CHROM, -POS, -REF, -ALT, -QUAL, -AF, -DP, -FORMAT) %>% 
-  mutate(POS = as.numeric(POS)) %>% 
-  left_join(candidates) %>% 
-  separate(values, c("GT", "AD", "DP_lib"),":", convert = TRUE) %>% 
-  select(-FORMAT) %>% 
-  separate(AD, c("AC_REF", "AC_ALT"), convert = TRUE) %>% 
-  mutate(AF_lib = AC_ALT / DP_lib)
-filtered <- joined %>% 
-  filter(AF_lib > 0) %>% 
-  separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
-           remove = FALSE) %>% 
-  separate_rows(branch) %>% 
-  filter(branch_mutation == branch)
-ggplot(filtered, aes(DP_lib, fill = (DP_lib > 9))) +
+```{r dp}
+ggplot(filtered, aes(DP_lib, fill = (DP_lib > 50))) +
   geom_histogram() +
   theme_bw() +
   xlab("Sequencing depth") + ylab("# of library") +
-  ggtitle("Sixto") +
+  facet_wrap(~ tree, nrow = 2) +
   scale_fill_discrete(guide = "none")
-ggplot(filtered, aes(AF_lib, fill = tissue)) +
-  geom_histogram() +
-  theme_bw() +
-  facet_wrap(~ gsub("Super-Scaffold_", "", SNV), scales = "free_y") +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ggtitle("Sixto AF in fruits", "All depth") + xlab("")
-ggplot(filter(filtered, DP_lib > 4),
+```
+
+
+```{r angela}
+ggplot(filter(filtered, DP_lib > 50, tree == "angela"),
        aes(AF_lib, fill = tissue)) +
   geom_histogram() +
   theme_bw() +
-  facet_wrap(~ gsub("Super-Scaffold_", "", SNV), scales = "free_y") +
+  facet_wrap(~ gsub("Super-Scaffold_", "", SNV)) +
   theme(axis.text.x = element_text(angle = 90)) +
-  ggtitle("Sixto AF in fruits", "Depth above 9 reads") + xlab("") + xlim(0,1)
+  ggtitle("Angela AF in fruits", "Depth above 50 reads") + xlab("") + 
+  xlim(0,1)
 ```
+```{r sixto}
+ggplot(filter(filtered, DP_lib > 50, tree == "sixto"),
+       aes(AF_lib, fill = tissue)) +
+  geom_histogram() +
+  theme_bw() +
+  facet_wrap(~ gsub("Super-Scaffold_", "", SNV)) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ggtitle("Sixto AF in fruits", "Depth above 50 reads") + xlab("") + xlim(0,1)
+```
+
 
 
