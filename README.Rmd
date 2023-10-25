@@ -245,53 +245,222 @@ sixto <- sixto_vcf@fix %>%
   select(-FORMAT) %>% 
   separate(AD, c("AC_REF", "AC_ALT"), convert = TRUE) %>% 
   mutate(AF_lib = AC_ALT / DP_lib)
-filtered <- bind_rows(
+all <- bind_rows(
   angela %>% 
-    filter(AF_lib > 0) %>% 
     separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
              remove = FALSE) %>% 
     separate_rows(branch) %>% 
-    filter(branch_mutation == branch) %>% 
     mutate(tree = "angela"),
   sixto %>% 
-    filter(AF_lib > 0) %>% 
     separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
              remove = FALSE) %>% 
     separate_rows(branch) %>% 
-    filter(branch_mutation == branch) %>% 
     mutate(tree = "sixto")
-)
+) %>% 
+  mutate(fruit = sprintf("%02d", as.numeric(fruit))) %>% 
+  mutate(CHROM = gsub("Super-Scaffold_", "", CHROM)) %>% 
+  mutate(CHROM = sprintf("%02d", as.numeric(CHROM))) %>% 
+  mutate(POS = sprintf("%09d", as.numeric(POS))) %>% 
+  mutate(SNV = paste0(CHROM, "#", POS)) 
+rm(angela_vcf, sixto_vcf, angela, sixto)
 ```
 
-```{r dp}
-ggplot(filtered, aes(DP_lib, fill = (DP_lib > 50))) +
-  geom_histogram() +
-  theme_bw() +
-  xlab("Sequencing depth") + ylab("# of library") +
-  facet_wrap(~ tree, nrow = 2) +
-  scale_fill_discrete(guide = "none")
+```{r data2, include=FALSE}
+library(vcfR)
+angela_vcf <- read.vcfR("results/angela_filtered.vcf")
+sixto_vcf <- read.vcfR("results/sixto_filtered.vcf")
+angela <- angela_vcf@fix %>% 
+  as_tibble() %>% 
+  separate_rows(INFO, sep = ";") %>% 
+  separate(INFO, c("metric", "value"), convert = TRUE, sep = "=") %>% 
+  pivot_wider(names_from = metric, values_from = value) %>% 
+  bind_cols(angela_vcf@gt %>% 
+              as_tibble()) %>% 
+  filter(paste(CHROM, POS, REF, ALT) %in% 
+           with(read_tsv("data/angela_fruits_candidate_mutations.tsv"),
+                paste(CHROM, POS, REF, ALT))) %>% 
+  select(-ID, -FILTER, -AN, -ExcessHet, -FS, -InbreedingCoeff, -MLEAC, -MLEAF,
+         -MQ, -QD, -SOR, -BaseQRankSum, -MQRankSum, -ReadPosRankSum, -AC) %>% 
+  gather(library, values, -CHROM, -POS, -REF, -ALT, -QUAL, -AF, -DP, -FORMAT) %>% 
+  mutate(POS = as.numeric(POS)) %>% 
+  left_join(read_tsv("data/angela_fruits_candidate_mutations.tsv")) %>% 
+  separate(values, c("GT", "AD", "DP_lib"),":", convert = TRUE) %>% 
+  select(-FORMAT) %>% 
+  separate(AD, c("AC_REF", "AC_ALT"), convert = TRUE) %>% 
+  mutate(AF_lib = AC_ALT / DP_lib)
+sixto <- sixto_vcf@fix %>% 
+  as_tibble() %>% 
+  separate_rows(INFO, sep = ";") %>% 
+  separate(INFO, c("metric", "value"), convert = TRUE, sep = "=") %>% 
+  pivot_wider(names_from = metric, values_from = value) %>% 
+  bind_cols(sixto_vcf@gt %>% 
+              as_tibble()) %>% 
+  filter(paste(CHROM, POS, REF, ALT) %in% 
+           with(read_tsv("data/sixto_fruits_candidate_mutations.tsv"),
+                paste(CHROM, POS, REF, ALT))) %>% 
+  select(-ID, -FILTER, -AN, -ExcessHet, -FS, -InbreedingCoeff, -MLEAC, -MLEAF,
+         -MQ, -QD, -SOR, -BaseQRankSum, -MQRankSum, -ReadPosRankSum, -AC) %>% 
+  gather(library, values, -CHROM, -POS, -REF, -ALT, -QUAL, -AF, -DP, -FORMAT) %>% 
+  mutate(POS = as.numeric(POS)) %>% 
+  left_join(read_tsv("data/sixto_fruits_candidate_mutations.tsv")) %>% 
+  separate(values, c("GT", "AD", "DP_lib"),":", convert = TRUE) %>% 
+  select(-FORMAT) %>% 
+  separate(AD, c("AC_REF", "AC_ALT"), convert = TRUE) %>% 
+  mutate(AF_lib = AC_ALT / DP_lib)
+filtered <- bind_rows(
+  angela %>% 
+    separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
+             remove = FALSE) %>% 
+    separate_rows(branch) %>% 
+    mutate(tree = "angela"),
+  sixto %>% 
+    separate(library, c("species", "branch_mutation", "fruit", "tissue"), 
+             remove = FALSE) %>% 
+    separate_rows(branch) %>% 
+    mutate(tree = "sixto")
+) %>% 
+  mutate(fruit = sprintf("%02d", as.numeric(fruit))) %>% 
+  mutate(CHROM = gsub("Super-Scaffold_", "", CHROM)) %>% 
+  mutate(CHROM = sprintf("%02d", as.numeric(CHROM))) %>% 
+  mutate(POS = sprintf("%09d", as.numeric(POS))) %>% 
+  mutate(SNV = paste0(CHROM, "#", POS)) %>% 
+  filter(AF_lib >= 0.1) %>% 
+  select(SNV, library) %>% 
+  mutate(gatk = 1)
+all <- all %>% 
+  left_join(filtered) %>% 
+  mutate(gatk = ifelse(is.na(gatk), 0, 1)) 
+rm(angela_vcf, sixto_vcf, angela, sixto, filtered)
 ```
 
 
-```{r angela}
-ggplot(filter(filtered, DP_lib > 50, tree == "angela"),
-       aes(AF_lib, fill = tissue)) +
-  geom_histogram() +
+```{r, fig.height=7, fig.width=14}
+gs <- all %>% 
+  filter(tree == "sixto") %>%
+  filter(branch_mutation != "A") %>% 
+  mutate(branch_mutation = recode(branch_mutation, "B" = "B1")) %>% 
+  bind_rows(all %>% 
+              filter(tree == "sixto") %>%
+              select(SNV, af, branch) %>% 
+              mutate(fruit = "tree") %>% 
+              rename(tissue = branch, AF_lib = af) %>% 
+              mutate(branch_mutation = "") %>% 
+              mutate(gatk = 0)) %>%
+  mutate(tissue_col = ifelse(!is.na(AF_lib), branch_mutation, "No data")) %>% 
+  mutate(tissue_col = ifelse(branch_mutation  == "", tissue, tissue_col)) %>% 
+  filter(!(!is.nan(AF_lib) & AF_lib == 0)) %>% 
+  mutate(AF_lib = ifelse(is.na(AF_lib), 0.5, AF_lib)) %>% 
+  mutate(AF_lib = ifelse(AF_lib == 0, 1, AF_lib)) %>% 
+  mutate(AF_lib = ifelse(AF_lib > 0.5, 0.5, AF_lib)) %>% 
+  select(branch_mutation, fruit, tissue, tissue_col, SNV, AF_lib, gatk) %>% 
+  unique() %>% 
+  ggplot(aes(tissue, SNV)) +
+  geom_tile(aes(fill = tissue_col, alpha = AF_lib, col = as.factor(gatk)), linewidth = 1.5) +
+  facet_grid(~ paste0(branch_mutation, "\n", fruit), scales = "free_x", space = "free_x") +
   theme_bw() +
-  facet_wrap(~ gsub("Super-Scaffold_", "", SNV)) +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ggtitle("Angela AF in fruits", "Depth above 50 reads") + xlab("") + 
-  xlim(0,1)
+  scale_alpha_continuous(guide = "none", range = c(0.1, 1)) +
+  ylab("") + xlab("") +
+  theme(legend.position = "bottom", panel.spacing = unit(0,'lines'),
+        axis.text.x = element_text(angle = 90),
+        panel.grid.major = element_blank()) +
+  geom_vline(xintercept = seq(0.5, 3.5, by = 1), color="gray", size=.5, alpha=.5) +
+  geom_hline(yintercept = seq(0.5, 30.5, by = 1), color="gray", size=.5, alpha=.5) +
+  geom_point(aes(fill = "No mutation"), alpha = 0) +
+  scale_fill_manual("",
+                    values = c("#E69F00", "#56B4E9", "#009E73",
+                               "#F0E442", "#0072B2", "#D55E00",
+                               "#000000", "white")) +
+  scale_color_manual("GATK", values = c(NA, "red"), labels = c("no", "yes"),
+                     na.value = NA) +
+  ggnewscale::new_scale_color() +
+  geom_point(aes(col = AF_lib), alpha = 0) +
+  scale_colour_gradient("Allele\nfraction", high = "#333333", low = "#c9c9c9") +
+  ggtitle("Sextonia rubra")
+gs
 ```
-```{r sixto}
-ggplot(filter(filtered, DP_lib > 50, tree == "sixto"),
-       aes(AF_lib, fill = tissue)) +
-  geom_histogram() +
+
+```{r, fig.height=7, fig.width=14}
+ga <- all %>% 
+filter(tree == "angela") %>%
+  bind_rows(all %>% 
+              filter(tree == "angela") %>%
+              select(SNV, af, branch) %>% 
+              mutate(fruit = "tree") %>% 
+              rename(tissue = branch, AF_lib = af) %>% 
+              mutate(branch_mutation = "") %>% 
+              mutate(gatk = 0)) %>%
+  mutate(tissue_col = ifelse(!is.na(AF_lib), branch_mutation, "No data")) %>% 
+  mutate(tissue_col = ifelse(branch_mutation  == "", tissue, tissue_col)) %>% 
+  filter(!(!is.nan(AF_lib) & AF_lib == 0)) %>% 
+  mutate(AF_lib = ifelse(is.na(AF_lib), 0.5, AF_lib)) %>% 
+  mutate(AF_lib = ifelse(AF_lib == 0, 1, AF_lib)) %>% 
+  mutate(AF_lib = ifelse(AF_lib > 0.5, 0.5, AF_lib)) %>% 
+  select(branch_mutation, fruit, tissue, tissue_col, SNV, AF_lib, gatk) %>% 
+  unique() %>% 
+  ggplot(aes(tissue, SNV)) +
+  geom_tile(aes(fill = tissue_col, alpha = AF_lib, col = as.factor(gatk)), linewidth = 1.5) +
+  facet_grid(~ paste0(branch_mutation, "\n", fruit), scales = "free_x", space = "free_x") +
   theme_bw() +
-  facet_wrap(~ gsub("Super-Scaffold_", "", SNV)) +
-  theme(axis.text.x = element_text(angle = 90)) +
-  ggtitle("Sixto AF in fruits", "Depth above 50 reads") + xlab("") + xlim(0,1)
+  scale_alpha_continuous(guide = "none", range = c(0.1, 1)) +
+  ylab("") + xlab("") +
+  theme(legend.position = "bottom", panel.spacing = unit(0,'lines'),
+        axis.text.x = element_text(angle = 90),
+        panel.grid.major = element_blank()) +
+  geom_vline(xintercept = seq(0.5, 3.5, by = 1), color="gray", size=.5, alpha=.5) +
+  geom_hline(yintercept = seq(0.5, 30.5, by = 1), color="gray", size=.5, alpha=.5) +
+  geom_point(aes(fill = "No mutation"), alpha = 0) +
+  scale_fill_manual("",
+                    values = c("#E69F00", "#56B4E9", "#009E73", 
+                               "#F0E442", "#000000", "white")) +
+  scale_color_manual("GATK", values = c(NA, "red"), labels = c("no", "yes"),
+                     na.value = NA) +
+  ggnewscale::new_scale_color() +
+  geom_point(aes(col = AF_lib), alpha = 0) +
+  scale_colour_gradient("Allele\nfraction", high = "#333333", low = "#c9c9c9") +
+  ggtitle("Dicorynia guianensis")
+ga
 ```
+
+```{r, fig.height=10, fig.width=16}
+gt <- cowplot::plot_grid(ga, gs, nrow = 2, rel_heights = c(4,2))
+ggsave(plot = gt, filename = "matrice_all.png", height = 10, width = 16)
+```
+
+```{r, eval=FALSE}
+pdf("all_count.pdf")
+for(snv in unique(all$SNV))
+  print(all %>% 
+  filter(SNV == snv) %>% 
+  select(SNV, AC_REF, AC_ALT, branch_mutation, fruit, tissue) %>% 
+  gather(type, ac, -SNV, -branch_mutation, -fruit, -tissue) %>% 
+  mutate(type = gsub("AC_", "", type)) %>% 
+  mutate(tissue = factor(tissue, levels = c("ba", "pe", "ec", "co", "nu", "es"))) %>% 
+  ggplot(aes(tissue, ac, fill = type)) +
+  geom_col() +
+  theme_bw() +
+  facet_wrap(~ paste0(branch_mutation, "-", fruit)) +
+  scale_fill_manual(guide = "none", values = c("firebrick", "lightgrey")) +
+  xlab("") + ylab("Number of reads") +
+  ggtitle(snv))
+dev.off()
+```
+
+```{r}
+all %>% 
+  select(species, branch_mutation, fruit, tissue, 
+         CHROM, POS, REF, ALT, AC_REF, AC_ALT, DP_lib, AF_lib, gatk) %>% 
+  mutate(species = ifelse(species == "DG", "Dicorynia guianensis",
+                          "Sextonia rubra")) %>% 
+  mutate(tissue = recode(tissue)) %>% 
+  # rename tissue
+  rename(branch = branch_mutation, scaffold = CHROM, position = POS,
+         normal = REF, mutation = ALT, normal_read_count = AC_REF,
+         mutation_read_count = AC_ALT, sequencing_depth = DP_lib,
+         allelic_fraction = AF_lib, gatk_filtering = gatk)
+# save as table
+```
+
+
 
 
 

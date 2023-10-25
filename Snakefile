@@ -2,10 +2,10 @@ configfile: "config/config.yml"
 
 rule all:
     input:
-        # expand("results/count/{library}_on_angela.tsv",
-        #         library=config["angela_libs"]),
         "results/angela.vcf",
         "results/sixto.vcf"
+        # "results/angela_filtered.vcf",
+        # "results/sixto_filtered.vcf"
 
 # Rules #
 
@@ -27,3 +27,5 @@ include: "rules/gatk_haplotypecaller.py"
 include: "rules/gatk_genomicdbimport_angela.py"
 include: "rules/gatk_genomicdbimport_sixto.py"
 include: "rules/gatk_genotypegvcfs.py"
+# include: "rules/bcftools_biallelic.py"
+# include: "rules/gatk_snps.py"
