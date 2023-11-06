@@ -203,7 +203,7 @@ snakemake --dag | dot -Tsvg > dag/dag.svg # dag
 
 # Results
 
-```{r data, include=FALSE}
+```{r data, eval=FALSE}
 library(vcfR)
 angela_vcf <- read.vcfR("results/angela.vcf")
 sixto_vcf <- read.vcfR("results/sixto.vcf")
@@ -262,11 +262,11 @@ all <- bind_rows(
   mutate(CHROM = sprintf("%02d", as.numeric(CHROM))) %>% 
   mutate(POS = sprintf("%09d", as.numeric(POS))) %>% 
   mutate(SNV = paste0(CHROM, "#", POS)) %>% 
-  mutate(gatk = ifelse(GT %in% c("0|1", "0/1", "0|0", "1/1", "1|1"), 1, 0))
+  mutate(gatk = ifelse(GT %in% c("0|1", "0/1", "1/1", "1|1"), 1, 0))
 rm(angela_vcf, sixto_vcf, angela, sixto)
 ```
 
-```{r, fig.height=7, fig.width=14}
+```{r sixtofig, fig.height=7, fig.width=14, eval=FALSE}
 gs <- all %>% 
   filter(tree == "sixto") %>%
   filter(branch_mutation != "A") %>% 
@@ -308,10 +308,9 @@ gs <- all %>%
   geom_point(aes(col = AF_lib), alpha = 0) +
   scale_colour_gradient("Allele\nfraction", high = "#333333", low = "#c9c9c9") +
   ggtitle("Sextonia rubra (9/36)")
-gs
 ```
 
-```{r, fig.height=7, fig.width=14}
+```{r angelafig, fig.height=7, fig.width=14, eval=FALSE}
 ga <- all %>% 
 filter(tree == "angela") %>%
   bind_rows(all %>% 
@@ -353,12 +352,12 @@ filter(tree == "angela") %>%
 ga
 ```
 
-```{r, fig.height=10, fig.width=16}
+```{r allfig, fig.height=10, fig.width=16, eval=FALSE}
 gt <- cowplot::plot_grid(ga, gs, nrow = 2, rel_heights = c(4,2))
 ggsave(plot = gt, filename = "matrice.png", height = 10, width = 16)
 ```
 
-```{r}
+```{r restable, eval=FALSE}
 all %>% 
   select(species, branch_mutation, fruit, tissue, 
          CHROM, POS, REF, ALT, AC_REF, AC_ALT, DP_lib, AF_lib, gatk) %>% 
@@ -377,8 +376,3 @@ all %>%
          allelic_fraction = AF_lib, heterozygous_call_gatk = gatk) %>% 
   write_tsv("fruit_mutations.tsv")
 ```
-
-
-
-
-

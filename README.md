@@ -167,8 +167,3 @@ quality.*
 - Singularity: docker://broadinstitute/gatk
 
 # Results
-
-![](README_files/figure-gfm/dp-1.png)<!-- -->
-
-![](README_files/figure-gfm/angela-1.png)<!-- -->
-![](README_files/figure-gfm/sixto-1.png)<!-- -->
